@@ -9,7 +9,7 @@ public class Program
     public static async Task<int> Main(string[] args)
     {
         var rootLevelCommands = new RootLevelCommands();
-        await rootLevelCommands.InvokeAsync(args);
-        return 0;
+        var returnValue = await rootLevelCommands.InvokeAsync(args);
+        return returnValue;
     }
 }
