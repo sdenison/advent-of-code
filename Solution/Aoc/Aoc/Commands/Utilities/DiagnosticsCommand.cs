@@ -10,7 +10,7 @@ public class DiagnosticsCommand : Command
     public DiagnosticsCommand() : base("diagnostics", "Displays diagnostics information.")
     {
         var writeToLogOption = CreateWriteToLogOption();
-        this.SetHandler<bool>((writeToLog) =>
+        this.SetHandler((writeToLog) =>
         {
             DisplayDiagnosticInformation(writeToLog);
         }, writeToLogOption);
