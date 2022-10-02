@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Aoc.Domain.Infrastructure;
+using System;
 using System.CommandLine;
 using System.IO;
 using System.Reflection;
+using Aoc.Config;
 
 namespace Aoc.Commands.Utilities;
 
 public class DiagnosticsCommand : Command
 {
+    private ILogger Logger = null;
+
     public DiagnosticsCommand() : base("diagnostics", "Displays diagnostics information.")
     {
         var writeToLogOption = CreateWriteToLogOption();
@@ -18,6 +22,7 @@ public class DiagnosticsCommand : Command
 
     public void DisplayDiagnosticInformation(bool writeToLog)
     {
+        Logger = DependencyInjection.Logger;
         var assemblyName = Assembly.GetEntryAssembly().FullName;
         WriteLine($"Assembly Name: {assemblyName}");
         WriteLine($"Framework Version: {Environment.Version}");
@@ -52,5 +57,9 @@ public class DiagnosticsCommand : Command
     private void WriteLine(string message)
     {
         Console.WriteLine(message);
+        if (Logger is not null)
+        {
+            Logger.Log(message);
+        }
     }
 }

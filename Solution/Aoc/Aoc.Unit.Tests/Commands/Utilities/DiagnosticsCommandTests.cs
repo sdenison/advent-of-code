@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Aoc.Config;
+using NUnit.Framework;
 
 namespace Aoc.Unit.Tests.Commands.Utilities;
 
@@ -8,6 +9,7 @@ public class DiagnosticsCommandTests
     [Test]
     public async Task Can_call_DisplayDiagnosticInformation()
     {
+        DependencyInjection.RegisterLogger(new TestLogger());
         var args = new [] {
             "utilities", "diagnostics"
         };
