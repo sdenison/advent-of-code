@@ -2,6 +2,7 @@
 
 namespace Aoc.Domain.Unit.Tests;
 
+[TestFixture]
 public class AdderTests
 {
     [Test]

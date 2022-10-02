@@ -30,6 +30,7 @@ public static class DependencyInjection
 
     private static void AddBaseServices(this IServiceCollection serviceCollection)
     {
+        RegisterLogger(new Logger());
         serviceCollection.AddSingleton(Logger);
         serviceCollection.AddSingleton<IAdder, Adder>();
     }
