@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Aoc.Domain.Compute
 {
@@ -43,8 +42,7 @@ namespace Aoc.Domain.Compute
                 return programPosition + 4;
             }
 
-            return programPosition + 4;
+            throw new InvalidIntcodeProgram("Unknown operator");
         }
-
     }
 }
