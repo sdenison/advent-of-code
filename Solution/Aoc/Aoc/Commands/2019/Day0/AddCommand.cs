@@ -8,8 +8,6 @@ namespace Aoc.Commands._2019.Day0;
 
 public class AddCommand : Command
 {
-    public ILogger Logger;
-
     public AddCommand() : base("add", "Add values.")
     {
         var value1Option = CreateValue1Option();
@@ -23,10 +21,10 @@ public class AddCommand : Command
     public void Add(int value1, int value2)
     {
         var serviceProvider = DependencyInjection.GetServiceProvider();
-        Logger = serviceProvider.GetService<ILogger>();
+        var logger = serviceProvider.GetService<ILogger>();
         var adder = serviceProvider.GetService<IAdder>();
         var sum = adder.Add(value1, value2);
-        Logger.Log($"Adding {value1} to {value2} = {sum}");
+        logger.Log($"Adding {value1} to {value2} = {sum}");
     }
 
     private Option<int> CreateValue1Option()
