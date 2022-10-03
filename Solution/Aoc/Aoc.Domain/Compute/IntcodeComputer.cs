@@ -4,42 +4,43 @@ namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
-        private int[] WorkingMemory = { };
+        private int[] Memory;
 
         public int[] RunProgram(int[] program)
         {
-            Array.Resize(ref WorkingMemory, program.Length);
-            program.CopyTo(WorkingMemory, 0);
+            Array.Resize(ref Memory, program.Length);
+            program.CopyTo(Memory, 0);
 
-            var nextPosition = 0;
-            while (WorkingMemory[nextPosition] != 99)
+            var address = 0;
+            while (Memory[address] != 99)
             {
-                nextPosition = RunCommand(nextPosition);
+                address = RunCommand(address);
             }
-            return WorkingMemory;
+            return Memory;
         }
 
-        private int RunCommand(int programPosition)
+        private int RunCommand(int opcodeAddress)
         {
-            if (WorkingMemory[programPosition] == 1)
+            var opcode = Memory[opcodeAddress];
+            if (opcode == 1)
             {
                 //This is an add command
                 //The next two items in the list will be the pointers to the values to add.
-                var operand1 = WorkingMemory[WorkingMemory[programPosition + 1]];
-                var operand2 = WorkingMemory[WorkingMemory[programPosition + 2]];
-                var destination = WorkingMemory[programPosition + 3];
-                WorkingMemory[destination] = operand1 + operand2;
-                return programPosition + 4;
+                var operand1 = Memory[Memory[opcodeAddress + 1]];
+                var operand2 = Memory[Memory[opcodeAddress + 2]];
+                var destinationAddress = Memory[opcodeAddress + 3];
+                Memory[destinationAddress] = operand1 + operand2;
+                return opcodeAddress + 4;
             }
-            else if (WorkingMemory[programPosition] == 2)
+            else if (opcode == 2)
             {
                 //This is an multiply command
                 //The next two items in the list will be the pointers to the values to add.
-                var operand1 = WorkingMemory[WorkingMemory[programPosition + 1]];
-                var operand2 = WorkingMemory[WorkingMemory[programPosition + 2]];
-                var destination = WorkingMemory[programPosition + 3];
-                WorkingMemory[destination] = operand1 * operand2;
-                return programPosition + 4;
+                var operand1 = Memory[Memory[opcodeAddress + 1]];
+                var operand2 = Memory[Memory[opcodeAddress + 2]];
+                var destinationAddress = Memory[opcodeAddress + 3];
+                Memory[destinationAddress] = operand1 * operand2;
+                return opcodeAddress + 4;
             }
 
             throw new InvalidIntcodeProgram("Unknown operator");
