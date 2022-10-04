@@ -37,8 +37,16 @@ namespace Aoc.Domain.Compute
             switch (instruction)
             {
                 case IMathInstruction mathInstruction:
-                    var parameter1 = Memory[Memory[instructionPointer + 1]];
-                    var parameter2 = Memory[Memory[instructionPointer + 2]];
+                    int parameter1;
+                    if (mathInstruction.PassByReferenceParameter1)
+                        parameter1 = Memory[Memory[instructionPointer + 1]];
+                    else
+                        parameter1 = Memory[instructionPointer + 1];
+                    int parameter2;
+                    if (mathInstruction.PassByReferenceParameter2)
+                        parameter2 = Memory[Memory[instructionPointer + 2]];
+                    else
+                        parameter2 = Memory[instructionPointer + 2];
                     var instructionValue = mathInstruction.ExecuteOperation(parameter1, parameter2);
                     var destinationAddress = Memory[instructionPointer + 3];
                     Memory[destinationAddress] = instructionValue;
@@ -57,9 +65,10 @@ namespace Aoc.Domain.Compute
         private IInstruction GetNextInstruction(int instructionPointer)
         {
             var rawOpcode = Memory[instructionPointer];
-            var opcodeInt = rawOpcode % 100;
+            var passByRefParameter1 = GetPassByReferenceParameter1(rawOpcode);
+            var passByRefParameter2 = GetPassByReferenceParameter2(rawOpcode);
             
-            Opcodes opcode = (Opcodes) opcodeInt;
+            Opcodes opcode = (Opcodes) (rawOpcode % 100);
             IInstruction instruction;
             switch (opcode)
             {
@@ -67,10 +76,10 @@ namespace Aoc.Domain.Compute
                     instruction = new Halt();
                     break;
                 case Opcodes.Add:
-                    instruction = new Add();
+                    instruction = new Add(passByRefParameter1, passByRefParameter2);
                     break;
                 case Opcodes.Multiply:
-                    instruction = new Multiply();
+                    instruction = new Multiply(passByRefParameter1, passByRefParameter2);
                     break;
                 case Opcodes.Put:
                     instruction = new Put();
@@ -84,6 +93,18 @@ namespace Aoc.Domain.Compute
             if (Memory.Length < instructionPointer + instruction.Length)
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
+        }
+
+        private bool GetPassByReferenceParameter1(int rawOpcode)
+        {
+            var hundreds = (rawOpcode /= 100) % 10;
+            return !Convert.ToBoolean(hundreds);
+        }
+
+        private bool GetPassByReferenceParameter2(int rawOpcode)
+        {
+            var hundreds = (rawOpcode /= 1000) % 10;
+            return !Convert.ToBoolean(hundreds);
         }
     }
 }

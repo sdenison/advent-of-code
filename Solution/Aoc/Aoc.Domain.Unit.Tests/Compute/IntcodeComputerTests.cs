@@ -125,6 +125,17 @@ public class IntcodeComputerTests
         Assert.AreEqual(expectedComputedOutput, computedOutput);
     }
 
+    [Test]
+    public void Can_use_parameter_modes()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] {1002, 4, 3, 4, 33};
+        var expectedComputedOutput = new[] {1002, 4, 3, 4, 99};
+        var computedOutput = computer.RunProgram(program);
+
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
+
     //Edge cases
 
     [Test]
