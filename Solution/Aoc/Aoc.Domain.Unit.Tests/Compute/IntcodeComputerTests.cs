@@ -114,6 +114,17 @@ public class IntcodeComputerTests
         Assert.AreEqual(6635, solutionValue);
     }
 
+    [Test]
+    public void Can_use_new_Display_and_Put_instructions()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] {3, 0, 4, 0, 99};
+        var expectedComputedOutput = new[] {3, 0, 4, 0, 99};
+        var computedOutput = computer.RunProgram(program);
+
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
+
     //Edge cases
 
     [Test]

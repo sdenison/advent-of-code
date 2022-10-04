@@ -1,7 +1,11 @@
 ﻿namespace Aoc.Domain.Compute.Instructions
 {
-    public class Put : IInstruction
+    public class Put : IOperateOnInputInstruction
     {
-        public int Length => 3;
+        public int Length => 2;
+        public int Input { get; set; }
+        public void DoOperation()
+        {
+        }
     }
 }
