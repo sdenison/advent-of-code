@@ -1,48 +1,68 @@
 ﻿using System;
+using Aoc.Domain.Compute.Instructions;
 
 namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
-        private int[] WorkingMemory = { };
+        private int[] Memory = Array.Empty<int>();
 
         public int[] RunProgram(int[] program)
         {
-            Array.Resize(ref WorkingMemory, program.Length);
-            program.CopyTo(WorkingMemory, 0);
+            CreateWorkingMemory(program);
 
-            var nextPosition = 0;
-            while (WorkingMemory[nextPosition] != 99)
+            //Main computer logic
+            var instructionPointer = 0;
+            while (instructionPointer < Memory.Length)
             {
-                nextPosition = RunCommand(nextPosition);
+                var instruction = GetNextInstruction(instructionPointer);
+                if (instruction is Halt)
+                    return Memory;
+                instructionPointer = ExecuteInstruction(instruction, instructionPointer);
             }
-            return WorkingMemory;
+
+            //We should always see a halt operation at the end of the program
+            throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
-        private int RunCommand(int programPosition)
+        private void CreateWorkingMemory(int[] program)
         {
-            if (WorkingMemory[programPosition] == 1)
-            {
-                //This is an add command
-                //The next two items in the list will be the pointers to the values to add.
-                var operand1 = WorkingMemory[WorkingMemory[programPosition + 1]];
-                var operand2 = WorkingMemory[WorkingMemory[programPosition + 2]];
-                var destination = WorkingMemory[programPosition + 3];
-                WorkingMemory[destination] = operand1 + operand2;
-                return programPosition + 4;
-            }
-            else if (WorkingMemory[programPosition] == 2)
-            {
-                //This is an multiply command
-                //The next two items in the list will be the pointers to the values to add.
-                var operand1 = WorkingMemory[WorkingMemory[programPosition + 1]];
-                var operand2 = WorkingMemory[WorkingMemory[programPosition + 2]];
-                var destination = WorkingMemory[programPosition + 3];
-                WorkingMemory[destination] = operand1 * operand2;
-                return programPosition + 4;
-            }
+            //Don't surprise the user and make changes to the incoming program
+            Array.Resize(ref Memory, program.Length);
+            program.CopyTo(Memory, 0);
+        }
 
-            throw new InvalidIntcodeProgram("Unknown operator");
+        private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
+        { 
+            var parameter1 = Memory[Memory[instructionPointer + 1]];
+            var parameter2 = Memory[Memory[instructionPointer + 2]];
+            var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
+            var destinationAddress = Memory[instructionPointer + 3];
+            Memory[destinationAddress] = instructionValue;
+            return instructionPointer + instruction.Length;
+        }
+
+        private IInstruction GetNextInstruction(int instructionPointer)
+        {
+            Opcodes opcode = (Opcodes)Memory[instructionPointer];
+            IInstruction instruction;
+            switch (opcode)
+            {
+                case Opcodes.Halt:
+                    instruction = new Halt();
+                    break;
+                case Opcodes.Add:
+                    instruction = new Add();
+                    break;
+                case Opcodes.Multiply:
+                    instruction = new Multiply();
+                    break;
+                default:
+                    throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
+            }
+            if (Memory.Length < instructionPointer + instruction.Length)
+                throw new InvalidIntcodeProgram("Last instruction is incomplete");
+            return instruction;
         }
     }
 }
