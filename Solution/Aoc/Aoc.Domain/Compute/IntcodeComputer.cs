@@ -22,7 +22,7 @@ namespace Aoc.Domain.Compute
                     return Memory;
                 address = ExecuteInstruction(instruction, address);
             }
-            return Memory;
+            throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
         private int ExecuteInstruction(IInstruction instruction, int address)
@@ -51,8 +51,11 @@ namespace Aoc.Domain.Compute
                     returnValue = new Multiply();
                     break;
                 default:
-                    throw new InvalidProgramException($"Opcode {opcode} unknown");
+                    throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
             }
+
+            if (Memory.Length < opcodeAddress + returnValue.Length)
+                throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return returnValue;
         }
 

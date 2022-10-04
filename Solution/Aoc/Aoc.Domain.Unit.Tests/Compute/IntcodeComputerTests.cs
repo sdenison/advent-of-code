@@ -14,6 +14,28 @@ public class IntcodeComputerTests
     }
 
     [Test]
+    public void Halt_code_needed_at_end()
+    {
+        var program = new[] {1, 2, 3, 2, 1, 99}; 
+        var computer = new IntcodeComputer();
+        Assert.Throws<InvalidIntcodeProgram>(() =>
+        {
+            var computedOutput = computer.RunProgram(program);
+        });
+    }
+
+    [Test]
+    public void Halt_code_needed_at_end()
+    {
+        var program = new[] {1, 2, 3, 2, 88}; 
+        var computer = new IntcodeComputer();
+        Assert.Throws<InvalidIntcodeProgram>(() =>
+        {
+            var computedOutput = computer.RunProgram(program);
+        });
+    }
+
+    [Test]
     public void Can_process_add_opode()
     {
         var computer = new IntcodeComputer();
