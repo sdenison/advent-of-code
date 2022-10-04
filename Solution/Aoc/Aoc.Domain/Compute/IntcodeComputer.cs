@@ -8,36 +8,36 @@ namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
-        private int[] Memory;
+        private int[] Memory = Array.Empty<int>();
 
         public int[] RunProgram(int[] program)
         {
             Array.Resize(ref Memory, program.Length);
             program.CopyTo(Memory, 0);
-            var address = 0;
-            while (address < Memory.Length)
+            var instructionPointer = 0;
+            while (instructionPointer < Memory.Length)
             {
-                var instruction = GetNextInstruction(address);
+                var instruction = GetNextInstruction(instructionPointer);
                 if (instruction.Opcode == Opcodes.Halt)
                     return Memory;
-                address = ExecuteInstruction(instruction, address);
+                instructionPointer = ExecuteInstruction(instruction, instructionPointer);
             }
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
-        private int ExecuteInstruction(IInstruction instruction, int address)
+        private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
         {
-            var operand1 = Memory[Memory[address + 1]];
-            var operand2 = Memory[Memory[address + 2]];
-            var instructionValue = instruction.ExecuteInstruction(operand1, operand2);
-            var destinationAddress = Memory[address + 3];
+            var parameter1 = Memory[Memory[instructionPointer + 1]];
+            var parameter2 = Memory[Memory[instructionPointer + 2]];
+            var instructionValue = instruction.ExecuteInstruction(parameter1, parameter2);
+            var destinationAddress = Memory[instructionPointer + 3];
             Memory[destinationAddress] = instructionValue;
-            return address + instruction.Length;
+            return instructionPointer + instruction.Length;
         }
 
-        private IInstruction GetNextInstruction(int opcodeAddress)
+        private IInstruction GetNextInstruction(int instructionPointer)
         {
-            Opcodes opcode = (Opcodes)Memory[opcodeAddress];
+            Opcodes opcode = (Opcodes)Memory[instructionPointer];
             IInstruction returnValue;
             switch (opcode)
             {
@@ -54,7 +54,7 @@ namespace Aoc.Domain.Compute
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
             }
 
-            if (Memory.Length < opcodeAddress + returnValue.Length)
+            if (Memory.Length < instructionPointer + returnValue.Length)
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return returnValue;
         }

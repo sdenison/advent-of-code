@@ -4,6 +4,6 @@
     {
         Opcodes Opcode { get; }
         int Length { get; }
-        int ExecuteInstruction(int operand1, int operand2);
+        int ExecuteInstruction(int parameter1, int parameter2);
     }
 }

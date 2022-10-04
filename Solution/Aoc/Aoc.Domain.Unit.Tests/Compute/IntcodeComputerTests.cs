@@ -14,7 +14,7 @@ public class IntcodeComputerTests
     }
 
     [Test]
-    public void Halt_code_needed_at_end()
+    public void Incomplete_instruction_should_throw_excpetion()
     {
         var program = new[] {1, 2, 3, 2, 1, 99}; 
         var computer = new IntcodeComputer();
