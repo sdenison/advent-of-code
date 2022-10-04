@@ -1,8 +1,5 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Sockets;
-using Aoc.Domain.Compute.Instructions;
+using Aoc.Domain.Compute.Instructions; 
 
 namespace Aoc.Domain.Compute
 {
@@ -26,7 +23,7 @@ namespace Aoc.Domain.Compute
         }
 
         private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
-        {
+        { 
             var parameter1 = Memory[Memory[instructionPointer + 1]];
             var parameter2 = Memory[Memory[instructionPointer + 2]];
             var instructionValue = instruction.ExecuteInstruction(parameter1, parameter2);
@@ -58,6 +55,5 @@ namespace Aoc.Domain.Compute
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return returnValue;
         }
-
     }
 }
