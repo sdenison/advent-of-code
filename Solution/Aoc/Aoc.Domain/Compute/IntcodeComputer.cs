@@ -56,7 +56,10 @@ namespace Aoc.Domain.Compute
 
         private IInstruction GetNextInstruction(int instructionPointer)
         {
-            Opcodes opcode = (Opcodes)Memory[instructionPointer];
+            var rawOpcode = Memory[instructionPointer];
+            var opcodeInt = rawOpcode % 100;
+            
+            Opcodes opcode = (Opcodes) opcodeInt;
             IInstruction instruction;
             switch (opcode)
             {
