@@ -34,10 +34,10 @@ namespace Aoc.Domain.Compute
 
         private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
         {
+            int parameter1;
             switch (instruction)
             {
                 case IMathInstruction mathInstruction:
-                    int parameter1;
                     if (mathInstruction.PassByReferenceParameter1)
                         parameter1 = Memory[Memory[instructionPointer + 1]];
                     else
@@ -53,6 +53,16 @@ namespace Aoc.Domain.Compute
                     break;
                 case IOperateOnInputInstruction inputInstruction:
                 {
+                    if (inputInstruction is Display)
+                        parameter1 = Memory[Memory[instructionPointer + 1]];
+                    if (inputInstruction is Put)
+                    {
+                        var put = (Put) inputInstruction;
+                        if (put.PassByReferenceParameter1)
+                            parameter1 = Memory[Memory[instructionPointer + 1]];
+                        else
+                            parameter1 = Memory[instructionPointer + 1];
+                    }
                     var operationInstruction = inputInstruction;
                     operationInstruction.Input = 9999;
                     operationInstruction.DoOperation();
@@ -82,7 +92,7 @@ namespace Aoc.Domain.Compute
                     instruction = new Multiply(passByRefParameter1, passByRefParameter2);
                     break;
                 case Opcodes.Put:
-                    instruction = new Put();
+                    instruction = new Put(passByRefParameter1);
                     break;
                 case Opcodes.Display:
                     instruction = new Display();
