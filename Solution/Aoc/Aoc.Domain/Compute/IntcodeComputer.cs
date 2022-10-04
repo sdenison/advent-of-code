@@ -33,12 +33,16 @@ namespace Aoc.Domain.Compute
         }
 
         private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
-        { 
-            var parameter1 = Memory[Memory[instructionPointer + 1]];
-            var parameter2 = Memory[Memory[instructionPointer + 2]];
-            var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
-            var destinationAddress = Memory[instructionPointer + 3];
-            Memory[destinationAddress] = instructionValue;
+        {
+            if (instruction is IMathInstruction)
+            {
+                var mathInstruction = (IMathInstruction) instruction;
+                var parameter1 = Memory[Memory[instructionPointer + 1]];
+                var parameter2 = Memory[Memory[instructionPointer + 2]];
+                var instructionValue = mathInstruction.ExecuteOperation(parameter1, parameter2);
+                var destinationAddress = Memory[instructionPointer + 3];
+                Memory[destinationAddress] = instructionValue;
+            }
             return instructionPointer + instruction.Length;
         }
 
@@ -56,6 +60,12 @@ namespace Aoc.Domain.Compute
                     break;
                 case Opcodes.Multiply:
                     instruction = new Multiply();
+                    break;
+                case Opcodes.Put:
+                    instruction = new Put();
+                    break;
+                case Opcodes.Display:
+                    instruction = new Put();
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
