@@ -136,6 +136,17 @@ public class IntcodeComputerTests
         Assert.AreEqual(expectedComputedOutput, computedOutput);
     }
 
+    [Test]
+    public void Can_use_negative_numbers()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] {1101, 100, -1, 4, 0};
+        var expectedComputedOutput = new[] {1101, 100, -1, 4, 99};
+        var computedOutput = computer.RunProgram(program);
+
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
+
     //Edge cases
 
     [Test]

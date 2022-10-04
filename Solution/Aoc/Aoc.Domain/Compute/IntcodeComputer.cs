@@ -6,9 +6,11 @@ namespace Aoc.Domain.Compute
     public class IntcodeComputer
     {
         private int[] Memory = Array.Empty<int>();
+        private int Input = 0;
 
-        public int[] RunProgram(int[] program)
+        public int[] RunProgram(int[] program, int input = 0)
         {
+            Input = input;
             CreateWorkingMemory(program);
 
             //Main computer logic
@@ -54,7 +56,10 @@ namespace Aoc.Domain.Compute
                 case IOperateOnInputInstruction inputInstruction:
                 {
                     if (inputInstruction is Display)
+                    {
                         parameter1 = Memory[Memory[instructionPointer + 1]];
+                        Console.WriteLine(parameter1);
+                    }
                     if (inputInstruction is Put)
                     {
                         var put = (Put) inputInstruction;
@@ -62,10 +67,8 @@ namespace Aoc.Domain.Compute
                             parameter1 = Memory[Memory[instructionPointer + 1]];
                         else
                             parameter1 = Memory[instructionPointer + 1];
+                        Memory[parameter1] = Input;
                     }
-                    var operationInstruction = inputInstruction;
-                    operationInstruction.Input = 9999;
-                    operationInstruction.DoOperation();
                     break;
                 }
             }
