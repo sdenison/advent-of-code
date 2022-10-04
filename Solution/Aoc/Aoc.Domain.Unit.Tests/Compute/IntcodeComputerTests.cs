@@ -25,9 +25,20 @@ public class IntcodeComputerTests
     }
 
     [Test]
+    public void Invliad_opcode_throws_exception()
+    {
+        var program = new[] {1, 2, 3, 3, 88}; 
+        var computer = new IntcodeComputer();
+        Assert.Throws<InvalidIntcodeProgram>(() =>
+        {
+            var computedOutput = computer.RunProgram(program);
+        });
+    }
+
+    [Test]
     public void Halt_code_needed_at_end()
     {
-        var program = new[] {1, 2, 3, 2, 88}; 
+        var program = new[] {1, 2, 3, 2}; 
         var computer = new IntcodeComputer();
         Assert.Throws<InvalidIntcodeProgram>(() =>
         {
