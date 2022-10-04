@@ -1,4 +1,8 @@
 ﻿using System;
+using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Sockets;
+using Aoc.Domain.Compute.Instructions;
 
 namespace Aoc.Domain.Compute
 {
@@ -10,40 +14,47 @@ namespace Aoc.Domain.Compute
         {
             Array.Resize(ref Memory, program.Length);
             program.CopyTo(Memory, 0);
-
             var address = 0;
-            while (Memory[address] != 99)
+            while (address < Memory.Length)
             {
-                address = RunCommand(address);
+                var instruction = GetNextInstruction(address);
+                if (instruction.Opcode == Opcodes.Halt)
+                    return Memory;
+                address = ExecuteInstruction(instruction, address);
             }
             return Memory;
         }
 
-        private int RunCommand(int opcodeAddress)
+        private int ExecuteInstruction(IInstruction instruction, int address)
         {
-            var opcode = Memory[opcodeAddress];
-            if (opcode == 1)
-            {
-                //This is an add command
-                //The next two items in the list will be the pointers to the values to add.
-                var operand1 = Memory[Memory[opcodeAddress + 1]];
-                var operand2 = Memory[Memory[opcodeAddress + 2]];
-                var destinationAddress = Memory[opcodeAddress + 3];
-                Memory[destinationAddress] = operand1 + operand2;
-                return opcodeAddress + 4;
-            }
-            else if (opcode == 2)
-            {
-                //This is an multiply command
-                //The next two items in the list will be the pointers to the values to add.
-                var operand1 = Memory[Memory[opcodeAddress + 1]];
-                var operand2 = Memory[Memory[opcodeAddress + 2]];
-                var destinationAddress = Memory[opcodeAddress + 3];
-                Memory[destinationAddress] = operand1 * operand2;
-                return opcodeAddress + 4;
-            }
-
-            throw new InvalidIntcodeProgram("Unknown operator");
+            var operand1 = Memory[Memory[address + 1]];
+            var operand2 = Memory[Memory[address + 2]];
+            var instructionValue = instruction.ExecuteInstruction(operand1, operand2);
+            var destinationAddress = Memory[address + 3];
+            Memory[destinationAddress] = instructionValue;
+            return address + instruction.Length;
         }
+
+        private IInstruction GetNextInstruction(int opcodeAddress)
+        {
+            Opcodes opcode = (Opcodes)Memory[opcodeAddress];
+            IInstruction returnValue;
+            switch (opcode)
+            {
+                case Opcodes.Halt:
+                    returnValue = new Halt();
+                    break;
+                case Opcodes.Add:
+                    returnValue = new Add();
+                    break;
+                case Opcodes.Multiply:
+                    returnValue = new Multiply();
+                    break;
+                default:
+                    throw new InvalidProgramException($"Opcode {opcode} unknown");
+            }
+            return returnValue;
+        }
+
     }
 }
