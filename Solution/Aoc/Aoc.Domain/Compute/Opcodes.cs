@@ -1,4 +1,4 @@
-﻿namespace Aoc.Domain.Compute.Instructions
+﻿namespace Aoc.Domain.Compute
 {
     public enum Opcodes
     {
