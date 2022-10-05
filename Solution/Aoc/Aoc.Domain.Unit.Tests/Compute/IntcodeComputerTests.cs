@@ -149,23 +149,14 @@ public class IntcodeComputerTests
     }
 
     [Test]
-    public void Playiny_around()
-    {
-        var rawOpcode = 1002;
-        var hundreds = (rawOpcode /= 100) % 10;
-        Assert.AreEqual(0, hundreds);
-        var x = !Convert.ToBoolean(hundreds);
-        Assert.IsTrue(x);
-    }
-
-    [Test]
     public void Get_day5_step1_answer()
     {
         var computer = new IntcodeComputer();
-        var program = GetDay2Step1Data();
+        var program = GetDay2Data();
         var computedOutput = computer.RunProgram(program, 1);
         var output = computer.Output;
-        Assert.AreEqual(13933662.ToString(), output[9]);
+
+        Assert.AreEqual(13933662, output[9]);
     }
 
     //Edge cases
@@ -214,7 +205,9 @@ public class IntcodeComputerTests
         });
     }
 
-    private int[] GetDay2Step1Data()
+    //Data generation
+
+    private int[] GetDay2Data()
     {
         return new[]
         {
