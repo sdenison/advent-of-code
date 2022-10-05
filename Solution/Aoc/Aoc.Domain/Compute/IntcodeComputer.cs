@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aoc.Domain.Compute.Instructions;
 
 namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
+        public List<string> Output { get; set;  }
+
         private int[] Memory = Array.Empty<int>();
         private int Input = 0;
+
+        public IntcodeComputer()
+        {
+            this.Output = new List<string>();
+        }
 
         public int[] RunProgram(int[] program, int input = 0)
         {
@@ -58,19 +66,19 @@ namespace Aoc.Domain.Compute
                     if (inputInstruction is Display)
                     {
                         parameter1 = Memory[Memory[instructionPointer + 1]];
-                        Console.WriteLine(parameter1);
+                        Output.Add(parameter1.ToString());
                     }
-                    if (inputInstruction is Put)
+                    else if (inputInstruction is Put)
                     {
                         var put = (Put) inputInstruction;
                         if (put.PassByReferenceParameter1)
-                            parameter1 = Memory[Memory[instructionPointer + 1]];
+                            Memory[Memory[instructionPointer + 1]] = Input;
                         else
-                            parameter1 = Memory[instructionPointer + 1];
-                        Memory[parameter1] = Input;
+                            Memory[instructionPointer + 1] = Input;
                     }
                     break;
                 }
+                default: throw new InvalidIntcodeProgram("this shouldn't happen");
             }
             return instructionPointer + instruction.Length;
         }
