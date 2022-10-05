@@ -114,16 +114,17 @@ public class IntcodeComputerTests
         Assert.AreEqual(6635, solutionValue);
     }
 
-    //[Test]
-    //public void Can_use_new_Display_and_Put_instructions()
-    //{
-    //    var computer = new IntcodeComputer();
-    //    var program = new[] {3, 0, 4, 0, 99};
-    //    var expectedComputedOutput = new[] {3, 0, 4, 55, 99};
-    //    var computedOutput = computer.RunProgram(program, 55);
+    [Test]
+    public void Can_use_new_Display_and_Put_instructions()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] { 3, 0, 4, 0, 99 };
+        var expectedComputedOutput = new[] { 55, 0, 4, 0, 99 };
+        var computedOutput = computer.RunProgram(program, 55);
+        var output = computer.Output;
 
-    //    Assert.AreEqual(expectedComputedOutput, computedOutput);
-    //}
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
 
     [Test]
     public void Can_use_parameter_modes()
@@ -147,7 +148,6 @@ public class IntcodeComputerTests
         Assert.AreEqual(expectedComputedOutput, computedOutput);
     }
 
-
     [Test]
     public void Playiny_around()
     {
@@ -156,40 +156,6 @@ public class IntcodeComputerTests
         Assert.AreEqual(0, hundreds);
         var x = !Convert.ToBoolean(hundreds);
         Assert.IsTrue(x);
-    }
-
-    [Test]
-    public void Playiny_around2()
-    {
-        var rawOpcode = 1002;
-        var thousands = (rawOpcode /= 1000) % 10;
-        //var t = rawOpcode / 1000;
-        Assert.AreEqual(1, thousands);
-        var y = !Convert.ToBoolean(thousands);
-        Assert.IsFalse(y);
-
-    }
-
-    [Test]
-    public void Can_insert_input()
-    {
-        var computer = new IntcodeComputer();
-        var program = new[] { 103, 0, 99 };
-        var expectedComputedOutput = new[] { 5, 0, 99 };
-        var computedOutput = computer.RunProgram(program, 5);
-
-        Assert.AreEqual(expectedComputedOutput, computedOutput);
-    }
-
-    [Test]
-    public void Can_insert_input2()
-    {
-        var computer = new IntcodeComputer();
-        var program = new[] { 3, 1, 99, 99, 99 };
-        var expectedComputedOutput = new[] { 5, 0, 99 };
-        var computedOutput = computer.RunProgram(program, 5);
-
-        Assert.AreEqual(expectedComputedOutput, computedOutput);
     }
 
     [Test]
