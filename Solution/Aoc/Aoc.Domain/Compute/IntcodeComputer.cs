@@ -7,28 +7,25 @@ namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
-        public List<int> Output { get; set;  }
-        private int[] Memory = Array.Empty<int>();
-        private int? Input = 0;
-        private int InstructionPointer;
+        private int[]? _memory;
+        private int? _input = 0;
+        private int _instructionPointer;
 
-        public IntcodeComputer()
-        {
-            Output = new List<int>();
-        }
+
+        public List<int>? Output { get; set;  }
 
         public int[] RunProgram(int[] program, int? input = null)
         {
             Initialize(program, input);
 
             //Main computer logic
-            InstructionPointer = 0;
-            while (InstructionPointer < Memory.Length)
+            _instructionPointer = 0;
+            while (_instructionPointer < _memory.Length)
             {
                 var instruction = GetNextInstruction();
                 if (instruction is Halt)
-                    return Memory;
-                InstructionPointer = ExecuteInstruction(instruction);
+                    return _memory;
+                _instructionPointer = ExecuteInstruction(instruction);
             }
 
             //We should always see a halt operation at the end of the program
@@ -37,7 +34,7 @@ namespace Aoc.Domain.Compute
 
         private IInstruction GetNextInstruction()
         {
-            var rawOpcode = Memory[InstructionPointer];
+            var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
             IInstruction instruction;
             switch (opcode)
@@ -60,7 +57,7 @@ namespace Aoc.Domain.Compute
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
             }
-            if (Memory.Length < InstructionPointer + instruction.Length)
+            if (_memory.Length < _instructionPointer + instruction.Length)
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
         }
@@ -81,7 +78,7 @@ namespace Aoc.Domain.Compute
                 default: 
                     throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
             }
-            return InstructionPointer + instruction.Length;
+            return _instructionPointer + instruction.Length;
         }
 
         private void ExecuteInstruction(MathInstruction instruction)
@@ -89,41 +86,42 @@ namespace Aoc.Domain.Compute
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
             var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
-            var destinationAddress = Memory[InstructionPointer + 3];
-            Memory[destinationAddress] = instructionValue;
+            var destinationAddress = _memory[_instructionPointer + 3];
+            _memory[destinationAddress] = instructionValue;
         }
 
         private void ExecuteInstruction(Display instruction)
         {
-            Output.Add(Memory[Memory[InstructionPointer + 1]]);
+            Output.Add(_memory[_memory[_instructionPointer + 1]]);
         }
 
         private void ExecuteInstruction(Put instruction)
         {
-            if (!Input.HasValue)
+            if (!_input.HasValue)
                 throw new InvalidIntcodeProgram("This program expects input from user and none was given");
             if (instruction.ParameterModes[0] == ParameterMode.Immediate)
-                Memory[InstructionPointer + 1] = Input.Value;
+                _memory[_instructionPointer + 1] = _input.Value;
             else
-                Memory[Memory[InstructionPointer + 1]] = Input.Value;
+                _memory[_memory[_instructionPointer + 1]] = _input.Value;
         }
 
         private int GetParameterValue(IInstruction instruction, int parameterPosition)
         {
             if (instruction.ParameterModes[parameterPosition - 1] == ParameterMode.Immediate)
-                    return Memory[InstructionPointer + parameterPosition];
-            return Memory[Memory[InstructionPointer + parameterPosition]];
+                    return _memory[_instructionPointer + parameterPosition];
+            return _memory[_memory[_instructionPointer + parameterPosition]];
         }
 
         private void Initialize(int[] program, int? input)
         {
             //Make sure we don't use input from previous runs
-            Input = input;
+            _input = input;
             //Make sure we don't have output from previous program runs
-            Output.Clear();
+            Output = new List<int>();
             //Don't surprise the user and make changes to the incoming program
-            Array.Resize(ref Memory, program.Length);
-            program.CopyTo(Memory, 0);
+            _memory = Array.Empty<int>();
+            Array.Resize(ref _memory, program.Length);
+            program.CopyTo(_memory, 0);
         }
     }
 }
