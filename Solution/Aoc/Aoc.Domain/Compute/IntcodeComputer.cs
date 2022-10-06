@@ -36,7 +36,7 @@ namespace Aoc.Domain.Compute
         {
             var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
-            IInstruction instruction;
+            IInstruction instruction = null;
             switch (opcode)
             {
                 case Opcodes.Halt:
@@ -53,6 +53,18 @@ namespace Aoc.Domain.Compute
                     break;
                 case Opcodes.Display:
                     instruction = new Display();
+                    break;
+                case Opcodes.JumpIfTrue:
+                    instruction = new JumpIfTrue(rawOpcode);
+                    break;
+                case Opcodes.JumpIfFalse:
+                    instruction = new JumpIfFalse(rawOpcode);
+                    break;
+                case Opcodes.LessThan:
+                    instruction = new LessThan(rawOpcode);
+                    break;
+                case Opcodes.Equals:
+                    instruction = new Equals(rawOpcode);
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
