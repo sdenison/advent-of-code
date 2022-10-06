@@ -9,9 +9,10 @@ namespace Aoc.Domain.Compute
         int Length { get; }
         List<ParameterMode> ParameterModes { get; }
 
-        static ParameterMode GetParameterMode(int opcode, int digit)
+        static ParameterMode GetParameterMode(int opcode, int positionIndex)
         {
-            return (ParameterMode) (((opcode / (int) Math.Pow(10, digit))) % 10);
+            //Assume zero based index so if we want the hundreds column then positionIndex would be 2
+            return (ParameterMode) (((opcode / (int) Math.Pow(10, positionIndex))) % 10);
         }
     }
 }

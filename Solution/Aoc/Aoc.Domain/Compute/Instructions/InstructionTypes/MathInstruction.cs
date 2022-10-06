@@ -12,8 +12,8 @@ namespace Aoc.Domain.Compute.Instructions.InstructionTypes
         protected MathInstruction(int opcode)
         {
             ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add((ParameterMode) IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add((ParameterMode) IInstruction.GetParameterMode(opcode, 3));
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
     }
 }
