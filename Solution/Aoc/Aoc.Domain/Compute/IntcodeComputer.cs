@@ -19,8 +19,7 @@ namespace Aoc.Domain.Compute
 
         public int[] RunProgram(int[] program, int? input = null)
         {
-            Input = input;
-            CreateWorkingMemory(program);
+            Initialize(program, input);
 
             //Main computer logic
             InstructionPointer = 0;
@@ -116,8 +115,12 @@ namespace Aoc.Domain.Compute
             return Memory[Memory[InstructionPointer + parameterPosition]];
         }
 
-        private void CreateWorkingMemory(int[] program)
+        private void Initialize(int[] program, int? input)
         {
+            //Make sure we don't use input from previous runs
+            Input = input;
+            //Make sure we don't have output from previous program runs
+            Output.Clear();
             //Don't surprise the user and make changes to the incoming program
             Array.Resize(ref Memory, program.Length);
             program.CopyTo(Memory, 0);
