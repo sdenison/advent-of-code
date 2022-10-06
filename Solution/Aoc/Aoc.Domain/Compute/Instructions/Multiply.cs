@@ -1,9 +1,14 @@
-﻿namespace Aoc.Domain.Compute.Instructions
+﻿using Aoc.Domain.Compute.Instructions.InstructionTypes;
+
+namespace Aoc.Domain.Compute.Instructions
 {
-    public class Multiply : IInstruction
+    public class Multiply : MathInstruction
     {
-        public int Length => 4;
-        public int ExecuteOperation(int parameter1, int parameter2)
+        public Multiply(int opcode) : base(opcode)
+        {
+        }
+
+        public override int ExecuteOperation(int parameter1, int parameter2)
         {
             return parameter1 * parameter2;
         }

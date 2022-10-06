@@ -1,50 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aoc.Domain.Compute.Instructions;
+using Aoc.Domain.Compute.Instructions.InstructionTypes;
 
 namespace Aoc.Domain.Compute
 {
     public class IntcodeComputer
     {
-        private int[] Memory = Array.Empty<int>();
+        private int[]? _memory;
+        private int? _input = 0;
+        private int _instructionPointer;
 
-        public int[] RunProgram(int[] program)
+
+        public List<int>? Output { get; set;  }
+
+        public int[] RunProgram(int[] program, int? input = null)
         {
-            CreateWorkingMemory(program);
+            Initialize(program, input);
 
             //Main computer logic
-            var instructionPointer = 0;
-            while (instructionPointer < Memory.Length)
+            _instructionPointer = 0;
+            while (_instructionPointer < _memory.Length)
             {
-                var instruction = GetNextInstruction(instructionPointer);
+                var instruction = GetNextInstruction();
                 if (instruction is Halt)
-                    return Memory;
-                instructionPointer = ExecuteInstruction(instruction, instructionPointer);
+                    return _memory;
+                _instructionPointer = ExecuteInstruction(instruction);
             }
 
             //We should always see a halt operation at the end of the program
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
-        private void CreateWorkingMemory(int[] program)
+        private IInstruction GetNextInstruction()
         {
-            //Don't surprise the user and make changes to the incoming program
-            Array.Resize(ref Memory, program.Length);
-            program.CopyTo(Memory, 0);
-        }
-
-        private int ExecuteInstruction(IInstruction instruction, int instructionPointer)
-        { 
-            var parameter1 = Memory[Memory[instructionPointer + 1]];
-            var parameter2 = Memory[Memory[instructionPointer + 2]];
-            var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
-            var destinationAddress = Memory[instructionPointer + 3];
-            Memory[destinationAddress] = instructionValue;
-            return instructionPointer + instruction.Length;
-        }
-
-        private IInstruction GetNextInstruction(int instructionPointer)
-        {
-            Opcodes opcode = (Opcodes)Memory[instructionPointer];
+            var rawOpcode = _memory[_instructionPointer];
+            Opcodes opcode = (Opcodes) (rawOpcode % 100);
             IInstruction instruction;
             switch (opcode)
             {
@@ -52,17 +43,85 @@ namespace Aoc.Domain.Compute
                     instruction = new Halt();
                     break;
                 case Opcodes.Add:
-                    instruction = new Add();
+                    instruction = new Add(rawOpcode);
                     break;
                 case Opcodes.Multiply:
-                    instruction = new Multiply();
+                    instruction = new Multiply(rawOpcode);
+                    break;
+                case Opcodes.Put:
+                    instruction = new Put(rawOpcode);
+                    break;
+                case Opcodes.Display:
+                    instruction = new Display();
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
             }
-            if (Memory.Length < instructionPointer + instruction.Length)
+            if (_memory.Length < _instructionPointer + instruction.Length)
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
+        }
+
+        private int ExecuteInstruction(IInstruction instruction)
+        {
+            switch (instruction)
+            {
+                case MathInstruction mathInstruction:
+                    ExecuteInstruction(mathInstruction);
+                    break;
+                case Display displayInstruction:
+                    ExecuteInstruction(displayInstruction);
+                    break;
+                case Put putInstruction:
+                    ExecuteInstruction(putInstruction);
+                    break;
+                default: 
+                    throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
+            }
+            return _instructionPointer + instruction.Length;
+        }
+
+        private void ExecuteInstruction(MathInstruction instruction)
+        {
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
+            var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
+            var destinationAddress = _memory[_instructionPointer + 3];
+            _memory[destinationAddress] = instructionValue;
+        }
+
+        private void ExecuteInstruction(Display instruction)
+        {
+            Output.Add(_memory[_memory[_instructionPointer + 1]]);
+        }
+
+        private void ExecuteInstruction(Put instruction)
+        {
+            if (!_input.HasValue)
+                throw new InvalidIntcodeProgram("This program expects input from user and none was given");
+            if (instruction.ParameterModes[0] == ParameterMode.Immediate)
+                _memory[_instructionPointer + 1] = _input.Value;
+            else
+                _memory[_memory[_instructionPointer + 1]] = _input.Value;
+        }
+
+        private int GetParameterValue(IInstruction instruction, int parameterPosition)
+        {
+            if (instruction.ParameterModes[parameterPosition - 1] == ParameterMode.Immediate)
+                    return _memory[_instructionPointer + parameterPosition];
+            return _memory[_memory[_instructionPointer + parameterPosition]];
+        }
+
+        private void Initialize(int[] program, int? input)
+        {
+            //Make sure we don't use input from previous runs
+            _input = input;
+            //Make sure we don't have output from previous program runs
+            Output = new List<int>();
+            //Don't surprise the user and make changes to the incoming program
+            _memory = Array.Empty<int>();
+            Array.Resize(ref _memory, program.Length);
+            program.CopyTo(_memory, 0);
         }
     }
 }
