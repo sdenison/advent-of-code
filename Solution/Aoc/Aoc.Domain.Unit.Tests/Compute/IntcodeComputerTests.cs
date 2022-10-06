@@ -205,6 +205,17 @@ public class IntcodeComputerTests
         });
     }
 
+    [Test]
+    public void Running_a_program_that_expects_input_but_none_was_given_should_fail()
+    {
+        var program = new[] { 3, 0, 4, 0, 99 };
+        var computer = new IntcodeComputer();
+        Assert.Throws<InvalidIntcodeProgram>(() =>
+        {
+            var computedOutput = computer.RunProgram(program);
+        });
+    }
+
     //Data generation
 
     private int[] GetDay2Data()

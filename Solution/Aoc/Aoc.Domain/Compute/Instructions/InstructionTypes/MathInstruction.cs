@@ -7,10 +7,10 @@
         public bool PassByReferenceParameter2 { get; protected set; }
         public abstract int ExecuteOperation(int parameter1, int parameter2);
 
-        public MathInstruction(bool passByReferenceParameter1, bool passByReferenceParameter2)
+        protected MathInstruction(int opcode)
         {
-            PassByReferenceParameter1 = passByReferenceParameter1;
-            PassByReferenceParameter2 = passByReferenceParameter2;
+            PassByReferenceParameter1 = !IInstruction.GetBoolInDigit(opcode, 2);
+            PassByReferenceParameter2 = !IInstruction.GetBoolInDigit(opcode, 3);
         }
     }
 }

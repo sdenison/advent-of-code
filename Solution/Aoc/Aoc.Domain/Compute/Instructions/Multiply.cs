@@ -4,7 +4,7 @@ namespace Aoc.Domain.Compute.Instructions
 {
     public class Multiply : MathInstruction
     {
-        public Multiply(bool passByReferenceParameter1, bool passByReferenceParameter2) : base(passByReferenceParameter1, passByReferenceParameter2)
+        public Multiply(int opcode) : base(opcode)
         {
         }
 

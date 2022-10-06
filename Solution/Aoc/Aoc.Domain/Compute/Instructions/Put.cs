@@ -5,9 +5,9 @@
         public int Length => 2;
         public bool PassByReferenceParameter1 { get; }
 
-        public Put(bool passByReferenceParameter1)
+        public Put(int opcode)
         {
-            PassByReferenceParameter1 = passByReferenceParameter1;
+            PassByReferenceParameter1 = !IInstruction.GetBoolInDigit(opcode, 2);
         }
     }
 }

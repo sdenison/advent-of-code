@@ -4,7 +4,7 @@ namespace Aoc.Domain.Compute.Instructions
 {
     public class Add : MathInstruction 
     {
-        public Add(bool passByReferenceParameter1, bool passByReferenceParameter2) : base(passByReferenceParameter1, passByReferenceParameter2)
+        public Add(int opcode) : base(opcode)
         {
         }
 

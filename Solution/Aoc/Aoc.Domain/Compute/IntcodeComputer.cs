@@ -39,8 +39,6 @@ namespace Aoc.Domain.Compute
         private IInstruction GetNextInstruction()
         {
             var rawOpcode = Memory[InstructionPointer];
-            var passByRefParameter1 = GetPassByReferenceParameter1(rawOpcode);
-            var passByRefParameter2 = GetPassByReferenceParameter2(rawOpcode);
             
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
             IInstruction instruction;
@@ -50,13 +48,13 @@ namespace Aoc.Domain.Compute
                     instruction = new Halt();
                     break;
                 case Opcodes.Add:
-                    instruction = new Add(passByRefParameter1, passByRefParameter2);
+                    instruction = new Add(rawOpcode);
                     break;
                 case Opcodes.Multiply:
-                    instruction = new Multiply(passByRefParameter1, passByRefParameter2);
+                    instruction = new Multiply(rawOpcode);
                     break;
                 case Opcodes.Put:
-                    instruction = new Put(passByRefParameter1);
+                    instruction = new Put(rawOpcode);
                     break;
                 case Opcodes.Display:
                     instruction = new Display();
@@ -82,26 +80,45 @@ namespace Aoc.Domain.Compute
                 case Put putInstruction:
                     ExecuteInstruction(putInstruction);
                     break;
-                default: throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
+                default: 
+                    throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
             }
             return InstructionPointer + instruction.Length;
         }
 
         private void ExecuteInstruction(MathInstruction instruction)
         {
-            int parameter1;
-            if (instruction.PassByReferenceParameter1)
-                parameter1 = Memory[Memory[InstructionPointer + 1]];
-            else
-                parameter1 = Memory[InstructionPointer + 1];
-            int parameter2;
-            if (instruction.PassByReferenceParameter2)
-                parameter2 = Memory[Memory[InstructionPointer + 2]];
-            else
-                parameter2 = Memory[InstructionPointer + 2];
+            int parameter1 = GetValue(instruction, 1);
+            int parameter2 = GetValue(instruction, 2);
+
+            //if (instruction.PassByReferenceParameter1)
+            //    parameter1 = Memory[Memory[InstructionPointer + 1]];
+            //else
+            //    parameter1 = Memory[InstructionPointer + 1];
+            //int parameter2;
+            //if (instruction.PassByReferenceParameter2)
+            //    parameter2 = Memory[Memory[InstructionPointer + 2]];
+            //else
+            //    parameter2 = Memory[InstructionPointer + 2];
             var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
             var destinationAddress = Memory[InstructionPointer + 3];
             Memory[destinationAddress] = instructionValue;
+        }
+
+        private int GetValue(MathInstruction instruction, int parameterPosition)
+        {
+            if (parameterPosition == 1)
+                if (instruction.PassByReferenceParameter1)
+                    return Memory[Memory[InstructionPointer + parameterPosition]];
+                else
+                    return Memory[InstructionPointer + 1];
+            else
+            {
+                if (instruction.PassByReferenceParameter2)
+                    return Memory[Memory[InstructionPointer + parameterPosition]];
+                else
+                    return Memory[InstructionPointer + 2];
+            }
         }
 
         private void ExecuteInstruction(Display instruction)
@@ -138,7 +155,7 @@ namespace Aoc.Domain.Compute
 
         private bool GetBoolInDigit(int opcode, int digit)
         {
-            return Convert.ToBoolean(((opcode /= (int) Math.Pow(10, digit))) % 10);
+            return Convert.ToBoolean(((opcode / (int) Math.Pow(10, digit))) % 10);
         }
     }
 }
