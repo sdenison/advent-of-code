@@ -39,7 +39,6 @@ namespace Aoc.Domain.Compute
         private IInstruction GetNextInstruction()
         {
             var rawOpcode = Memory[InstructionPointer];
-            
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
             IInstruction instruction;
             switch (opcode)
@@ -88,37 +87,11 @@ namespace Aoc.Domain.Compute
 
         private void ExecuteInstruction(MathInstruction instruction)
         {
-            int parameter1 = GetValue(instruction, 1);
-            int parameter2 = GetValue(instruction, 2);
-
-            //if (instruction.PassByReferenceParameter1)
-            //    parameter1 = Memory[Memory[InstructionPointer + 1]];
-            //else
-            //    parameter1 = Memory[InstructionPointer + 1];
-            //int parameter2;
-            //if (instruction.PassByReferenceParameter2)
-            //    parameter2 = Memory[Memory[InstructionPointer + 2]];
-            //else
-            //    parameter2 = Memory[InstructionPointer + 2];
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
             var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
             var destinationAddress = Memory[InstructionPointer + 3];
             Memory[destinationAddress] = instructionValue;
-        }
-
-        private int GetValue(MathInstruction instruction, int parameterPosition)
-        {
-            if (parameterPosition == 1)
-                if (instruction.PassByReferenceParameter1)
-                    return Memory[Memory[InstructionPointer + parameterPosition]];
-                else
-                    return Memory[InstructionPointer + 1];
-            else
-            {
-                if (instruction.PassByReferenceParameter2)
-                    return Memory[Memory[InstructionPointer + parameterPosition]];
-                else
-                    return Memory[InstructionPointer + 2];
-            }
         }
 
         private void ExecuteInstruction(Display instruction)
@@ -130,10 +103,17 @@ namespace Aoc.Domain.Compute
         {
             if (!Input.HasValue)
                 throw new InvalidIntcodeProgram("This program expects input from user and none was given");
-            if (instruction.PassByReferenceParameter1)
-                Memory[Memory[InstructionPointer + 1]] = Input.Value;
-            else
+            if (instruction.ParameterModes[0] == ParameterMode.Immediate)
                 Memory[InstructionPointer + 1] = Input.Value;
+            else
+                Memory[Memory[InstructionPointer + 1]] = Input.Value;
+        }
+
+        private int GetParameterValue(IInstruction instruction, int parameterPosition)
+        {
+            if (instruction.ParameterModes[parameterPosition - 1] == ParameterMode.Immediate)
+                    return Memory[InstructionPointer + parameterPosition];
+            return Memory[Memory[InstructionPointer + parameterPosition]];
         }
 
         private void CreateWorkingMemory(int[] program)
@@ -141,21 +121,6 @@ namespace Aoc.Domain.Compute
             //Don't surprise the user and make changes to the incoming program
             Array.Resize(ref Memory, program.Length);
             program.CopyTo(Memory, 0);
-        }
-
-        private bool GetPassByReferenceParameter1(int opcode)
-        {
-            return !GetBoolInDigit(opcode, 2);
-        }
-
-        private bool GetPassByReferenceParameter2(int opcode)
-        {
-            return !GetBoolInDigit(opcode, 3);
-        }
-
-        private bool GetBoolInDigit(int opcode, int digit)
-        {
-            return Convert.ToBoolean(((opcode / (int) Math.Pow(10, digit))) % 10);
         }
     }
 }

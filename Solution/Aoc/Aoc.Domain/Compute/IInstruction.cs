@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using Aoc.Domain.Compute.Instructions;
 
 namespace Aoc.Domain.Compute
 {
     public interface IInstruction
     {
         int Length { get; }
+        List<ParameterMode> ParameterModes { get; }
 
-        static bool GetBoolInDigit(int opcode, int digit)
+        static ParameterMode GetParameterMode(int opcode, int digit)
         {
-            return Convert.ToBoolean(((opcode / (int) Math.Pow(10, digit))) % 10);
+            return (ParameterMode) (((opcode / (int) Math.Pow(10, digit))) % 10);
         }
     }
 }

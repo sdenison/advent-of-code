@@ -1,13 +1,16 @@
-﻿namespace Aoc.Domain.Compute.Instructions
+﻿using System.Collections.Generic;
+
+namespace Aoc.Domain.Compute.Instructions
 {
     public class Put : IInstruction
     {
         public int Length => 2;
-        public bool PassByReferenceParameter1 { get; }
+        public List<ParameterMode> ParameterModes { get; }
 
         public Put(int opcode)
         {
-            PassByReferenceParameter1 = !IInstruction.GetBoolInDigit(opcode, 2);
+            ParameterModes = new List<ParameterMode>();
+            ParameterModes.Add((ParameterMode) IInstruction.GetParameterMode(opcode, 2));
         }
     }
 }
