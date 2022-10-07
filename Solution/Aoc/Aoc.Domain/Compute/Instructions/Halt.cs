@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions
+﻿namespace Aoc.Domain.Compute.Instructions
 {
-    public class Halt : IInstruction
+    public class Halt : Instruction
     {
-        public int Length => 1;
-        public List<ParameterMode> ParameterModes => throw new System.NotImplementedException();
+        public override int Length => 1;
     }
 }

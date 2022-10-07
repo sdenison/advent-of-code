@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions.InstructionTypes
+﻿namespace Aoc.Domain.Compute.Instructions.InstructionTypes
 {
-    internal abstract class Jump : IInstruction
+    internal abstract class Jump : Instruction
     {
-        public int Length => 3;
-        public List<ParameterMode> ParameterModes { get; }
-
-        internal Jump(int opcode)
+        public override int Length => 3;
+        
+        internal Jump(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
 
         public abstract bool ShouldJump(int parameter);

@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions.InstructionTypes
+﻿namespace Aoc.Domain.Compute.Instructions.InstructionTypes
 {
-    internal abstract class Compare : IInstruction
+    internal abstract class Compare : Instruction
     {
-        public int Length => 4;
-        public List<ParameterMode> ParameterModes { get; }
+        public override int Length => 4;
 
-        internal Compare(int opcode)
+        internal Compare(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
 
         internal abstract bool DoComparison(int parameter1, int parameter2);

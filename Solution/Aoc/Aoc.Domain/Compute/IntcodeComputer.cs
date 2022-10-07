@@ -35,7 +35,7 @@ namespace Aoc.Domain.Compute
         {
             var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
-            IInstruction instruction = null;
+            Instruction instruction = null;
             switch (opcode)
             {
                 case Opcodes.Halt:

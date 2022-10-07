@@ -2,15 +2,15 @@
 
 namespace Aoc.Domain.Compute.Instructions
 {
-    public class Put : IInstruction
+    public class Put : Instruction
     {
-        public int Length => 2;
+        public override int Length => 2;
         public List<ParameterMode> ParameterModes { get; }
 
         public Put(int opcode)
         {
             ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
+            ParameterModes.Add(GetParameterMode(opcode, 2));
         }
     }
 }

@@ -1,19 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions.InstructionTypes
+﻿namespace Aoc.Domain.Compute.Instructions.InstructionTypes
 {
-    public abstract class Math : IInstruction
+    public abstract class Math : Instruction
     {
-        public int Length => 4;
-        public List<ParameterMode> ParameterModes { get; }
+        public override int Length => 4;
 
         public abstract int ExecuteOperation(int parameter1, int parameter2);
 
-        protected Math(int opcode)
+        protected Math(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
     }
 }
