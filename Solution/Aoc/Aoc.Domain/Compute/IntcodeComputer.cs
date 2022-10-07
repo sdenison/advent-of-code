@@ -11,8 +11,6 @@ namespace Aoc.Domain.Compute
         private int[]? _memory;
         private int? _input = 0;
         private int _instructionPointer;
-
-
         public List<int>? Output { get; set;  }
 
         public int[] RunProgram(int[] program, int? input = null)
@@ -88,8 +86,8 @@ namespace Aoc.Domain.Compute
                 case Put putInstruction:
                     ExecuteInstruction(putInstruction);
                     break;
-                case Jump jumpIfTrueInstruction:
-                    return ExecuteInstruction(jumpIfTrueInstruction);
+                case Jump jumpInstruction:
+                    return ExecuteInstruction(jumpInstruction);
                 case Compare compareInstruction:
                     ExecuteInstruction(compareInstruction);
                     break;
