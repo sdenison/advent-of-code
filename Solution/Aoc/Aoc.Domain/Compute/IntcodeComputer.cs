@@ -128,7 +128,8 @@ namespace Aoc.Domain.Compute
             var destinationAddress = _memory[_instructionPointer + 3];
             if (parameter1 < parameter2)
                 _memory[destinationAddress] = 1;
-            _memory[destinationAddress] = 0;
+            else
+                _memory[destinationAddress] = 0;
         }
 
         private void ExecuteInstruction(Equals instruction)
@@ -138,7 +139,8 @@ namespace Aoc.Domain.Compute
             var destinationAddress = _memory[_instructionPointer + 3];
             if (parameter1 == parameter2)
                 _memory[destinationAddress] = 1;
-            _memory[destinationAddress] = 0;
+            else
+                _memory[destinationAddress] = 0;
         }
 
         private void ExecuteInstruction(MathInstruction instruction)
