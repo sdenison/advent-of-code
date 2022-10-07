@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Aoc.Domain.Compute.Instructions.InstructionTypes;
 
 namespace Aoc.Domain.Compute.Instructions
 {
-    internal class JumpIfFalse : IInstruction
+    internal class JumpIfFalse : Jump
     {
-        public int Length => 3;
-        public List<ParameterMode> ParameterModes { get; }
-
-        internal JumpIfFalse(int opcode)
+        public JumpIfFalse(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
+        }
+
+        public override bool ShouldJump(int parameter)
+        {
+            return parameter == 0;
         }
     }
 }

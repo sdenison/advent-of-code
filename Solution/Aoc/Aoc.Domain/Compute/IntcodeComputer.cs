@@ -88,10 +88,8 @@ namespace Aoc.Domain.Compute
                 case Put putInstruction:
                     ExecuteInstruction(putInstruction);
                     break;
-                case JumpIfTrue jumpIfTrueInstruction:
+                case Jump jumpIfTrueInstruction:
                     return ExecuteInstruction(jumpIfTrueInstruction);
-                case JumpIfFalse jumpIfFalseInstruction:
-                    return ExecuteInstruction(jumpIfFalseInstruction);
                 case LessThan lessThanInstruction:
                     ExecuteInstruction(lessThanInstruction);
                     break;
@@ -104,20 +102,11 @@ namespace Aoc.Domain.Compute
             return _instructionPointer + instruction.Length;
         }
 
-        private int ExecuteInstruction(JumpIfTrue instruction)
+        private int ExecuteInstruction(Jump instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
-            if (parameter1 > 0)
-                return parameter2;
-            return _instructionPointer + instruction.Length;
-        }
-
-        private int ExecuteInstruction(JumpIfFalse instruction)
-        {
-            int parameter1 = GetParameterValue(instruction, 1);
-            int parameter2 = GetParameterValue(instruction, 2);
-            if (parameter1 == 0)
+            if (instruction.ShouldJump(parameter1))
                 return parameter2;
             return _instructionPointer + instruction.Length;
         }
