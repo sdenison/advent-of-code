@@ -159,6 +159,52 @@ public class IntcodeComputerTests
         Assert.AreEqual(13933662, output[9]);
     }
 
+    [Test]
+    [TestCase(new int[] { 3,9,8,9,10,9,4,9,99,-1,8 })]
+    [TestCase(new int[] { 3,3,1108,-1,8,3,4,3,99 })]
+    public void Can_pass_jump_test_is_input_equal_to_8(int[] program)
+    {
+        //var program = new[] {3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8};
+        var computer = new IntcodeComputer();
+        //Input is 8 so output should be 0
+        var computedOutput = computer.RunProgram(program, 8);
+        Assert.AreEqual(1, computer.Output[0]);
+        //Input is greater than 8 so output should be 0
+        computedOutput = computer.RunProgram(program, 10);
+        Assert.AreEqual(0, computer.Output[0]);
+        //Input is less than 8 so output should be 0
+        computedOutput = computer.RunProgram(program, 5);
+        Assert.AreEqual(0, computer.Output[0]);
+    }
+
+    [Test]
+    [TestCase(new int[] { 3,9,7,9,10,9,4,9,99,-1,8 })]
+    [TestCase(new int[] { 3,3,1107,-1,8,3,4,3,99 })]
+    public void Can_pass_jump_test_input_is_less_than_8(int[] program)
+    {
+        var computer = new IntcodeComputer();
+        //Input is 8 so output should be 0
+        var computedOutput = computer.RunProgram(program, 8);
+        Assert.AreEqual(0, computer.Output[0]);
+        //Input is greater than 8 so output should be 0
+        computedOutput = computer.RunProgram(program, 10);
+        Assert.AreEqual(0, computer.Output[0]);
+        //Input is less than 8 so output should be 1
+        computedOutput = computer.RunProgram(program, 6);
+        Assert.AreEqual(1, computer.Output[0]);
+    }
+
+    [Test]
+    public void Get_day5_step2_answer()
+    {
+        var computer = new IntcodeComputer();
+        var program = GetDay2Data();
+        var computedOutput = computer.RunProgram(program, 5);
+        var output = computer.Output;
+
+        Assert.AreEqual(2369720, output[0]);
+    }
+
     //Edge cases
 
     [Test]

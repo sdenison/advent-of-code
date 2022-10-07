@@ -87,10 +87,58 @@ namespace Aoc.Domain.Compute
                 case Put putInstruction:
                     ExecuteInstruction(putInstruction);
                     break;
+                case JumpIfTrue jumpIfTrueInstruction:
+                    return ExecuteInstruction(jumpIfTrueInstruction);
+                case JumpIfFalse jumpIfFalseInstruction:
+                    return ExecuteInstruction(jumpIfFalseInstruction);
+                case LessThan lessThanInstruction:
+                    ExecuteInstruction(lessThanInstruction);
+                    break;
+                case Equals equalsInstruction:
+                    ExecuteInstruction(equalsInstruction);
+                    break;
                 default: 
                     throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
             }
             return _instructionPointer + instruction.Length;
+        }
+
+        private int ExecuteInstruction(JumpIfTrue instruction)
+        {
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
+            if (parameter1 > 0)
+                return parameter2;
+            return _instructionPointer + instruction.Length;
+        }
+
+        private int ExecuteInstruction(JumpIfFalse instruction)
+        {
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
+            if (parameter1 == 0)
+                return parameter2;
+            return _instructionPointer + instruction.Length;
+        }
+
+        private void ExecuteInstruction(LessThan instruction)
+        {
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
+            var destinationAddress = _memory[_instructionPointer + 3];
+            if (parameter1 < parameter2)
+                _memory[destinationAddress] = 1;
+            _memory[destinationAddress] = 0;
+        }
+
+        private void ExecuteInstruction(Equals instruction)
+        {
+            int parameter1 = GetParameterValue(instruction, 1);
+            int parameter2 = GetParameterValue(instruction, 2);
+            var destinationAddress = _memory[_instructionPointer + 3];
+            if (parameter1 == parameter2)
+                _memory[destinationAddress] = 1;
+            _memory[destinationAddress] = 0;
         }
 
         private void ExecuteInstruction(MathInstruction instruction)

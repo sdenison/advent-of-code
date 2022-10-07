@@ -5,13 +5,14 @@ namespace Aoc.Domain.Compute.Instructions
 {
     internal class JumpIfFalse : IInstruction
     {
-        public int Length => throw new NotImplementedException();
+        public int Length => 3;
+        public List<ParameterMode> ParameterModes { get; }
 
-        public List<ParameterMode> ParameterModes => throw new NotImplementedException();
-
-        internal JumpIfFalse(int opcodes)
+        internal JumpIfFalse(int opcode)
         {
-
+            ParameterModes = new List<ParameterMode>();
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
     }
 }

@@ -5,13 +5,15 @@ namespace Aoc.Domain.Compute.Instructions
 {
     internal class LessThan : IInstruction
     {
-        public int Length => throw new NotImplementedException();
+        public int Length => 4;
 
-        public List<ParameterMode> ParameterModes => throw new NotImplementedException();
+        public List<ParameterMode> ParameterModes { get; }
 
-        internal LessThan(int opcodes)
+        internal LessThan(int opcode)
         {
-
+            ParameterModes = new List<ParameterMode>();
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
+            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
         }
     }
 }
