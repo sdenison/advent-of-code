@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Aoc.Domain.Compute.Instructions;
 using Aoc.Domain.Compute.Instructions.InstructionTypes;
+using Math = Aoc.Domain.Compute.Instructions.InstructionTypes.Math;
 
 namespace Aoc.Domain.Compute
 {
@@ -78,7 +79,7 @@ namespace Aoc.Domain.Compute
         {
             switch (instruction)
             {
-                case MathInstruction mathInstruction:
+                case Math mathInstruction:
                     ExecuteInstruction(mathInstruction);
                     break;
                 case Display displayInstruction:
@@ -143,7 +144,7 @@ namespace Aoc.Domain.Compute
                 _memory[destinationAddress] = 0;
         }
 
-        private void ExecuteInstruction(MathInstruction instruction)
+        private void ExecuteInstruction(Math instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);

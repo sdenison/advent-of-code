@@ -2,7 +2,7 @@
 
 namespace Aoc.Domain.Compute.Instructions
 {
-    public class Multiply : MathInstruction
+    public class Multiply : Math
     {
         public Multiply(int opcode) : base(opcode)
         {

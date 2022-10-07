@@ -2,7 +2,7 @@
 
 namespace Aoc.Domain.Compute.Instructions
 {
-    public class Add : MathInstruction 
+    public class Add : Math 
     {
         public Add(int opcode) : base(opcode)
         {
