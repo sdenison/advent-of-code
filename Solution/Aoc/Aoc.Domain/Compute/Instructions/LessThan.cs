@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Aoc.Domain.Compute.Instructions.InstructionTypes;
 
 namespace Aoc.Domain.Compute.Instructions
 {
-    internal class LessThan : IInstruction
+    internal class LessThan : Compare
     {
-        public int Length => 4;
-
-        public List<ParameterMode> ParameterModes { get; }
-
-        internal LessThan(int opcode)
+        internal LessThan(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 3));
+        }
+
+        internal override bool DoComparison(int parameter1, int parameter2)
+        {
+            return parameter1 < parameter2;
         }
     }
 }

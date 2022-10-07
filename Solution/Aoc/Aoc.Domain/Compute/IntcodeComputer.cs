@@ -90,11 +90,8 @@ namespace Aoc.Domain.Compute
                     break;
                 case Jump jumpIfTrueInstruction:
                     return ExecuteInstruction(jumpIfTrueInstruction);
-                case LessThan lessThanInstruction:
-                    ExecuteInstruction(lessThanInstruction);
-                    break;
-                case Equals equalsInstruction:
-                    ExecuteInstruction(equalsInstruction);
+                case Compare compareInstruction:
+                    ExecuteInstruction(compareInstruction);
                     break;
                 default: 
                     throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
@@ -111,26 +108,12 @@ namespace Aoc.Domain.Compute
             return _instructionPointer + instruction.Length;
         }
 
-        private void ExecuteInstruction(LessThan instruction)
+        private void ExecuteInstruction(Compare instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
             var destinationAddress = _memory[_instructionPointer + 3];
-            if (parameter1 < parameter2)
-                _memory[destinationAddress] = 1;
-            else
-                _memory[destinationAddress] = 0;
-        }
-
-        private void ExecuteInstruction(Equals instruction)
-        {
-            int parameter1 = GetParameterValue(instruction, 1);
-            int parameter2 = GetParameterValue(instruction, 2);
-            var destinationAddress = _memory[_instructionPointer + 3];
-            if (parameter1 == parameter2)
-                _memory[destinationAddress] = 1;
-            else
-                _memory[destinationAddress] = 0;
+            _memory[destinationAddress] = instruction.DoComparison(parameter1, parameter2) ? 1 : 0;
         }
 
         private void ExecuteInstruction(Math instruction)
