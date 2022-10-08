@@ -11,7 +11,7 @@ class TestsIntcodeUnit(unittest.TestCase):
     def test_that_add_works(self):
         computer = IntcodeComputer()
         program = [1, 2, 3, 2, 99]
-        memoryOutput = computer.RunProgram(program, None)
+        memoryOutput = computer.run_program(program, None)
         expectedMemoryOutput = [1, 2, 5, 2, 99];
         self.assertEqual(memoryOutput, expectedMemoryOutput)
 
@@ -19,7 +19,7 @@ class TestsIntcodeUnit(unittest.TestCase):
         computer = IntcodeComputer()
         program = [2, 2, 3, 2, 99]
         expectedComputedOutput = [2, 2, 6, 2, 99]
-        computedOutput = computer.RunProgram(program, None)
+        computedOutput = computer.run_program(program, None)
         self.assertEqual(expectedComputedOutput, computedOutput)
 
     def get_day_1_examples(self):
@@ -33,7 +33,7 @@ class TestsIntcodeUnit(unittest.TestCase):
         datasets = self.get_day_1_examples()
         for dataset in datasets:
             computer = IntcodeComputer()
-            computedoutput = computer.RunProgram(dataset[0], None)
+            computedoutput = computer.run_program(dataset[0], None)
             self.assertEqual(dataset[1], computedoutput)
 
     def test_can_get_final_answer_for_day2_step_1(self):
@@ -46,7 +46,7 @@ class TestsIntcodeUnit(unittest.TestCase):
                    91, 6, 95, 1, 95, 6, 99, 2, 99, 13, 103, 1, 6, 103, 107, 1, 2, 107, 111, 1, 111, 9, 0, 99, 2, 14, 0,
                    0]
         computer = IntcodeComputer()
-        computedoutput = computer.RunProgram(program, None)
+        computedoutput = computer.run_program(program, None)
         self.assertEqual(4138687, computedoutput[0])
 
     def test_can_get_final_answer_for_day2_step_2(self):
@@ -64,7 +64,7 @@ class TestsIntcodeUnit(unittest.TestCase):
             for verb in range(100):
                 candidateProgram[1] = noun
                 candidateProgram[2] = verb
-                computedOutput = computer.RunProgram(candidateProgram, None)
+                computedOutput = computer.run_program(candidateProgram, None)
                 if (computedOutput[0] == 19690720):
                     solutioncount = solutioncount + 1
                     solutionNoun = noun
@@ -80,28 +80,28 @@ class TestsIntcodeUnit(unittest.TestCase):
         computer = IntcodeComputer()
         program = [3, 0, 4, 0, 99]
         expectedComputedOutput = [55, 0, 4, 0, 99]
-        computedOutput = computer.RunProgram(program, 55)
+        computedOutput = computer.run_program(program, 55)
         self.assertEqual(expectedComputedOutput, computedOutput)
 
     def test_can_use_parameter_modes(self):
         computer = IntcodeComputer()
         program = [1002, 4, 3, 4, 33]
         expectedComputedOutput = [1002, 4, 3, 4, 99]
-        computedOutput = computer.RunProgram(program, None)
+        computedOutput = computer.run_program(program, None)
         self.assertEqual(expectedComputedOutput, computedOutput)
 
     def Can_use_negative_numbers(self):
         computer = IntcodeComputer()
         program = [1101, 100, -1, 4, 0]
         expectedComputedOutput = [1101, 100, -1, 4, 99]
-        computedOutput = computer.RunProgram(program, None)
+        computedOutput = computer.run_program(program, None)
         self.assertEqual(expectedComputedOutput, computedOutput)
 
     def test_get_day5_step1_answer(self):
         computer = IntcodeComputer()
         program = self.GetDay2Data()
-        computer.RunProgram(program, 1)
-        output = computer.Output
+        computer.run_program(program, 1)
+        output = computer.output
         self.assertEqual(13933662, output[9])
 
     def get_equal_8_data(self):
@@ -113,30 +113,30 @@ class TestsIntcodeUnit(unittest.TestCase):
                           [3, 3, 1108, -1, 8, 3, 4, 3, 99]]
         for program in programstotest:
             computer = IntcodeComputer()
-            computer.RunProgram(program, 8)
-            self.assertEqual(1, computer.Output[0])
-            computer.RunProgram(program, 10)
-            self.assertEqual(0, computer.Output[0])
-            computer.RunProgram(program, 5)
-            self.assertEqual(0, computer.Output[0])
+            computer.run_program(program, 8)
+            self.assertEqual(1, computer.output[0])
+            computer.run_program(program, 10)
+            self.assertEqual(0, computer.output[0])
+            computer.run_program(program, 5)
+            self.assertEqual(0, computer.output[0])
 
     def test_can_pass_jump_test_is_less_than_8(self):
         programstotest = [[3,9,7,9,10,9,4,9,99,-1,8],
                           [3,3,1107,-1,8,3,4,3,99]]
         for program in programstotest:
             computer = IntcodeComputer()
-            computer.RunProgram(program, 8)
-            self.assertEqual(0, computer.Output[0])
-            computer.RunProgram(program, 10)
-            self.assertEqual(0, computer.Output[0])
-            computer.RunProgram(program, 5)
-            self.assertEqual(1, computer.Output[0])
+            computer.run_program(program, 8)
+            self.assertEqual(0, computer.output[0])
+            computer.run_program(program, 10)
+            self.assertEqual(0, computer.output[0])
+            computer.run_program(program, 5)
+            self.assertEqual(1, computer.output[0])
 
-    def Get_day5_step2_answer(self):
+    def test_get_day5_step2_answer(self):
         computer = IntcodeComputer()
         program = self.GetDay2Data()
-        computedOutput = computer.RunProgram(program, 5)
-        output = computer.Output
+        computer.run_program(program, 5)
+        output = computer.output
         self.assertEqual(2369720, output[0])
 
     def GetDay2Data(self):
