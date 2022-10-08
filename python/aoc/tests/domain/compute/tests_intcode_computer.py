@@ -72,7 +72,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         solution_value = (100 * solution_noun) + solution_verb
         self.assertEqual(6635, solution_value)
 
-    def test_that_new_Display_and_Put_instructions_work(self):
+    def test_that_new_display_and_put_instructions_work(self):
         computer = IntcodeComputer()
         program = [3, 0, 4, 0, 99]
         expected_computed_output = [55, 0, 4, 0, 99]
@@ -86,7 +86,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computed_output = computer.run_program(program, None)
         self.assertEqual(expected_computed_output, computed_output)
 
-    def Can_that_negative_numbers_are_valid(self):
+    def test_that_negative_numbers_are_valid(self):
         computer = IntcodeComputer()
         program = [1101, 100, -1, 4, 0]
         expected_computed_output = [1101, 100, -1, 4, 99]
