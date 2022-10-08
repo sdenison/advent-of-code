@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions
+﻿namespace Aoc.Domain.Compute.Instructions
 {
-    public class Display : IInstruction
+    public class Display : Instruction
     {
-        public int Length => 2;
-        public List<ParameterMode> ParameterModes { get; }
+        public override int Length => 2;
     }
 }

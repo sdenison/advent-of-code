@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace Aoc.Domain.Compute.Instructions
+﻿namespace Aoc.Domain.Compute.Instructions
 {
-    public class Put : IInstruction
+    public class Put : Instruction
     {
-        public int Length => 2;
-        public List<ParameterMode> ParameterModes { get; }
+        public override int Length => 2;
 
-        public Put(int opcode)
+        public Put(int opcode) : base(opcode)
         {
-            ParameterModes = new List<ParameterMode>();
-            ParameterModes.Add(IInstruction.GetParameterMode(opcode, 2));
         }
     }
 }

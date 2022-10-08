@@ -1,0 +1,23 @@
+﻿using System;
+
+namespace Aoc.Domain.Compute.Instructions
+{
+    internal class Jump : Instruction
+    {
+        public Func<bool> _jumpIfTrue { get; }
+        public override int Length => 3;
+
+        internal Jump(int opcode, Func<bool> jumpIfTrue) : base(opcode)
+        {
+            _jumpIfTrue = jumpIfTrue;
+        }
+
+        public bool ShouldJump(int parameter)
+        {
+            if (_jumpIfTrue())
+                return parameter > 0;
+            //If we get here we know that it's jump if false
+            return parameter == 0;
+        }
+    }
+}
