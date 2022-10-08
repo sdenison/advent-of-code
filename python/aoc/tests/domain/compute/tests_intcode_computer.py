@@ -120,6 +120,18 @@ class TestsIntcodeUnit(unittest.TestCase):
             computer.RunProgram(program, 5)
             self.assertEqual(0, computer.Output[0])
 
+    def test_can_pass_jump_test_is_less_than_8(self):
+        programstotest = [[3,9,7,9,10,9,4,9,99,-1,8],
+                          [3,3,1107,-1,8,3,4,3,99]]
+        for program in programstotest:
+            computer = IntcodeComputer()
+            computer.RunProgram(program, 8)
+            self.assertEqual(0, computer.Output[0])
+            computer.RunProgram(program, 10)
+            self.assertEqual(0, computer.Output[0])
+            computer.RunProgram(program, 5)
+            self.assertEqual(1, computer.Output[0])
+
     def GetDay2Data(self):
         return [3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 37, 61, 225, 101, 34, 121, 224, 1001, 224, -49,
                 224,
