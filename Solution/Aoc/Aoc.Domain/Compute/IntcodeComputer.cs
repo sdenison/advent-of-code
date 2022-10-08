@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Aoc.Domain.Compute.Instructions;
-using Aoc.Domain.Compute.Instructions.InstructionTypes;
-using Math = Aoc.Domain.Compute.Instructions.InstructionTypes.Math;
+using Math = Aoc.Domain.Compute.Instructions.Math;
 
 namespace Aoc.Domain.Compute
 {
@@ -31,39 +30,39 @@ namespace Aoc.Domain.Compute
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
-        private IInstruction GetNextInstruction()
+        private Instruction GetNextInstruction()
         {
             var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
-            Instruction instruction = null;
+            Instruction instruction;
             switch (opcode)
             {
                 case Opcodes.Halt:
                     instruction = new Halt();
                     break;
-                case Opcodes.Add:
-                    instruction = new Add(rawOpcode);
-                    break;
-                case Opcodes.Multiply:
-                    instruction = new Multiply(rawOpcode);
+                case Opcodes.Display:
+                    instruction = new Display();
                     break;
                 case Opcodes.Put:
                     instruction = new Put(rawOpcode);
                     break;
-                case Opcodes.Display:
-                    instruction = new Display();
-                    break;
                 case Opcodes.JumpIfTrue:
-                    instruction = new JumpIfTrue(rawOpcode);
+                    instruction = new Jump(rawOpcode,() => true);
                     break;
                 case Opcodes.JumpIfFalse:
-                    instruction = new JumpIfFalse(rawOpcode);
+                    instruction = new Jump(rawOpcode,() => false);
                     break;
                 case Opcodes.LessThan:
-                    instruction = new LessThan(rawOpcode);
+                    instruction = new Compare(rawOpcode, compareFunction: (x, y) => x < y);
                     break;
                 case Opcodes.Equals:
-                    instruction = new Equals(rawOpcode);
+                    instruction = new Compare(rawOpcode, compareFunction: (x, y) => x == y);
+                    break;
+                case Opcodes.Add:
+                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x + y);
+                    break;
+                case Opcodes.Multiply:
+                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x * y);
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
@@ -73,7 +72,7 @@ namespace Aoc.Domain.Compute
             return instruction;
         }
 
-        private int ExecuteInstruction(IInstruction instruction)
+        private int ExecuteInstruction(Instruction instruction)
         {
             switch (instruction)
             {
@@ -111,14 +110,14 @@ namespace Aoc.Domain.Compute
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
             var destinationAddress = _memory[_instructionPointer + 3];
-            _memory[destinationAddress] = instruction.DoComparison(parameter1, parameter2) ? 1 : 0;
+            _memory[destinationAddress] = instruction.CompareFunction(parameter1, parameter2) ? 1 : 0;
         }
 
         private void ExecuteInstruction(Math instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
-            var instructionValue = instruction.ExecuteOperation(parameter1, parameter2);
+            var instructionValue = instruction.MathOperation(parameter1, parameter2);
             var destinationAddress = _memory[_instructionPointer + 3];
             _memory[destinationAddress] = instructionValue;
         }
@@ -138,10 +137,10 @@ namespace Aoc.Domain.Compute
                 _memory[_memory[_instructionPointer + 1]] = _input.Value;
         }
 
-        private int GetParameterValue(IInstruction instruction, int parameterPosition)
+        private int GetParameterValue(Instruction instruction, int parameterPosition)
         {
             if (instruction.ParameterModes[parameterPosition - 1] == ParameterMode.Immediate)
-                    return _memory[_instructionPointer + parameterPosition];
+                return _memory[_instructionPointer + parameterPosition];
             return _memory[_memory[_instructionPointer + parameterPosition]];
         }
 

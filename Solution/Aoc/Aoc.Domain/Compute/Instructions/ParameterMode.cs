@@ -2,7 +2,7 @@
 {
     public enum ParameterMode
     {
-        Reference = 1,
+        Reference = 0,
         Immediate = 1
     }
 }
