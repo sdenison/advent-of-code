@@ -95,12 +95,12 @@ class IntcodeComputer(object):
         self._Output.append(self._memory[self._memory[(self._instructionPointer + 1)]])
 
     def ExecutePutInstruction(self, instruction):
-        if (not self._input.HasValue):
+        if (self._input == None):
             raise InvalidIntcodeProgram("This program expects input from user and none was given")
         if (instruction.ParameterModes[0] == ParameterMode.Immediate):
-            self._memory[(self._instructionPointer + 1)] = self._input.Value
+            self._memory[(self._instructionPointer + 1)] = self._input
         else:
-            self._memory[self._memory[(self._instructionPointer + 1)]] = self._input.Value
+            self._memory[self._memory[(self._instructionPointer + 1)]] = self._input
 
     def GetParameterValue(self, instruction, parameterPosition):
         if (instruction.ParameterModes[(parameterPosition - 1)] == ParameterMode.Immediate):
@@ -109,5 +109,6 @@ class IntcodeComputer(object):
 
     def Initialize(self, program, userInput):
         self._input = userInput
+        #Don't surprise the user and change the incoming program
         self._Output = []
         self._memory = program.copy()

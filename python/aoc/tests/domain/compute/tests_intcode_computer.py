@@ -68,9 +68,19 @@ class TestsIntcodeUnit(unittest.TestCase):
         solutionValue = (100 * solutionNoun) + solutionVerb
         self.assertEqual(6635, solutionValue)
 
-    def test_something(self):
-        self.assertEqual(True, True)
+    def test_can_use_new_Display_and_Put_instructions(self):
+        computer = IntcodeComputer()
+        program = [3, 0, 4, 0, 99]
+        expectedComputedOutput = [55, 0, 4, 0, 99]
+        computedOutput = computer.RunProgram(program, 55)
+        self.assertEqual(expectedComputedOutput, computedOutput)
 
+    def test_can_use_parameter_modes(self):
+        computer = IntcodeComputer()
+        program = [1002, 4, 3, 4, 33]
+        expectedComputedOutput = [1002, 4, 3, 4, 99]
+        computedOutput = computer.RunProgram(program)
+        self.assertEqual(expectedComputedOutput, computedOutput)
 
 if __name__ == '__main__':
     unittest.main()
