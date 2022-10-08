@@ -13,7 +13,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computer = IntcodeComputer()
         program = [1, 2, 3, 2, 99]
         memory_output = computer.run_program(program, None)
-        expected_memory_output = [1, 2, 5, 2, 99];
+        expected_memory_output = [1, 2, 5, 2, 99]
         self.assertEqual(memory_output, expected_memory_output)
 
     def test_that_multiply_works(self):
@@ -56,6 +56,8 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
                              1, 6, 103, 107, 1, 2, 107, 111, 1, 111, 9, 0, 99, 2, 14, 0, 0]
         computer = IntcodeComputer()
         solution_count = 0
+        solution_noun = 0
+        solution_verb = 0
         for noun in range(100):
             for verb in range(100):
                 candidate_program[1] = noun
