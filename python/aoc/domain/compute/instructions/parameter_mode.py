@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class ParameterMode(Enum):
-    Reference = 0
-    Immediate = 1
+    REFERENCE = 0
+    IMMEDIATE = 1

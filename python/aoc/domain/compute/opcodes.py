@@ -2,12 +2,12 @@ from enum import Enum
 
 
 class Opcodes(Enum):
-    Add = 1
-    Multiply = 2
-    Put = 3
-    Display = 4
-    JumpIfTrue = 5
-    JumpIfFalse = 6
-    LessThan = 7
-    Equals = 8
-    Halt = 99
+    ADD = 1
+    MULTIPLY = 2
+    PUT = 3
+    DISPLAY = 4
+    JUMPIFTRUE = 5
+    JUMPIFFALSE = 6
+    LESSTHAN = 7
+    EQUALS = 8
+    HALT = 99

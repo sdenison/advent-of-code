@@ -13,7 +13,7 @@ class IntcodeComputer(object):
     def __init__(self):
         self._memory = None
         self._input = 0
-        self._instructionPointer = None
+        self._instruction_pointer = None
         self._Output = None
 
     @property
@@ -22,38 +22,38 @@ class IntcodeComputer(object):
 
     def run_program(self, program, userinput):
         self.initialize(program, userinput)
-        self._instructionPointer = 0
+        self._instruction_pointer = 0
 
         # Main computer logic
-        while (self._instructionPointer < len(program)):
+        while self._instruction_pointer < len(program):
             instruction = self.get_next_instruction()
             if isinstance(instruction, Halt):
                 return self._memory
-            self._instructionPointer = self.execute_instruction(instruction)
+            self._instruction_pointer = self.execute_instruction(instruction)
 
         raise InvalidIntcodeProgram("No halt instruction at end of program")
 
     def get_next_instruction(self):
-        opcode = self._memory[self._instructionPointer]
-        opcodeEnum = Opcodes(opcode % 100)
-        match opcodeEnum:
-            case Opcodes.Halt:
+        opcode = self._memory[self._instruction_pointer]
+        opcode_enum = Opcodes(opcode % 100)
+        match opcode_enum:
+            case Opcodes.HALT:
                 return Halt()
-            case Opcodes.Display:
+            case Opcodes.DISPLAY:
                 return Display()
-            case Opcodes.Put:
+            case Opcodes.PUT:
                 return Put(opcode)
-            case Opcodes.JumpIfTrue:
+            case Opcodes.JUMPIFTRUE:
                 return Jump(opcode, lambda: True)
-            case Opcodes.JumpIfFalse:
+            case Opcodes.JUMPIFFALSE:
                 return Jump(opcode, lambda: False)
-            case Opcodes.LessThan:
+            case Opcodes.LESSTHAN:
                 return Compare(opcode, lambda x, y: x < y)
-            case Opcodes.Equals:
+            case Opcodes.EQUALS:
                 return Compare(opcode, lambda x, y: x == y)
-            case Opcodes.Add:
+            case Opcodes.ADD:
                 return Math(opcode, lambda x, y: x + y)
-            case Opcodes.Multiply:
+            case Opcodes.MULTIPLY:
                 return Math(opcode, lambda x, y: x * y)
 
     def execute_instruction(self, instruction):
@@ -67,46 +67,46 @@ class IntcodeComputer(object):
             self.execute_compare_instruction(instruction)
         if isinstance(instruction, Jump):
             return self.execute_jump_instruction(instruction)
-        return self._instructionPointer + instruction.Length
+        return self._instruction_pointer + instruction.Length
 
     def execute_jump_instruction(self, instruction):
         parameter1 = self.get_parameter_value(instruction, 1)
         parameter2 = self.get_parameter_value(instruction, 2)
         if instruction.ShouldJump(parameter1):
             return parameter2
-        return self._instructionPointer + instruction.Length
+        return self._instruction_pointer + instruction.Length
 
     def execute_compare_instruction(self, instruction):
         parameter1 = self.get_parameter_value(instruction, 1)
         parameter2 = self.get_parameter_value(instruction, 2)
-        destinationAddress = self._memory[(self._instructionPointer + 3)]
-        self._memory[destinationAddress] = (1 if instruction.CompareFunction(parameter1, parameter2) else 0)
+        destination_address = self._memory[(self._instruction_pointer + 3)]
+        self._memory[destination_address] = (1 if instruction.CompareFunction(parameter1, parameter2) else 0)
 
     def execute_math_instruction(self, instruction):
         parameter1 = self.get_parameter_value(instruction, 1)
         parameter2 = self.get_parameter_value(instruction, 2)
-        instructionValue = instruction.MathOperation(parameter1, parameter2)
-        destinationAddress = self._memory[(self._instructionPointer + 3)]
-        self._memory[destinationAddress] = instructionValue
+        instruction_value = instruction.MathOperation(parameter1, parameter2)
+        destination_address = self._memory[(self._instruction_pointer + 3)]
+        self._memory[destination_address] = instruction_value
 
     def execute_display_instruction(self, instruction):
-        self._Output.append(self._memory[self._memory[(self._instructionPointer + 1)]])
+        self._Output.append(self._memory[self._memory[(self._instruction_pointer + 1)]])
 
     def execute_put_instruction(self, instruction):
-        if (self._input == None):
+        if self._input == None:
             raise InvalidIntcodeProgram("This program expects input from user and none was given")
-        if (instruction.ParameterModes[0] == ParameterMode.Immediate):
-            self._memory[(self._instructionPointer + 1)] = self._input
+        if instruction.ParameterModes[0] == ParameterMode.IMMEDIATE:
+            self._memory[(self._instruction_pointer + 1)] = self._input
         else:
-            self._memory[self._memory[(self._instructionPointer + 1)]] = self._input
+            self._memory[self._memory[(self._instruction_pointer + 1)]] = self._input
 
-    def get_parameter_value(self, instruction, parameterPosition):
-        if (instruction.ParameterModes[(parameterPosition - 1)] == ParameterMode.Immediate):
-            return self._memory[(self._instructionPointer + parameterPosition)]
-        return self._memory[self._memory[(self._instructionPointer + parameterPosition)]]
+    def get_parameter_value(self, instruction, parameter_position):
+        if instruction.ParameterModes[(parameter_position - 1)] == ParameterMode.IMMEDIATE:
+            return self._memory[(self._instruction_pointer + parameter_position)]
+        return self._memory[self._memory[(self._instruction_pointer + parameter_position)]]
 
-    def initialize(self, program, userInput):
-        self._input = userInput
+    def initialize(self, program, user_input):
+        self._input = user_input
         # Don't surprise the user and change the incoming program
         self._Output = []
         self._memory = program.copy()
