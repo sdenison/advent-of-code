@@ -50,9 +50,9 @@ class IntcodeComputer(object):
             case Opcodes.JumpIfFalse:
                 return Jump(opcode, lambda: False)
             case Opcodes.LessThan:
-                return Jump(opcode, lambda x, y: x < y)
+                return Compare(opcode, lambda x, y: x < y)
             case Opcodes.Equals:
-                return Jump(opcode, lambda x, y: x == y)
+                return Compare(opcode, lambda x, y: x == y)
             case Opcodes.Add:
                 return Math(opcode, lambda x, y: x + y)
             case Opcodes.Multiply:
@@ -76,7 +76,7 @@ class IntcodeComputer(object):
         parameter2 = self.GetParameterValue(instruction, 2)
         if instruction.ShouldJump(parameter1):
             return parameter2
-        return (self._instructionPointer + instruction.Length)
+        return self._instructionPointer + instruction.Length
 
     def ExecuteCompareInstruction(self, instruction):
         parameter1 = self.GetParameterValue(instruction, 1)

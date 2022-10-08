@@ -13,5 +13,5 @@ class Jump(Instruction):
         self.__jumpIfTrue = jumpIfTrue
     def ShouldJump(self, parameter):
         if self.__jumpIfTrue():
-            return (parameter > 0)
-        return (parameter == 0)
+            return parameter > 0
+        return parameter == 0
