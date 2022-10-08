@@ -1,0 +1,7 @@
+engine:
+  enable-web-ui: false
+  load-pytest-plugins: false
+  runtime: pytest
+pinned-tests:
+- tests.domain.compute.tests_instruction:TestsInstructions::test_something
+- tests.domain.compute.tests_instruction:TestsInstructions::test_create_instruction

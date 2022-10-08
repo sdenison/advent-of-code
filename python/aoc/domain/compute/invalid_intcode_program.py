@@ -1,0 +1,2 @@
+class InvalidIntcodeProgram(Exception):
+    pass
