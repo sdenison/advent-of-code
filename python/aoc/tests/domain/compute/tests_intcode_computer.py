@@ -132,6 +132,13 @@ class TestsIntcodeUnit(unittest.TestCase):
             computer.RunProgram(program, 5)
             self.assertEqual(1, computer.Output[0])
 
+    def Get_day5_step2_answer(self):
+        computer = IntcodeComputer()
+        program = self.GetDay2Data()
+        computedOutput = computer.RunProgram(program, 5)
+        output = computer.Output
+        self.assertEqual(2369720, output[0])
+
     def GetDay2Data(self):
         return [3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 37, 61, 225, 101, 34, 121, 224, 1001, 224, -49,
                 224,
