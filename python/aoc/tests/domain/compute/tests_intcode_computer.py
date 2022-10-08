@@ -5,7 +5,7 @@ from domain.compute.intcode_computer import IntcodeComputer
 
 class TestsIntcodeComputerUnit(unittest.TestCase):
 
-    def test_can_create_intcode_computer(self):
+    def test_that_we_can_create_intcode_computer(self):
         computer = IntcodeComputer()
         assert computer is not None
 
@@ -31,10 +31,10 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
                 [[2, 4, 4, 5, 99, 0], [2, 4, 4, 5, 99, 9801]],
                 [[1, 1, 1, 4, 99, 5, 6, 0, 99], [30, 1, 1, 4, 2, 5, 6, 0, 99]]]
 
-    def test_that_process_examples_given_by_day1_problem_work(self):
+    def test_that_examples_given_by_day1_problem_work(self):
+        computer = IntcodeComputer()
         datasets = self.get_day_1_examples()
         for dataset in datasets:
-            computer = IntcodeComputer()
             computed_output = computer.run_program(dataset[0], None)
             self.assertEqual(dataset[1], computed_output)
 

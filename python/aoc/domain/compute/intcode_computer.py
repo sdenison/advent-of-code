@@ -20,8 +20,8 @@ class IntcodeComputer(object):
     def output(self):
         return self._Output
 
-    def run_program(self, program, userinput):
-        self.initialize(program, userinput)
+    def run_program(self, program, user_input):
+        self.initialize(program, user_input)
         self._instruction_pointer = 0
 
         # Main computer logic
