@@ -20,9 +20,8 @@ class IntcodeComputer(object):
     def output(self):
         return self._Output
 
-    def run_program(self, program, user_input):
+    def run_program(self, program, user_input) -> list[int]:
         self.initialize(program, user_input)
-        self._instruction_pointer = 0
 
         # Main computer logic
         while self._instruction_pointer < len(program):
@@ -93,7 +92,7 @@ class IntcodeComputer(object):
         self._Output.append(self._memory[self._memory[(self._instruction_pointer + 1)]])
 
     def execute_put_instruction(self, instruction):
-        if self._input == None:
+        if self._input is None:
             raise InvalidIntcodeProgram("This program expects input from user and none was given")
         if instruction.ParameterModes[0] == ParameterMode.IMMEDIATE:
             self._memory[(self._instruction_pointer + 1)] = self._input
@@ -107,6 +106,7 @@ class IntcodeComputer(object):
 
     def initialize(self, program, user_input):
         self._input = user_input
+        self._instruction_pointer = 0;
         # Don't surprise the user and change the incoming program
         self._Output = []
         self._memory = program.copy()
