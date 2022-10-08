@@ -16,7 +16,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         expected_memory_output = [1, 2, 5, 2, 99];
         self.assertEqual(memory_output, expected_memory_output)
 
-    def test_can_process_multiply_opcode(self):
+    def test_that_multiply_works(self):
         computer = IntcodeComputer()
         program = [2, 2, 3, 2, 99]
         expected_computed_output = [2, 2, 6, 2, 99]
@@ -31,14 +31,14 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
                 [[2, 4, 4, 5, 99, 0], [2, 4, 4, 5, 99, 9801]],
                 [[1, 1, 1, 4, 99, 5, 6, 0, 99], [30, 1, 1, 4, 2, 5, 6, 0, 99]]]
 
-    def test_can_process_examples_given_by_day1_problem(self):
+    def test_that_process_examples_given_by_day1_problem_work(self):
         datasets = self.get_day_1_examples()
         for dataset in datasets:
             computer = IntcodeComputer()
             computed_output = computer.run_program(dataset[0], None)
             self.assertEqual(dataset[1], computed_output)
 
-    def test_can_get_final_answer_for_day2_step_1(self):
+    def test_get_answer_for_day_2_step_1(self):
         program = [1, 12, 2, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 6, 1, 19, 1, 19, 10, 23, 2, 13, 23, 27, 1, 5, 27,
                    31, 2, 6, 31, 35, 1, 6, 35, 39, 2, 39, 9, 43, 1, 5, 43, 47, 1, 13, 47, 51, 1, 10, 51, 55, 2, 55, 10,
                    59, 2, 10, 59, 63, 1, 9, 63, 67, 2, 67, 13, 71, 1, 71, 6, 75, 2, 6, 75, 79, 1, 5, 79, 83, 2, 83, 9,
@@ -48,7 +48,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computed_output = computer.run_program(program, None)
         self.assertEqual(4138687, computed_output[0])
 
-    def test_can_get_final_answer_for_day2_step_2(self):
+    def test_get_final_answer_for_day2_step_2(self):
         candidate_program = [1, 0, 0, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 6, 1, 19, 1, 19, 10, 23, 2, 13, 23, 27,
                              1, 5, 27, 31, 2, 6, 31, 35, 1, 6, 35, 39, 2, 39, 9, 43, 1, 5, 43, 47, 1, 13, 47, 51, 1, 10,
                              51, 55, 2, 55, 10, 59, 2, 10, 59, 63, 1, 9, 63, 67, 2, 67, 13, 71, 1, 71, 6, 75, 2, 6, 75,
@@ -72,21 +72,21 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         solution_value = (100 * solution_noun) + solution_verb
         self.assertEqual(6635, solution_value)
 
-    def test_can_use_new_Display_and_Put_instructions(self):
+    def test_that_new_Display_and_Put_instructions_work(self):
         computer = IntcodeComputer()
         program = [3, 0, 4, 0, 99]
         expected_computed_output = [55, 0, 4, 0, 99]
         computed_output = computer.run_program(program, 55)
         self.assertEqual(expected_computed_output, computed_output)
 
-    def test_can_use_parameter_modes(self):
+    def test_that_parameter_modes_work(self):
         computer = IntcodeComputer()
         program = [1002, 4, 3, 4, 33]
         expected_computed_output = [1002, 4, 3, 4, 99]
         computed_output = computer.run_program(program, None)
         self.assertEqual(expected_computed_output, computed_output)
 
-    def Can_use_negative_numbers(self):
+    def Can_that_negative_numbers_are_valid(self):
         computer = IntcodeComputer()
         program = [1101, 100, -1, 4, 0]
         expected_computed_output = [1101, 100, -1, 4, 99]
@@ -100,7 +100,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         output = computer.output
         self.assertEqual(13933662, output[9])
 
-    def test_can_pass_jump_test_is_input_equal_to_8(self):
+    def test_programs_that_return_true_if_input_is_equal_to_8(self):
         programs_to_test = [[3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8],
                             [3, 3, 1108, -1, 8, 3, 4, 3, 99]]
         for program in programs_to_test:
@@ -112,7 +112,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
             computer.run_program(program, 5)
             self.assertEqual(0, computer.output[0])
 
-    def test_can_pass_jump_test_is_less_than_8(self):
+    def test_programs_that_return_true_if_input_is_less_than_8(self):
         programs_to_test = [[3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8],
                             [3, 3, 1107, -1, 8, 3, 4, 3, 99]]
         for program in programs_to_test:
