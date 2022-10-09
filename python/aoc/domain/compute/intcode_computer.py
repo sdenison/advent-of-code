@@ -26,7 +26,7 @@ class IntcodeComputer(object):
 
     def __get_next_instruction(self) -> Instruction:
         opcode = self._memory[self._instruction_pointer]
-        opcode_enum = Opcodes(opcode % 100)
+        opcode_enum = self.__get_opcode(opcode)
         match opcode_enum:
             case Opcodes.HALT:
                 return Halt()
@@ -81,8 +81,6 @@ class IntcodeComputer(object):
         self._memory[destination_address] = instruction_value
 
     def __execute_display_instruction(self, instruction: Display) -> None:
-        x = self.__get_parameter_value(instruction, 1)
-        y = self._memory[self._memory[(self._instruction_pointer + 1)]]
         self._Output.append(self.__get_parameter_value(instruction, 1))
 
     def __execute_put_instruction(self, instruction: Put) -> None:
@@ -94,9 +92,22 @@ class IntcodeComputer(object):
             self._memory[self._memory[(self._instruction_pointer + 1)]] = self._input
 
     def __get_parameter_value(self, instruction: Instruction, parameter_position: int) -> int:
+        memory_location = self.__get_memory_location(instruction, parameter_position)
+        if memory_location > len(self._memory) - 1:
+            raise InvalidIntcodeProgram("The program tried to access memory that does not belong to it")
+        return self._memory[memory_location]
+
+    def __get_memory_location(self, instruction: Instruction, parameter_position: int) -> int:
         if instruction.parameter_modes[(parameter_position - 1)] == ParameterMode.IMMEDIATE:
-            return self._memory[(self._instruction_pointer + parameter_position)]
-        return self._memory[self._memory[(self._instruction_pointer + parameter_position)]]
+            return self._instruction_pointer + parameter_position
+        else:
+            return self._memory[self._instruction_pointer + parameter_position]
+
+    def __get_opcode(self, opcode: int) -> Opcodes:
+        try:
+            return Opcodes(opcode % 100)
+        except Exception:
+            raise InvalidIntcodeProgram("Unknown opcode {}".format(opcode))
 
     def __initialize(self, program, user_input) -> None:
         self._input = user_input

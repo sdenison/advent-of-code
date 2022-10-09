@@ -1,6 +1,6 @@
 import unittest
 
-from domain.compute.intcode_computer import IntcodeComputer
+from domain.compute.intcode_computer import *
 
 
 class TestsIntcodeComputerUnit(unittest.TestCase):
@@ -132,6 +132,45 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computer.run_program(program, 5)
         output = computer.output
         self.assertEqual(2369720, output[0])
+
+    # Edge cases
+
+    def test_that_99_is_a_valid_program(self):
+        computer = IntcodeComputer()
+        program = [99]
+        expected_computed_output = [99]
+        computed_output = computer.run_program(program, None)
+        self.assertEqual(expected_computed_output, computed_output)
+
+    def test_incomplete_instruction_should_raise_exception(self):
+        program = [1, 2, 3, 2, 1, 3, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_when_program_references_memory_that_does_not_belong_to_it_an_exception_is_raised(self):
+        program = [4, 3, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_that_invalid_opcode_should_raise_exception(self):
+        program = [1, 2, 3, 3, 88]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_halt_code_needed_at_end_of_program(self):
+        program = [1, 2, 3, 2]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_that_a_program_that_expects_input_and_doesnt_get_it_will_raise_exception(self):
+        program = [3, 0, 4, 0, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
 
     @classmethod
     def get_day_2_data(cls):
