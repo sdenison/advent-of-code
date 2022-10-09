@@ -109,7 +109,7 @@ namespace Aoc.Domain.Compute
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
-            var destinationAddress = _memory[_instructionPointer + 3];
+            var destinationAddress = GetParameterValue(instruction, 3);
             _memory[destinationAddress] = instruction.CompareFunction(parameter1, parameter2) ? 1 : 0;
         }
 
@@ -118,7 +118,7 @@ namespace Aoc.Domain.Compute
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
             var instructionValue = instruction.MathOperation(parameter1, parameter2);
-            var destinationAddress = _memory[_instructionPointer + 3];
+            var destinationAddress = GetParameterValue(instruction, 3);
             _memory[destinationAddress] = instructionValue;
         }
 

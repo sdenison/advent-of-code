@@ -70,15 +70,14 @@ class IntcodeComputer(object):
     def __execute_compare_instruction(self, instruction: Compare) -> None:
         parameter1 = self.__get_parameter_value(instruction, 1)
         parameter2 = self.__get_parameter_value(instruction, 2)
-        destination_address = self._memory[(self._instruction_pointer + 3)]
+        destination_address = self.__get_parameter_value(instruction, 3)
         self._memory[destination_address] = (1 if instruction.compare_function(parameter1, parameter2) else 0)
 
     def __execute_math_instruction(self, instruction: Math) -> None:
         parameter1 = self.__get_parameter_value(instruction, 1)
         parameter2 = self.__get_parameter_value(instruction, 2)
         instruction_value = instruction.math_operation(parameter1, parameter2)
-        destination_address = self._memory[(self._instruction_pointer + 3)]
-        #destination_address = self.__get_parameter_value(instruction, 3)
+        destination_address = self.__get_parameter_value(instruction, 3)
         self._memory[destination_address] = instruction_value
 
     def __execute_display_instruction(self) -> None:

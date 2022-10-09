@@ -38,7 +38,23 @@ class Compare(Instruction):
     def __init__(self, opcode, compare_function):
         super(Compare, self).__init__(opcode)
         self._compare_function = compare_function
-        self._ParameterModes.append(self.get_parameter_mode(opcode, 3))
+        # This will be the mode for the third parameter
+        self._ParameterModes.append(ParameterMode.IMMEDIATE)
+
+class Math(Instruction):
+    @property
+    def math_operation(self):
+        return self._math_operation
+
+    @property
+    def length(self):
+        return 4
+
+    def __init__(self, opcode, math_operation_param):
+        super(Math, self).__init__(opcode)
+        self._math_operation = math_operation_param
+        # This will be the mode for the third parameter
+        self._ParameterModes.append(ParameterMode.IMMEDIATE)
 
 
 class Display(Instruction):
@@ -76,21 +92,6 @@ class Jump(Instruction):
         if self.__jump_if_true():
             return parameter > 0
         return parameter == 0
-
-
-class Math(Instruction):
-    @property
-    def math_operation(self):
-        return self._math_operation
-
-    @property
-    def length(self):
-        return 4
-
-    def __init__(self, opcode, math_operation_param):
-        super(Math, self).__init__(opcode)
-        self._math_operation = math_operation_param
-        self._ParameterModes.append(self.get_parameter_mode(opcode, 4))
 
 
 class Put(Instruction):
