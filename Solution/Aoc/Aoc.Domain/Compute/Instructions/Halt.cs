@@ -1,7 +1,7 @@
 ﻿namespace Aoc.Domain.Compute.Instructions
 {
-    public class Halt : Instruction
+    internal class Halt : Instruction
     {
-        public override int Length => 1;
+        internal override int Length => 1;
     }
 }

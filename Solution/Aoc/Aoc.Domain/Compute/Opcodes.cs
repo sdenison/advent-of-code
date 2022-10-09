@@ -1,6 +1,6 @@
 ﻿namespace Aoc.Domain.Compute
 {
-    public enum Opcodes
+    internal enum Opcodes
     {
         Add = 1,
         Multiply = 2,
