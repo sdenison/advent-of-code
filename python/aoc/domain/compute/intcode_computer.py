@@ -51,7 +51,7 @@ class IntcodeComputer(object):
         if isinstance(instruction, Math):
             self.__execute_math_instruction(instruction)
         if isinstance(instruction, Display):
-            self.__execute_display_instruction()
+            self.__execute_display_instruction(instruction)
         if isinstance(instruction, Put):
             self.__execute_put_instruction(instruction)
         if isinstance(instruction, Compare):
@@ -80,8 +80,10 @@ class IntcodeComputer(object):
         destination_address = self.__get_parameter_value(instruction, 3)
         self._memory[destination_address] = instruction_value
 
-    def __execute_display_instruction(self) -> None:
-        self._Output.append(self._memory[self._memory[(self._instruction_pointer + 1)]])
+    def __execute_display_instruction(self, instruction: Display) -> None:
+        x = self.__get_parameter_value(instruction, 1)
+        y = self._memory[self._memory[(self._instruction_pointer + 1)]]
+        self._Output.append(self.__get_parameter_value(instruction, 1))
 
     def __execute_put_instruction(self, instruction: Put) -> None:
         if self._input is None:

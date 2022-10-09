@@ -124,7 +124,7 @@ namespace Aoc.Domain.Compute
 
         private void ExecuteInstruction(Display instruction)
         {
-            Output.Add(_memory[_memory[_instructionPointer + 1]]);
+            Output.Add(GetParameterValue(instruction, 1));
         }
 
         private void ExecuteInstruction(Put instruction)

@@ -76,21 +76,22 @@ class Math(Instruction):
 
 
 class Display(Instruction):
-    def __init__(self):
-        super(Display, self).__init__(0)
-
     @property
     def length(self) -> int:
         return 2
 
+    def __init__(self):
+        super(Display, self).__init__(0)
+        self._ParameterModes[0] = ParameterMode.REFERENCE
+
 
 class Halt(Instruction):
-    def __init__(self):
-        super(Halt, self).__init__(0)
-
     @property
     def length(self) -> int:
         return 1
+
+    def __init__(self):
+        super(Halt, self).__init__(0)
 
 
 class Jump(Instruction):
@@ -119,4 +120,3 @@ class Put(Instruction):
 
     def __init__(self, opcode: int):
         super(Put, self).__init__(opcode)
-
