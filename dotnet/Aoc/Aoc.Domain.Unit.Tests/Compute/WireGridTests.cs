@@ -55,15 +55,6 @@ namespace Aoc.Domain.Unit.Tests.Compute
         }
 
         [Test]
-        public void Can_create_a_path_for_a_wire()
-        {
-            var moves = new[] {"R2"};
-            var wire = new Wire(moves);
-            Assert.AreEqual(2, wire.Path.Count);
-            wire.Path[0].Should().BeEquivalentTo(new Coordinate(2, 1));
-        }
-
-        [Test]
         public void Can_figure_out_where_two_wires_cross()
         {
             var wireA = new Wire(new[] {"R8", "U5", "L5", "D3"});
@@ -91,90 +82,10 @@ namespace Aoc.Domain.Unit.Tests.Compute
         }
 
         [Test]
-        public void Can_get_manhattan_distance_for_examples_given()
+        public void Can_get_manhattan_distance_for_examples_given_2()
         {
-            //var coordinateA = new Coordinate()
-        }
-
-        [Test]
-        public void Can_just_run_the_x_axis()
-        {
-            var moves = new[]
-            {
-                "R75",
-                "R83",
-                "L12",
-                "R71", 
-                "L72",
-                "R66",
-                "R34", 
-                "R55", 
-                "R83"
-            };
-            var wire = new Wire(moves);
-            var finalCoordinate = wire.CurrentCoordinate;
-            //Not quite sure about this. I get 385 by hand
-            Assert.AreEqual(384, wire.CurrentCoordinate.X);
-            //var port = new Coordinate(1, 1);
-            //var manhattanDistance = Grid.GetManhattanDistance(port, finalCoordinate);
-            //Assert.AreEqual(159, manhattanDistance);
-
-        }
-
-        [Test]
-        public void Can_just_run_the_y_axis()
-        {
-            var moves = new[]
-            {
-                "D30", 
-                "U83",
-                "D49",
-                "U7", 
-                "U62",
-                "U55",
-                "D71",
-                "D58"
-            };
-            var wire = new Wire(moves);
-            var finalCoordinate = wire.CurrentCoordinate;
-            Assert.AreEqual(0, wire.CurrentCoordinate.Y);
-        }
-
-
-
-
-        //[Test]
-        //public void Can_get_manhattan_distance_for_examples_given_2()
-        //{
-        //    var moves = new[]
-        //    {
-        //        "R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72",
-        //        "U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"
-        //    };
-        //    var wire = new Wire(moves);
-        //    var finalCoordinate = wire.CurrentCoordinate;
-        //    var port = new Coordinate(1, 1);
-        //    var manhattanDistance = Grid.GetManhattanDistance(port, finalCoordinate);
-        //    Assert.AreEqual(159, manhattanDistance);
-
-        //}
-
-
-
-        [Test]
-        public void Can_get_manhattan_distance_for_examples_given2()
-        {
-
-            var movesA = new[]
-            {
-                "R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72",
-                "U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"
-            };
-            var movesB = new[]
-            {
-                "R98","U47","R26","D63","R33","U87","L62","D20","R33","U53","R51",
-                "U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"
-            };
+            var movesA = new[] { "R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72" };
+            var movesB = new[] { "U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83" };
             var wireA = new Wire(movesA);
             var wireB = new Wire(movesB);
             var grid = new Grid(wireA, wireB);
@@ -186,26 +97,26 @@ namespace Aoc.Domain.Unit.Tests.Compute
                 if (manhattan < lowestManhattan)
                     lowestManhattan = manhattan;
             }
-
-            Assert.AreEqual(1, lowestManhattan);
-
-            
-
-
+            Assert.AreEqual(159, lowestManhattan);
         }
 
-
-            //[Test]
-            //public void Can_get_manhattan_distance_for_examples_given()
-            //{
-            //    var moves = new List<string>
-            //    {
-            //        "R75", "D30","R83","U83","L12","D49","R71","U7","L72",
-            //        "U62","R66","U55","R34","D71","R55","D58","R83"
-            //    };
-            //    var grid = new Grid(moves);
-            //    Assert.AreEqual(159, grid.ManhattanDistance);
-            //}
-
+        [Test]
+        public void Can_get_manhattan_distance_for_examples_given_3()
+        {
+            var movesA = new[] { "R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51"};
+            var movesB = new[] { "U98","R91","D20","R16","D67","R40","U7","R15","U6","R7" };
+            var wireA = new Wire(movesA);
+            var wireB = new Wire(movesB);
+            var grid = new Grid(wireA, wireB);
+            var port = new Coordinate(1, 1);
+            var lowestManhattan = int.MaxValue;
+            foreach (var intersection in grid.Intersections)
+            {
+                var manhattan = Grid.GetManhattanDistance(port, intersection);
+                if (manhattan < lowestManhattan)
+                    lowestManhattan = manhattan;
+            }
+            Assert.AreEqual(135, lowestManhattan);
         }
+    }
 }

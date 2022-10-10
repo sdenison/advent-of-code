@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Aoc.Domain.Compute
 {
@@ -29,7 +31,7 @@ namespace Aoc.Domain.Compute
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
-                            Path.Add(newCoordinate);
+                            Path.Add(new Vector(newCoordinate, Direction.Right));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -37,7 +39,7 @@ namespace Aoc.Domain.Compute
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
-                            Path.Add(newCoordinate);
+                            Path.Add(new Vector(newCoordinate, Direction.Left));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -45,7 +47,7 @@ namespace Aoc.Domain.Compute
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
-                            Path.Add(newCoordinate);
+                            Path.Add(new Vector(newCoordinate, Direction.Up));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -53,10 +55,13 @@ namespace Aoc.Domain.Compute
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
-                            Path.Add(newCoordinate);
+                            Path.Add(new Vector(newCoordinate, Direction.Down));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
+                    default:
+                        throw new Exception();
+
 
                 }
             }

@@ -15,9 +15,22 @@ namespace Aoc.Domain.Compute
                 var intersections = new List<Coordinate>();
                 foreach(var coordinateA in _wireA.Path)
                     foreach(var coordinateB in _wireB.Path)
-                        if (coordinateA.Equals(coordinateB))
+                        if (coordinateA.Position.Equals(coordinateB.Position))
                         {
-                            intersections.Add(coordinateA);
+                            if (coordinateA.Direction == Direction.Left || coordinateA.Direction == Direction.Right)
+                            {
+                                if (coordinateB.Direction == Direction.Up || coordinateB.Direction == Direction.Down)
+                                {
+                                    intersections.Add(coordinateA.Position);
+                                }
+                            }
+                            else
+                            {
+                                if (coordinateB.Direction == Direction.Left || coordinateB.Direction == Direction.Right)
+                                {
+                                    intersections.Add(coordinateA.Position);
+                                }
+                            }
                         }
                 return intersections;
             }
