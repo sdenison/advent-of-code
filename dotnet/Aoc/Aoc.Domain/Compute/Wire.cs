@@ -4,14 +4,13 @@ namespace Aoc.Domain.Compute
 {
     public class Wire
     {
-        public List<Coordinate> Path { get; set; }
+        public List<Vector> Path { get; set; }
         public Coordinate CurrentCoordinate { get; set; }
 
         public Wire(List<Move> moves)
         {
-            Path = new List<Coordinate>();
+            Path = new List<Vector>();
             CurrentCoordinate = new Coordinate(1, 1);
-            //Path.Add(CurrentCoordinate);
             GeneratePath(moves);
         }
 

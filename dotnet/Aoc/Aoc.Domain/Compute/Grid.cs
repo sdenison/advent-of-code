@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Aoc.Domain.Compute
 {
@@ -15,7 +16,9 @@ namespace Aoc.Domain.Compute
                 foreach(var coordinateA in _wireA.Path)
                     foreach(var coordinateB in _wireB.Path)
                         if (coordinateA.Equals(coordinateB))
+                        {
                             intersections.Add(coordinateA);
+                        }
                 return intersections;
             }
         }
@@ -25,6 +28,15 @@ namespace Aoc.Domain.Compute
             _wireA = wireA;
             _wireB = wireB;
 
+        }
+
+        public static int GetManhattanDistance(Coordinate coordinateA, Coordinate coordinateB)
+        {
+            int xDistance = Math.Abs(coordinateA.X - coordinateB.X);
+            int yDistance = Math.Abs(coordinateA.Y - coordinateB.Y);
+
+
+            return xDistance + yDistance;
         }
     }
 }
@@ -37,5 +49,16 @@ namespace Aoc.Domain.Compute
 //....|....|.
 //....|....|.
 //.........|.
+//.o-------+.
+//...........
+
+//...........
+//.+-----+...
+//.|.....|...
+//.|..+--X-+.
+//.|..|..|.|.
+//.|.-X--+.|.
+//.|..|....|.
+//.|.......|.
 //.o-------+.
 //...........
