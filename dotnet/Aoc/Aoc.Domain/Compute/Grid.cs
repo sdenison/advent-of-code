@@ -8,11 +8,11 @@ namespace Aoc.Domain.Compute
         private Wire _wireA;
         private Wire _wireB;
 
-        public List<Coordinate> Intersections
+        public List<Intersection> Intersections
         {
             get
             {
-                var intersections = new List<Coordinate>();
+                var intersections = new List<Intersection>();
                 var wireAProgress = 0;
                 var wireBProgress = 0;
                 foreach (var coordinateA in _wireA.Path)
@@ -27,14 +27,14 @@ namespace Aoc.Domain.Compute
                             {
                                 if (coordinateB.Direction == Direction.Up || coordinateB.Direction == Direction.Down)
                                 {
-                                    intersections.Add(coordinateA.Position);
+                                    intersections.Add(new Intersection(coordinateA.Position, wireAProgress));
                                 }
                             }
                             else
                             {
                                 if (coordinateB.Direction == Direction.Left || coordinateB.Direction == Direction.Right)
                                 {
-                                    intersections.Add(coordinateA.Position);
+                                    intersections.Add(new Intersection(coordinateB.Position, wireBProgress));
                                 }
                             }
                         }

@@ -62,12 +62,12 @@ namespace Aoc.Domain.Unit.Tests.Compute
             var grid = new Grid(wireA, wireB);
             Assert.AreEqual(2, grid.Intersections.Count);
             var expectedFirstCrossing = new Coordinate(7, 6);
-            grid.Intersections[0].Should().BeEquivalentTo(expectedFirstCrossing);
+            grid.Intersections[0].Coordinate.Should().BeEquivalentTo(expectedFirstCrossing);
             var expectedSecondCrossing = new Coordinate(4, 4);
-            grid.Intersections[1].Should().BeEquivalentTo(expectedSecondCrossing);
+            grid.Intersections[1].Coordinate.Should().BeEquivalentTo(expectedSecondCrossing);
             var port = new Coordinate(1, 1);
             var expectedManhattanDistance = 6;
-            var manhattanDistance = Grid.GetManhattanDistance(port, grid.Intersections[1]);
+            var manhattanDistance = Grid.GetManhattanDistance(port, grid.Intersections[1].Coordinate);
             Assert.AreEqual(expectedManhattanDistance, manhattanDistance);
         }
 
@@ -93,7 +93,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
             var lowestManhattan = int.MaxValue;
             foreach (var intersection in grid.Intersections)
             {
-                var manhattan = Grid.GetManhattanDistance(port, intersection);
+                var manhattan = Grid.GetManhattanDistance(port, intersection.Coordinate);
                 if (manhattan < lowestManhattan)
                     lowestManhattan = manhattan;
             }
@@ -112,7 +112,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
             var lowestManhattan = int.MaxValue;
             foreach (var intersection in grid.Intersections)
             {
-                var manhattan = Grid.GetManhattanDistance(port, intersection);
+                var manhattan = Grid.GetManhattanDistance(port, intersection.Coordinate);
                 if (manhattan < lowestManhattan)
                     lowestManhattan = manhattan;
             }
@@ -131,7 +131,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
             var lowestManhattan = int.MaxValue;
             foreach (var intersection in grid.Intersections)
             {
-                var manhattan = Grid.GetManhattanDistance(port, intersection);
+                var manhattan = Grid.GetManhattanDistance(port, intersection.Coordinate);
                 if (manhattan < lowestManhattan)
                     lowestManhattan = manhattan;
             }
