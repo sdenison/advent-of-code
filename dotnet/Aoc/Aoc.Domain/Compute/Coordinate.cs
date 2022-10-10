@@ -1,4 +1,6 @@
-﻿namespace Aoc.Domain.Compute
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Aoc.Domain.Compute
 {
     public class Coordinate
     {
@@ -9,6 +11,11 @@
         {
             X = x;
             Y = y;
+        }
+
+        public bool Equals(Coordinate obj)
+        {
+            return X == obj.X && Y == obj.Y;
         }
     }
 }

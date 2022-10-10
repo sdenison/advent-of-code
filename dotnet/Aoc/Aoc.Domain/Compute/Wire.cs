@@ -11,7 +11,7 @@ namespace Aoc.Domain.Compute
         {
             Path = new List<Coordinate>();
             CurrentCoordinate = new Coordinate(1, 1);
-            Path.Add(CurrentCoordinate);
+            //Path.Add(CurrentCoordinate);
             GeneratePath(moves);
         }
 

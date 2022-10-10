@@ -59,15 +59,17 @@ namespace Aoc.Domain.Unit.Tests.Compute
         {
             var moves = new[] {"R2"};
             var wire = new Wire(moves);
-            Assert.AreEqual(3, wire.Path.Count);
-            wire.Path[0].Should().BeEquivalentTo(new Coordinate(1, 1));
-            wire.Path[1].Should().BeEquivalentTo(new Coordinate(2, 1));
+            Assert.AreEqual(2, wire.Path.Count);
+            wire.Path[0].Should().BeEquivalentTo(new Coordinate(2, 1));
         }
 
         [Test]
         public void Can_figure_out_where_two_wires_cross()
         {
-
+            var wireA = new Wire(new[] {"R8", "U5", "L5", "D3"});
+            var wireB = new Wire(new[] {"U7", "R6", "D4", "L4"});
+            var grid = new Grid(wireA, wireB);
+            Assert.AreEqual(2, grid.Intersections.Count);
         }
 
 
