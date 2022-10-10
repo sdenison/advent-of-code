@@ -4,15 +4,15 @@ namespace Aoc.Domain.Compute.Instructions
 {
     internal class Jump : Instruction
     {
-        public Func<bool> _jumpIfTrue { get; }
-        public override int Length => 3;
+        internal Func<bool> _jumpIfTrue { get; }
+        internal override int Length => 3;
 
         internal Jump(int opcode, Func<bool> jumpIfTrue) : base(opcode)
         {
             _jumpIfTrue = jumpIfTrue;
         }
 
-        public bool ShouldJump(int parameter)
+        internal bool ShouldJump(int parameter)
         {
             if (_jumpIfTrue())
                 return parameter > 0;

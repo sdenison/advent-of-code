@@ -1,6 +1,6 @@
 import unittest
 
-from domain.compute.intcode_computer import IntcodeComputer
+from domain.compute.intcode_computer import *
 
 
 class TestsIntcodeComputerUnit(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computer = IntcodeComputer()
         program = [1, 2, 3, 2, 99]
         memory_output = computer.run_program(program, None)
-        expected_memory_output = [1, 2, 5, 2, 99];
+        expected_memory_output = [1, 2, 5, 2, 99]
         self.assertEqual(memory_output, expected_memory_output)
 
     def test_that_multiply_works(self):
@@ -56,6 +56,8 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
                              1, 6, 103, 107, 1, 2, 107, 111, 1, 111, 9, 0, 99, 2, 14, 0, 0]
         computer = IntcodeComputer()
         solution_count = 0
+        solution_noun = 0
+        solution_verb = 0
         for noun in range(100):
             for verb in range(100):
                 candidate_program[1] = noun
@@ -72,7 +74,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         solution_value = (100 * solution_noun) + solution_verb
         self.assertEqual(6635, solution_value)
 
-    def test_that_new_Display_and_Put_instructions_work(self):
+    def test_that_new_display_and_put_instructions_work(self):
         computer = IntcodeComputer()
         program = [3, 0, 4, 0, 99]
         expected_computed_output = [55, 0, 4, 0, 99]
@@ -86,7 +88,7 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computed_output = computer.run_program(program, None)
         self.assertEqual(expected_computed_output, computed_output)
 
-    def Can_that_negative_numbers_are_valid(self):
+    def test_that_negative_numbers_are_valid(self):
         computer = IntcodeComputer()
         program = [1101, 100, -1, 4, 0]
         expected_computed_output = [1101, 100, -1, 4, 99]
@@ -130,6 +132,45 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         computer.run_program(program, 5)
         output = computer.output
         self.assertEqual(2369720, output[0])
+
+    # Edge cases
+
+    def test_that_99_is_a_valid_program(self):
+        computer = IntcodeComputer()
+        program = [99]
+        expected_computed_output = [99]
+        computed_output = computer.run_program(program, None)
+        self.assertEqual(expected_computed_output, computed_output)
+
+    def test_incomplete_instruction_should_raise_exception(self):
+        program = [1, 2, 3, 2, 1, 3, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_when_program_references_memory_that_does_not_belong_to_it_an_exception_is_raised(self):
+        program = [4, 3, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_that_invalid_opcode_should_raise_exception(self):
+        program = [1, 2, 3, 3, 88]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_halt_code_needed_at_end_of_program(self):
+        program = [1, 2, 3, 2]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
+
+    def test_that_a_program_that_expects_input_and_doesnt_get_it_will_raise_exception(self):
+        program = [3, 0, 4, 0, 99]
+        computer = IntcodeComputer()
+        with self.assertRaises(InvalidIntcodeProgram):
+            computer.run_program(program, None)
 
     @classmethod
     def get_day_2_data(cls):
