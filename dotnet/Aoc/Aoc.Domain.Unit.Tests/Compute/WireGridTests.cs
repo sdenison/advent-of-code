@@ -146,7 +146,6 @@ namespace Aoc.Domain.Unit.Tests.Compute
             var wireA = new Wire(movesA);
             var wireB = new Wire(movesB);
             var grid = new Grid(wireA, wireB);
-            var port = new Coordinate(1, 1);
             var lowestSteps = int.MaxValue;
             foreach (var intersection in grid.Intersections)
             {
@@ -154,6 +153,23 @@ namespace Aoc.Domain.Unit.Tests.Compute
                     lowestSteps = intersection.Steps;
             }
             Assert.AreEqual(610, lowestSteps);
+        }
+
+        [Test, Ignore("This test takes too long to run")]
+        public void Can_find_answer_day_3_step_2()
+        {
+            var movesA = GetTestDataDay3Step1MovesA();
+            var movesB = GetTestDataDay3Step1MovesB();
+            var wireA = new Wire(movesA);
+            var wireB = new Wire(movesB);
+            var grid = new Grid(wireA, wireB);
+            var lowestSteps = int.MaxValue;
+            foreach (var intersection in grid.Intersections)
+            {
+                if (intersection.Steps < lowestSteps)
+                    lowestSteps = intersection.Steps;
+            }
+            Assert.AreEqual(11432, lowestSteps);
         }
 
 
