@@ -13,8 +13,14 @@ namespace Aoc.Domain.Compute
             get
             {
                 var intersections = new List<Coordinate>();
-                foreach(var coordinateA in _wireA.Path)
-                    foreach(var coordinateB in _wireB.Path)
+                var wireAProgress = 0;
+                var wireBProgress = 0;
+                foreach (var coordinateA in _wireA.Path)
+                {
+                    wireAProgress++;
+                    foreach (var coordinateB in _wireB.Path)
+                    {
+                        wireBProgress++;
                         if (coordinateA.Position.Equals(coordinateB.Position))
                         {
                             if (coordinateA.Direction == Direction.Left || coordinateA.Direction == Direction.Right)
@@ -32,6 +38,9 @@ namespace Aoc.Domain.Compute
                                 }
                             }
                         }
+                    }
+                }
+
                 return intersections;
             }
         }
