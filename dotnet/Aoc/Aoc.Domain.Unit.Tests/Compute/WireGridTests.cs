@@ -138,6 +138,24 @@ namespace Aoc.Domain.Unit.Tests.Compute
             Assert.AreEqual(1017, lowestManhattan);
         }
 
+        [Test]
+        public void Can_find_intersection_with_fewest_total_steps()
+        {
+            var movesA = new[] { "R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"};
+            var movesB = new[] { "U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83" };
+            var wireA = new Wire(movesA);
+            var wireB = new Wire(movesB);
+            var grid = new Grid(wireA, wireB);
+            var port = new Coordinate(1, 1);
+            var lowestSteps = int.MaxValue;
+            foreach (var intersection in grid.Intersections)
+            {
+                if (intersection.Steps < lowestSteps)
+                    lowestSteps = intersection.Steps;
+            }
+            Assert.AreEqual(610, lowestSteps);
+        }
+
 
 
         public string[] GetTestDataDay3Step1MovesA()
