@@ -10,18 +10,14 @@ So far, the only software artifact that has been created is the **IntcodeCompute
 
 If you'd like to have your very own **IntcodeComputer** you can import the package with:
 
-...
-py -m pip install --index-url https://test.pypi.org/simple --no-deps compute_package_sdenison
-...
+    py -m pip install --index-url https://test.pypi.org/simple --no-deps compute_package_sdenison
 
 In the day five problem description, a program is given that outputs whatever is input. You can run that program and inspect the output by running:
 
-...
-from compute_package_sdenison import compute
+    from compute_package_sdenison import compute
 
-computer = compute.IntcodeComputer()
-program = [ 3, 0, 4, 0, 99 ]
-memory_after_program_runs = computer.run_program(program, 55)
-print(computer.output)
-print(memory_after_program_runs)
-...
+    computer = compute.IntcodeComputer()
+    program = [ 3, 0, 4, 0, 99 ]
+    memory_after_program_runs = computer.run_program(program, 55)
+    print(computer.output)
+    print(memory_after_program_runs)
