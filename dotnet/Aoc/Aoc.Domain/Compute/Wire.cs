@@ -15,6 +15,10 @@ namespace Aoc.Domain.Compute
             GeneratePath(moves);
         }
 
+        public Wire(string[] moves) : this(Move.ParseMoveList(moves))
+        {
+        }
+
         public void GeneratePath(List<Move> moves)
         {
             foreach (var move in moves)

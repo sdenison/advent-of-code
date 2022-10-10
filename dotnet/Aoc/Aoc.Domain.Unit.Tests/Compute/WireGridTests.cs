@@ -10,7 +10,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
         [Test]
         public void Can_create_wire()
         {
-            var moves = Move.ParseMoveList(new List<string>{"R2"});
+            var moves = Move.ParseMoveList(new[] {"R2"});
             var wire = new Wire(moves);
             Assert.IsNotNull(wire);
         }
@@ -30,7 +30,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
         [Test]
         public void Can_move_up()
         {
-            var moves = Move.ParseMoveList(new List<string>{"U5"});
+            var moves = Move.ParseMoveList(new[] {"U5"});
             var wire = new Wire(moves);
             var expectedCoordinate = new Coordinate(1, 6);
             wire.CurrentCoordinate.Should().BeEquivalentTo(expectedCoordinate);
@@ -39,7 +39,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
         [Test]
         public void Can_move_down()
         {
-            var moves = Move.ParseMoveList(new List<string>{"D3"});
+            var moves = Move.ParseMoveList(new[] {"D3"});
             var wire = new Wire(moves);
             var expectedCoordinate = new Coordinate(1, -2);
             wire.CurrentCoordinate.Should().BeEquivalentTo(expectedCoordinate);
@@ -48,7 +48,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
         [Test]
         public void Can_get_grid_location_after_several_moves()
         {
-            var moves = Move.ParseMoveList(new List<string> { "R2", "U5", "L3", "D1" });
+            var moves = new[] { "R2", "U5", "L3", "D1" };
             var wire = new Wire(moves);
             var expectedCoordinate = new Coordinate(0, 5);
             wire.CurrentCoordinate.Should().BeEquivalentTo(expectedCoordinate);
@@ -57,7 +57,7 @@ namespace Aoc.Domain.Unit.Tests.Compute
         [Test]
         public void Can_create_a_path_for_a_wire()
         {
-            var moves = Move.ParseMoveList(new List<string>{"R2"});
+            var moves = new[] {"R2"};
             var wire = new Wire(moves);
             Assert.AreEqual(3, wire.Path.Count);
             wire.Path[0].Should().BeEquivalentTo(new Coordinate(1, 1));

@@ -15,7 +15,7 @@ namespace Aoc.Domain.Compute
             Distance = int.Parse(move.Substring(1, move.Length - 1));
         }
 
-        public static List<Move> ParseMoveList(List<string> moveStrings)
+        public static List<Move> ParseMoveList(string[] moveStrings)
         {
             var moves = new List<Move>();
             foreach (var moveString in moveStrings)
