@@ -26,7 +26,7 @@ namespace Aoc.Spaceship.Hardware
                 Coordinate newCoordinate;
                 switch (move.Direction)
                 {
-                    case "R":
+                    case Directions.Right:
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
@@ -34,7 +34,7 @@ namespace Aoc.Spaceship.Hardware
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
-                    case "L":
+                    case Directions.Left:
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
@@ -42,7 +42,7 @@ namespace Aoc.Spaceship.Hardware
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
-                    case "U":
+                    case Directions.Up:
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
@@ -50,7 +50,7 @@ namespace Aoc.Spaceship.Hardware
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
-                    case "D":
+                    case Directions.Down:
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
@@ -59,9 +59,7 @@ namespace Aoc.Spaceship.Hardware
                         }
                         break;
                     default:
-                        throw new Exception();
-
-
+                        throw new InvalidHardware($"Direction unknown {move.Direction}");
                 }
             }
 

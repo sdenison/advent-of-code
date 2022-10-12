@@ -19,11 +19,11 @@ namespace Aoc.Spaceship.Unit.Tests.Hardware
         public void Can_parse_move()
         {
             var move = new Move("R75");
-            Assert.AreEqual("R", move.Direction);
+            Assert.AreEqual(Directions.Right, move.Direction);
             Assert.AreEqual(75, move.Distance);
 
             move = new Move("U323");
-            Assert.AreEqual("U", move.Direction);
+            Assert.AreEqual(Directions.Up, move.Direction);
             Assert.AreEqual(323, move.Distance);
         }
 
