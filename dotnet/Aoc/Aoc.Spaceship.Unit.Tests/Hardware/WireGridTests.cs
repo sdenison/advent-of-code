@@ -1,4 +1,5 @@
-﻿using Aoc.Spaceship.Hardware;
+﻿using System.Linq.Expressions;
+using Aoc.Spaceship.Hardware;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -119,7 +120,7 @@ namespace Aoc.Spaceship.Unit.Tests.Hardware
             Assert.AreEqual(135, lowestManhattan);
         }
 
-        [Test, Ignore("This test takes too long to run")]
+        [Test]
         public void Can_get_answer_day_3_step_1()
         {
             var movesA = GetTestDataDay3Step1MovesA();
@@ -155,7 +156,7 @@ namespace Aoc.Spaceship.Unit.Tests.Hardware
             Assert.AreEqual(610, lowestSteps);
         }
 
-        [Test, Ignore("This test takes too long to run")]
+        [Test]
         public void Can_find_answer_day_3_step_2()
         {
             var movesA = GetTestDataDay3Step1MovesA();
@@ -171,7 +172,6 @@ namespace Aoc.Spaceship.Unit.Tests.Hardware
             }
             Assert.AreEqual(11432, lowestSteps);
         }
-
 
 
         public string[] GetTestDataDay3Step1MovesA()

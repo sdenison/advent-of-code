@@ -13,19 +13,30 @@ namespace Aoc.Spaceship.Hardware
             get
             {
                 var intersections = new List<Intersection>();
-                var wireASteps = 0;
-                foreach (var coordinateA in _wireA.Path)
+
+                var wireADictionary = new Dictionary<Coordinate, List<Step>>();
+                foreach (var step in _wireA.Path)
                 {
-                    wireASteps++;
-                    var wireBSteps = 0;
-                    foreach (var coordinateB in _wireB.Path)
+                    if (wireADictionary.ContainsKey(step.Position))
                     {
-                        wireBSteps++;
-                        if (coordinateA.Position.Equals(coordinateB.Position))
-                        {
-                            if (coordinateA.Axis != coordinateB.Axis)
-                                intersections.Add(new Intersection(coordinateA.Position, wireASteps + wireBSteps));
-                        }
+                        wireADictionary[step.Position].Add(step);
+                    }
+                    else
+                    {
+                        var steps = new List<Step>() {step};
+                        wireADictionary.Add(step.Position, steps);
+                    }
+                }
+
+                var wireBSteps = 0;
+                foreach (var stepB in _wireB.Path)
+                {
+                    wireBSteps++;
+                    if (wireADictionary.ContainsKey(stepB.Position))
+                    {
+                        foreach (var stepA in wireADictionary[stepB.Position])
+                            if (stepA.Axis != stepB.Axis)
+                                intersections.Add(new Intersection(stepA.Position, stepA.TotalStepsSoFar + stepB.TotalStepsSoFar));
                     }
                 }
 

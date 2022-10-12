@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Aoc.Spaceship.Hardware
 {
     public class Wire
     {
-        public List<Vector> Path { get; set; }
+        public List<Step> Path { get; set; }
         public Coordinate CurrentCoordinate { get; set; }
 
         public Wire(List<Move> moves)
         {
-            Path = new List<Vector>();
+            Path = new List<Step>();
             CurrentCoordinate = new Coordinate(1, 1);
             GeneratePath(moves);
         }
@@ -21,6 +22,7 @@ namespace Aoc.Spaceship.Hardware
 
         public void GeneratePath(List<Move> moves)
         {
+            var totalStepsSoFar = 0;
             foreach (var move in moves)
             {
                 Coordinate newCoordinate;
@@ -29,32 +31,36 @@ namespace Aoc.Spaceship.Hardware
                     case Directions.Right:
                         for (int i = 1; i <= move.Distance; i++)
                         {
+                            totalStepsSoFar++;
                             newCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
-                            Path.Add(new Vector(newCoordinate, Axis.X));
+                            Path.Add(new Step(newCoordinate, Axis.X, totalStepsSoFar));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
                     case Directions.Left:
                         for (int i = 1; i <= move.Distance; i++)
                         {
+                            totalStepsSoFar++;
                             newCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
-                            Path.Add(new Vector(newCoordinate, Axis.X));
+                            Path.Add(new Step(newCoordinate, Axis.X, totalStepsSoFar));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
                     case Directions.Up:
                         for (int i = 1; i <= move.Distance; i++)
                         {
+                            totalStepsSoFar++;
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
-                            Path.Add(new Vector(newCoordinate, Axis.Y));
+                            Path.Add(new Step(newCoordinate, Axis.Y, totalStepsSoFar));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
                     case Directions.Down:
                         for (int i = 1; i <= move.Distance; i++)
                         {
+                            totalStepsSoFar++;
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
-                            Path.Add(new Vector(newCoordinate, Axis.Y));
+                            Path.Add(new Step(newCoordinate, Axis.Y, totalStepsSoFar));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;

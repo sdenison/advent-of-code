@@ -15,5 +15,15 @@
         {
             return X == obj.X && Y == obj.Y;
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Coordinate);
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
     }
 }
