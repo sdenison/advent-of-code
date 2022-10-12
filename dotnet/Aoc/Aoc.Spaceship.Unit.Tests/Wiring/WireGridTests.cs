@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using Aoc.Spaceship.Hardware;
+﻿using Aoc.Spaceship.Wiring;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Aoc.Spaceship.Unit.Tests.Hardware
+namespace Aoc.Spaceship.Unit.Tests.Wiring
 {
     [TestFixture]
     public class WireGridTests
