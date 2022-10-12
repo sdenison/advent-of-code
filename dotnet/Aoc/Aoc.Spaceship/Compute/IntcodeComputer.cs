@@ -9,6 +9,7 @@ namespace Aoc.Spaceship.Compute
     public class IntcodeComputer {
         private int[]? _memory;
         private List<int> _input;
+        private int _inputCounter;
         private int _instructionPointer;
         public List<int>? Output { get; set;  }
 
@@ -144,12 +145,20 @@ namespace Aoc.Spaceship.Compute
 
         private void ExecuteInstruction(Put instruction)
         {
-            if (!_input.HasValue)
-                throw new InvalidIntcodeProgram("This program expects input from user and none was given");
+            var input = GetInput();
             if (instruction.ParameterModes[0] == ParameterMode.Immediate)
-                _memory[_instructionPointer + 1] = _input.Value;
+                _memory[_instructionPointer + 1] = input;
             else
-                _memory[_memory[_instructionPointer + 1]] = _input.Value;
+                _memory[_memory[_instructionPointer + 1]] = input;
+        }
+
+        private int GetInput()
+        {
+            if (_inputCounter > _input.Count - 1)
+                throw new InvalidIntcodeProgram("There were not enough inputs passed to the program");
+            var inputValue = _input[_inputCounter];
+            _inputCounter++;
+            return inputValue;
         }
 
         private int GetParameterValue(Instruction instruction, int parameterPosition)
@@ -163,6 +172,7 @@ namespace Aoc.Spaceship.Compute
         {
             //Make sure we don't use input from previous runs
             _input = input;
+            _inputCounter = 0;
             //Make sure we don't have output from previous program runs
             Output = new List<int>();
             //Don't surprise the user and make changes to the incoming program
