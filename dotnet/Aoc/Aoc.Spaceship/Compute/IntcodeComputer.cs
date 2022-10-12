@@ -12,26 +12,22 @@ namespace Aoc.Spaceship.Compute
         private int _instructionPointer;
         public List<int>? Output { get; set;  }
 
-        public int[] RunProgram(int[] program, int? input = null)
+        public int[] RunProgram(int[] program)
         {
-            return RunProgram(program, new[] {input.Value});
-            Initialize(program, input);
+            return RunProgram(program, new List<int>());
+        }
 
-            //Main computer logic
-            _instructionPointer = 0;
-            while (_instructionPointer < _memory.Length)
-            {
-                var instruction = GetNextInstruction();
-                if (instruction is Halt)
-                    return _memory;
-                _instructionPointer = ExecuteInstruction(instruction);
-            }
-
-            //We should always see a halt operation at the end of the program
-            throw new InvalidIntcodeProgram("No halt instruction at end of program");
+        public int[] RunProgram(int[] program, int input)
+        {
+            return RunProgram(program, new List<int>{input});
         }
 
         public int[] RunProgram(int[] program, int[] input)
+        {
+            return RunProgram(program, input.ToList());
+        }
+
+        public int[] RunProgram(int[] program, List<int> input)
         {
             Initialize(program, input.ToList());
 
@@ -48,7 +44,8 @@ namespace Aoc.Spaceship.Compute
             //We should always see a halt operation at the end of the program
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
-l  h     private Instruction GetNextInstruction()
+
+        private Instruction GetNextInstruction()
         {
             var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
@@ -162,7 +159,7 @@ l  h     private Instruction GetNextInstruction()
             return _memory[_memory[_instructionPointer + parameterPosition]];
         }
 
-        private void Initialize(int[] program, int[] input)
+        private void Initialize(int[] program, List<int> input)
         {
             //Make sure we don't use input from previous runs
             _input = input;
