@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aoc.Spaceship.Hardware
+namespace Aoc.Spaceship.Wiring
 {
     public class InvalidHardware : Exception
     {

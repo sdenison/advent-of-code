@@ -1,4 +1,4 @@
-﻿namespace Aoc.Spaceship.Hardware
+﻿namespace Aoc.Spaceship.Wiring
 {
     public enum Directions
     {

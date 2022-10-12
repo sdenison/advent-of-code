@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aoc.Spaceship.Compute.Instructions;
 using Math = Aoc.Spaceship.Compute.Instructions.Math;
 
 namespace Aoc.Spaceship.Compute
 {
-    public class IntcodeComputer
-    {
+    public class IntcodeComputer {
         private int[]? _memory;
-        private int? _input = 0;
+        private List<int> _input;
         private int _instructionPointer;
         public List<int>? Output { get; set;  }
 
         public int[] RunProgram(int[] program, int? input = null)
         {
+            return RunProgram(program, new[] {input.Value});
             Initialize(program, input);
 
             //Main computer logic
@@ -30,7 +31,24 @@ namespace Aoc.Spaceship.Compute
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
         }
 
-        private Instruction GetNextInstruction()
+        public int[] RunProgram(int[] program, int[] input)
+        {
+            Initialize(program, input.ToList());
+
+            //Main computer logic
+            _instructionPointer = 0;
+            while (_instructionPointer < _memory.Length)
+            {
+                var instruction = GetNextInstruction();
+                if (instruction is Halt)
+                    return _memory;
+                _instructionPointer = ExecuteInstruction(instruction);
+            }
+
+            //We should always see a halt operation at the end of the program
+            throw new InvalidIntcodeProgram("No halt instruction at end of program");
+        }
+l  h     private Instruction GetNextInstruction()
         {
             var rawOpcode = _memory[_instructionPointer];
             Opcodes opcode = (Opcodes) (rawOpcode % 100);
@@ -144,7 +162,7 @@ namespace Aoc.Spaceship.Compute
             return _memory[_memory[_instructionPointer + parameterPosition]];
         }
 
-        private void Initialize(int[] program, int? input)
+        private void Initialize(int[] program, int[] input)
         {
             //Make sure we don't use input from previous runs
             _input = input;
