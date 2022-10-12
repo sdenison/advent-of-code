@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Aoc.Spaceship.Unit.Tests.Wiring
+namespace Aoc.Spaceship.Unit.Tests.WiringTests
 {
     [TestFixture]
     public class WireGridTests
@@ -19,11 +19,11 @@ namespace Aoc.Spaceship.Unit.Tests.Wiring
         public void Can_parse_move()
         {
             var move = new Move("R75");
-            Assert.AreEqual(Directions.Right, move.Direction);
+            Assert.AreEqual(Direction.Right, move.Direction);
             Assert.AreEqual(75, move.Distance);
 
             move = new Move("U323");
-            Assert.AreEqual(Directions.Up, move.Direction);
+            Assert.AreEqual(Direction.Up, move.Direction);
             Assert.AreEqual(323, move.Distance);
         }
 

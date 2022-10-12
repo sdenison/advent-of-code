@@ -1,7 +1,7 @@
-﻿using Aoc.Spaceship.Compute;
+﻿using Aoc.Spaceship.Computer;
 using NUnit.Framework;
 
-namespace Aoc.Spaceship.Unit.Tests.Compute;
+namespace Aoc.Spaceship.Unit.Tests.ComputerTests;
 
 [TestFixture]
 public class IntcodeComputerTests

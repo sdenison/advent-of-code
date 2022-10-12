@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Aoc.Spaceship.Compute.Instructions;
-using Math = Aoc.Spaceship.Compute.Instructions.Math;
+using Aoc.Spaceship.Computer.Instructions;
 
-namespace Aoc.Spaceship.Compute
+namespace Aoc.Spaceship.Computer
 {
     public class IntcodeComputer {
         private int[]? _memory;
@@ -75,10 +74,10 @@ namespace Aoc.Spaceship.Compute
                     instruction = new Compare(rawOpcode, compareFunction: (x, y) => x == y);
                     break;
                 case Opcodes.Add:
-                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x + y);
+                    instruction = new Instructions.Math(rawOpcode, mathOperation: (x, y) => x + y);
                     break;
                 case Opcodes.Multiply:
-                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x * y);
+                    instruction = new Instructions.Math(rawOpcode, mathOperation: (x, y) => x * y);
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
@@ -92,7 +91,7 @@ namespace Aoc.Spaceship.Compute
         {
             switch (instruction)
             {
-                case Math mathInstruction:
+                case Instructions.Math mathInstruction:
                     ExecuteInstruction(mathInstruction);
                     break;
                 case Display displayInstruction:
@@ -129,7 +128,7 @@ namespace Aoc.Spaceship.Compute
             _memory[destinationAddress] = instruction.CompareFunction(parameter1, parameter2) ? 1 : 0;
         }
 
-        private void ExecuteInstruction(Math instruction)
+        private void ExecuteInstruction(Instructions.Math instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);

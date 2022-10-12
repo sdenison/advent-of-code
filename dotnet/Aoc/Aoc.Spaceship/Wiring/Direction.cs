@@ -1,6 +1,6 @@
 ﻿namespace Aoc.Spaceship.Wiring
 {
-    public enum Directions
+    public enum Direction
     {
         Right,
         Left,

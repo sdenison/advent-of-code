@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aoc.Spaceship.Compute.Instructions
+namespace Aoc.Spaceship.Computer.Instructions
 {
     internal class Jump : Instruction
     {

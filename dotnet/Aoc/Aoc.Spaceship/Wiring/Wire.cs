@@ -18,55 +18,49 @@ namespace Aoc.Spaceship.Wiring
         {
         }
 
-        public void GeneratePath(List<Move> moves)
+        private void GeneratePath(List<Move> moves)
         {
             var totalStepsSoFar = 0;
             foreach (var move in moves)
             {
-                Coordinate newCoordinate;
-                switch (move.Direction)
-                {
-                    case Directions.Right:
-                        for (int i = 1; i <= move.Distance; i++)
-                        {
-                            totalStepsSoFar++;
-                            newCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
-                            Path.Add(new Step(newCoordinate, Axis.X, totalStepsSoFar));
-                            CurrentCoordinate = newCoordinate;
-                        }
-                        break;
-                    case Directions.Left:
-                        for (int i = 1; i <= move.Distance; i++)
-                        {
-                            totalStepsSoFar++;
-                            newCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
-                            Path.Add(new Step(newCoordinate, Axis.X, totalStepsSoFar));
-                            CurrentCoordinate = newCoordinate;
-                        }
-                        break;
-                    case Directions.Up:
-                        for (int i = 1; i <= move.Distance; i++)
-                        {
-                            totalStepsSoFar++;
-                            newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
-                            Path.Add(new Step(newCoordinate, Axis.Y, totalStepsSoFar));
-                            CurrentCoordinate = newCoordinate;
-                        }
-                        break;
-                    case Directions.Down:
-                        for (int i = 1; i <= move.Distance; i++)
-                        {
-                            totalStepsSoFar++;
-                            newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
-                            Path.Add(new Step(newCoordinate, Axis.Y, totalStepsSoFar));
-                            CurrentCoordinate = newCoordinate;
-                        }
-                        break;
-                    default:
-                        throw new InvalidHardware($"Direction unknown {move.Direction}");
-                }
+                totalStepsSoFar = MakeMove(move, totalStepsSoFar);
             }
+        }
 
+        private int MakeMove(Move move, int totalStepsSoFar)
+        {
+            for (var i = 0; i < move.Distance; i++)
+            {
+                totalStepsSoFar = TakeStep(move.Direction, totalStepsSoFar);
+            }
+            return totalStepsSoFar;
+        }
+
+        private int TakeStep(Direction direction, int totalStepsSoFar)
+        {
+            totalStepsSoFar++;
+            switch (direction)
+            {
+                case Direction.Right:
+                    CurrentCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
+                    Path.Add(new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
+                    break;
+                case Direction.Left:
+                    CurrentCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
+                    Path.Add(new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
+                    break;
+                case Direction.Up:
+                    CurrentCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
+                    Path.Add(new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
+                    break;
+                case Direction.Down:
+                    CurrentCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
+                    Path.Add(new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
+                    break;
+                default:
+                    throw new InvalidWiringConfiguration($"Direction unknown {direction}");
+            }
+            return totalStepsSoFar;
         }
     }
 }

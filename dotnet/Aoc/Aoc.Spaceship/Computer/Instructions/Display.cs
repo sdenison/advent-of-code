@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Aoc.Spaceship.Compute.Instructions
+namespace Aoc.Spaceship.Computer.Instructions
 {
     internal class Display : Instruction
     {
