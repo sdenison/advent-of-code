@@ -3,12 +3,12 @@
     public class Vector
     {
         public Coordinate Position { get; set; }
-        public Direction Direction { get; set; }
+        public Axis Axis { get; set; }
 
-        public Vector(Coordinate position, Direction direction)
+        public Vector(Coordinate position, Axis axis)
         {
             Position = position;
-            Direction = direction;
+            Axis = axis;
         }
     }
 }

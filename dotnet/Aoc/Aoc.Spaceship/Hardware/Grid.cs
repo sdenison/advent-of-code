@@ -23,20 +23,8 @@ namespace Aoc.Spaceship.Hardware
                         wireBSteps++;
                         if (coordinateA.Position.Equals(coordinateB.Position))
                         {
-                            if (coordinateA.Direction == Direction.Left || coordinateA.Direction == Direction.Right)
-                            {
-                                if (coordinateB.Direction == Direction.Up || coordinateB.Direction == Direction.Down)
-                                {
-                                    intersections.Add(new Intersection(coordinateA.Position, wireASteps + wireBSteps));
-                                }
-                            }
-                            else
-                            {
-                                if (coordinateB.Direction == Direction.Left || coordinateB.Direction == Direction.Right)
-                                {
-                                    intersections.Add(new Intersection(coordinateB.Position, wireASteps + wireBSteps));
-                                }
-                            }
+                            if (coordinateA.Axis != coordinateB.Axis)
+                                intersections.Add(new Intersection(coordinateA.Position, wireASteps + wireBSteps));
                         }
                     }
                 }
@@ -56,7 +44,6 @@ namespace Aoc.Spaceship.Hardware
         {
             int xDistance = Math.Abs(coordinateA.X - coordinateB.X);
             int yDistance = Math.Abs(coordinateA.Y - coordinateB.Y);
-
 
             return xDistance + yDistance;
         }

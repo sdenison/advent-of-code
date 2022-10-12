@@ -30,7 +30,7 @@ namespace Aoc.Spaceship.Hardware
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
-                            Path.Add(new Vector(newCoordinate, Direction.Right));
+                            Path.Add(new Vector(newCoordinate, Axis.X));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -38,7 +38,7 @@ namespace Aoc.Spaceship.Hardware
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
-                            Path.Add(new Vector(newCoordinate, Direction.Left));
+                            Path.Add(new Vector(newCoordinate, Axis.X));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -46,7 +46,7 @@ namespace Aoc.Spaceship.Hardware
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
-                            Path.Add(new Vector(newCoordinate, Direction.Up));
+                            Path.Add(new Vector(newCoordinate, Axis.Y));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
@@ -54,7 +54,7 @@ namespace Aoc.Spaceship.Hardware
                         for (int i = 1; i <= move.Distance; i++)
                         {
                             newCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
-                            Path.Add(new Vector(newCoordinate, Direction.Down));
+                            Path.Add(new Vector(newCoordinate, Axis.Y));
                             CurrentCoordinate = newCoordinate;
                         }
                         break;
