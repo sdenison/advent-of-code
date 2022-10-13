@@ -22,7 +22,7 @@ namespace Aoc.Spaceship.Propulsion
             for (int i = 0; i < numberOfAmplifiers; i++)
             {
                 var amplifier = new Amplifier(_program);
-                currentThrust = amplifier.GetThrust(_phaseSetting[0], currentThrust);
+                currentThrust = amplifier.GetThrust(_phaseSetting[i], currentThrust);
             }
             return currentThrust;
         }
