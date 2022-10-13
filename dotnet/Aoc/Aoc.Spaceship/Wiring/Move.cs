@@ -34,7 +34,7 @@ namespace Aoc.Spaceship.Wiring
                     return Direction.Right;
                 case "L":
                     return Direction.Left;
-                default: throw new InvalidHardware($"Unknown direction {direction}");
+                default: throw new InvalidWiringConfiguration($"Unknown direction {direction}");
             }
         }
     }
