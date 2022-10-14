@@ -10,6 +10,7 @@ namespace Aoc.Spaceship.Propulsion
             _program = program;
         }
 
+
         public int GetThrust(int phaseSetting, int input)
         {
             var computer = new IntcodeComputer();
