@@ -153,12 +153,21 @@ namespace Aoc.Spaceship.Computer
 
         private int GetInput()
         {
+            int inputValue;
             if (_inputCounter > _input.Count - 1)
-                throw new InvalidIntcodeProgram("There were not enough inputs passed to the program");
-            var inputValue = _input[_inputCounter];
-            _inputCounter++;
+            {
+                inputValue = AcceptInput();
+
+            }
+            else
+            {
+                inputValue = _input[_inputCounter];
+                _inputCounter++;
+            }
             return inputValue;
         }
+
+        public Func<int> AcceptInput { get; set; }
 
         private int GetParameterValue(Instruction instruction, int parameterPosition)
         {

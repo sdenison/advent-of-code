@@ -27,11 +27,10 @@ namespace Aoc.Spaceship.Propulsion
             return currentThrust;
         }
 
-        public int GetMaximumThrust(int numberOfAmplifiers)
+        public int GetMaximumThrust(int numberOfAmplifiers, int[] initialPhaseSettings)
         {
-
             var maximumThrust = 0;
-            var permutations = Permute(new[]  { 0, 1, 2, 3, 4 });
+            var permutations = Permute(initialPhaseSettings);
             foreach (var phaseSettings in permutations)
             {
                 var thrust = GetThrust(numberOfAmplifiers, 0, phaseSettings.ToArray());
@@ -40,6 +39,10 @@ namespace Aoc.Spaceship.Propulsion
             }
             return maximumThrust;
         }
+
+        //public int GetMaximumThrustWithFeedbackLook(int numberOfAmplifiers)
+
+
         public IList<IList<int>> Permute(int[] nums)
         {
             var list = new List<IList<int>>();

@@ -205,6 +205,20 @@ public class IntcodeComputerTests
         Assert.AreEqual(2369720, output[0]);
     }
 
+    [Test]
+    public void Can_prompt_for_input()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] { 3, 0, 4, 0, 99 };
+        var expectedComputedOutput = new[] { 55, 0, 4, 0, 99 };
+        computer.AcceptInput = () => 55;
+        var computedOutput = computer.RunProgram(program);
+        var output = computer.Output;
+
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+
+    }
+
     //Edge cases
 
     [Test]
@@ -251,16 +265,16 @@ public class IntcodeComputerTests
         });
     }
 
-    [Test]
-    public void Running_a_program_that_expects_input_but_none_was_given_should_fail()
-    {
-        var program = new[] { 3, 0, 4, 0, 99 };
-        var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
-        {
-            var computedOutput = computer.RunProgram(program);
-        });
-    }
+    //[Test]
+    //public void Running_a_program_that_expects_input_but_none_was_given_should_fail()
+    //{
+    //    var program = new[] { 3, 0, 4, 0, 99 };
+    //    var computer = new IntcodeComputer();
+    //    Assert.Throws<InvalidIntcodeProgram>(() =>
+    //    {
+    //        var computedOutput = computer.RunProgram(program);
+    //    });
+    //}
 
     //Data generation
 
