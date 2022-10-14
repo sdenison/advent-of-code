@@ -27,13 +27,37 @@ namespace Aoc.Spaceship.Unit.Tests.PropulsionTests
         {
             var program = GetDay7InputProgram();
             var amplifierArray = new AmplifierArray(program);
-            var maximumThrust = amplifierArray.GetMaximumThrust(5);
+            var maximumThrust = amplifierArray.GetMaximumThrust(5, new[] {0, 1, 2, 3, 4});
             Assert.AreEqual(92663, maximumThrust);
-            var phases = new[] {0, 1, 2};
-            var permutations = amplifierArray.Permute(phases);
+        }
 
-            Assert.AreEqual(6, permutations.Count);
+        [Test]
+        public void Can_get_amplifier_to_promt_for_input()
+        {
 
+        }
+
+        [Test]
+        public void Can_get_feedbac_answer_from_example()
+        {
+            var program =
+            new[]{
+                3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1, 28, 1005, 28, 6,
+                99, 0, 0, 5
+            };
+            var amplifierArray = new AmplifierArray(program);
+            var maximumThrust = amplifierArray.GetMaximumThrustWithFeedbackLook(new[] {9, 8, 7, 6, 5});
+            //Assert.AreEqual(139629729, maximumThrust);
+
+        }
+
+        [Test]
+        public void Can_get_day_7_part_2_answer()
+        {
+            var program = GetDay7InputProgram();
+            var amplifierArray = new AmplifierArray(program);
+            var maximumThrust = amplifierArray.GetMaximumThrustWithFeedbackLook(new[] {5, 6, 7, 8, 9});
+            //Assert.AreEqual(24, maximumThrust);
         }
 
         public int[] GetDay7InputProgram()

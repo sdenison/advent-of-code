@@ -214,9 +214,25 @@ public class IntcodeComputerTests
         computer.AcceptInput = () => 55;
         var computedOutput = computer.RunProgram(program);
         var output = computer.Output;
-
         Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
 
+    [Test]
+    public void Can_handle_output()
+    {
+        var computer = new IntcodeComputer();
+        var program = new[] { 3, 0, 4, 0, 99 };
+        var expectedComputedOutput = new[] { 55, 0, 4, 0, 99 };
+        computer.AcceptInput = () => 55;
+        computer.HandleOutput = HandlingOutput;
+        var computedOutput = computer.RunProgram(program);
+        var output = computer.Output;
+        Assert.AreEqual(expectedComputedOutput, computedOutput);
+    }
+
+    public void HandlingOutput(int output)
+    {
+        var x = output;
     }
 
     //Edge cases

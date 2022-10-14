@@ -139,8 +139,13 @@ namespace Aoc.Spaceship.Computer
 
         private void ExecuteInstruction(Display instruction)
         {
-            Output.Add(GetParameterValue(instruction, 1));
+            var outputValue = GetParameterValue(instruction, 1);
+            Output.Add(outputValue);
+            if (HandleOutput != null)
+                HandleOutput(outputValue);
         }
+
+        public Action<int> HandleOutput { get; set; }
 
         private void ExecuteInstruction(Put instruction)
         {
@@ -157,7 +162,6 @@ namespace Aoc.Spaceship.Computer
             if (_inputCounter > _input.Count - 1)
             {
                 inputValue = AcceptInput();
-
             }
             else
             {
@@ -166,6 +170,7 @@ namespace Aoc.Spaceship.Computer
             }
             return inputValue;
         }
+
 
         public Func<int> AcceptInput { get; set; }
 
