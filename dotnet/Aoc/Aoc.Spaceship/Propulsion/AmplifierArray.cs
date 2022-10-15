@@ -19,14 +19,14 @@ namespace Aoc.Spaceship.Propulsion
             var phaseSettingPermutations = initialPhaseSettings.GetPermutations();
             foreach (var phaseSettings in phaseSettingPermutations)
             {
-                var thrust = GetMaximumThrustWithFeedbackLoop(phaseSettings.ToArray());
+                var thrust = GetThrust(phaseSettings.ToArray());
                 if (thrust > maximumThrust)
                     maximumThrust = thrust;
             }
             return maximumThrust;
         }
 
-        public int GetMaximumThrustWithFeedbackLoop(int[] initialPhaseSettings)
+        public int GetThrust(int[] initialPhaseSettings)
         {
             //Creating the amplifiers
             var amplifierA = new Amplifier(_program, new[] {initialPhaseSettings[0], 0});
