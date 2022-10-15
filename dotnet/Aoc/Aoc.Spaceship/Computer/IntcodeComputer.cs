@@ -16,7 +16,6 @@ namespace Aoc.Spaceship.Computer
         private int _outputCounter = 0;
         public IntcodeComputer ParentComputer { get; set; }
         public string Name { get; set; }
-
         public List<int>? Output { get; set; }
 
         public IntcodeComputer() : this(new int[] {})
@@ -30,54 +29,22 @@ namespace Aoc.Spaceship.Computer
 
         public int[] RunProgram(int[] program)
         {
-            Initialize(program, _input.ToList());
-
-            //Main computer logic
-            _instructionPointer = 0;
-            while (_instructionPointer < _memory.Length)
-            {
-                var instruction = GetNextInstruction();
-                if (instruction is Halt)
-                    return _memory;
-                _instructionPointer = ExecuteInstruction(instruction);
-            }
-
-            //We should always see a halt operation at the end of the program
-            throw new InvalidIntcodeProgram("No halt instruction at end of program");return RunProgram(program, new List<int>());
+            return RunProgram(program, new int[]{});
         }
 
         public int[] RunProgram(int[] program, int input)
         {
-            return RunProgram(program, new List<int>{input});
+            return RunProgram(program, new [] {input});
         }
 
         public int[] RunProgram(int[] program, int[] input)
         {
-            return RunProgram(program, input.ToList());
-        }
-
-        public int[] RunProgram(int[] program, List<int> input)
-        {
-            Initialize(program, input.ToList());
-
-            //Main computer logic
-            _instructionPointer = 0;
-            while (_instructionPointer < _memory.Length)
-            {
-                var instruction = GetNextInstruction();
-                if (instruction is Halt)
-                    return _memory;
-                _instructionPointer = ExecuteInstruction(instruction);
-            }
-
-            //We should always see a halt operation at the end of the program
-            throw new InvalidIntcodeProgram("No halt instruction at end of program");
+            return RunProgramAsync(program, input).Result;
         }
 
         public async Task<int[]> RunProgramAsync(int[] program, int[] input)
         {
             Initialize(program, input.ToList());
-            var x = Name;
 
             //Main computer logic
             _instructionPointer = 0;
@@ -135,31 +102,6 @@ namespace Aoc.Spaceship.Computer
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
         }
-
-        private int ExecuteInstruction(Instruction instruction)
-        {
-            switch (instruction)
-            {
-                case Instructions.Math mathInstruction:
-                    ExecuteInstruction(mathInstruction);
-                    break;
-                case Display displayInstruction:
-                    ExecuteInstruction(displayInstruction);
-                    break;
-                case Put putInstruction:
-                    ExecuteInstruction(putInstruction);
-                    break;
-                case Jump jumpInstruction:
-                    return ExecuteInstruction(jumpInstruction);
-                case Compare compareInstruction:
-                    ExecuteInstruction(compareInstruction);
-                    break;
-                default: 
-                    throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
-            }
-            return _instructionPointer + instruction.Length;
-        }
-
         private async Task<int> ExecuteInstructionAsync(Instruction instruction)
         {
             switch (instruction)
@@ -216,15 +158,6 @@ namespace Aoc.Spaceship.Computer
             Output.Add(outputValue);
         }
 
-        private void ExecuteInstruction(Put instruction)
-        {
-            var input = GetInput().Result;
-            if (instruction.ParameterModes[0] == ParameterMode.Immediate)
-                _memory[_instructionPointer + 1] = input;
-            else
-                _memory[_memory[_instructionPointer + 1]] = input;
-        }
-
         private async Task ExecuteInstructionAsync(Put instruction)
         {
             var input = await GetInput();
@@ -248,7 +181,7 @@ namespace Aoc.Spaceship.Computer
         private async Task<int> GetInput()
         {
             int inputValue;
-            if (_inputCounter > _input.Count - 1)
+            if (_inputCounter > _input.Count - 1 && !(ParentComputer is null))
             {
                 //This is output from our parent machine
                 inputValue = await ParentComputer.GetOutput(_outputCounter);

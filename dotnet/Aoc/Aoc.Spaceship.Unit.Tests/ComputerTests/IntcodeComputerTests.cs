@@ -251,9 +251,9 @@ public class IntcodeComputerTests
     [Test]
     public void Incomplete_instruction_should_throw_exception()
     {
-        var program = new[] {1, 2, 3, 2, 1, 3, 99}; 
+        var program = new[] {1, 2, 3, 2, 1, 3, 99};
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
@@ -264,7 +264,7 @@ public class IntcodeComputerTests
     {
         var program = new[] {1, 2, 3, 3, 88}; 
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
@@ -275,22 +275,22 @@ public class IntcodeComputerTests
     {
         var program = new[] {1, 2, 3, 2}; 
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
     }
 
-    //[Test]
-    //public void Running_a_program_that_expects_input_but_none_was_given_should_fail()
-    //{
-    //    var program = new[] { 3, 0, 4, 0, 99 };
-    //    var computer = new IntcodeComputer();
-    //    Assert.Throws<InvalidIntcodeProgram>(() =>
-    //    {
-    //        var computedOutput = computer.RunProgram(program);
-    //    });
-    //}
+    [Test]
+    public void Running_a_program_that_expects_input_but_none_was_given_should_fail()
+    {
+        var program = new[] { 3, 0, 4, 0, 99 };
+        var computer = new IntcodeComputer();
+        Assert.Throws<AggregateException>(() =>
+        {
+            var computedOutput = computer.RunProgram(program);
+        });
+    }
 
     //Data generation
 
