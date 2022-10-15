@@ -36,11 +36,11 @@ namespace Aoc.Spaceship.Propulsion
             var amplifierE = new Amplifier(_program, initialPhaseSettings[4]);
 
             //Wiring the amplifiers together
-            amplifierB.ConnectInput(amplifierA.Output);
-            amplifierC.ConnectInput(amplifierB.Output);
-            amplifierD.ConnectInput(amplifierC.Output);
-            amplifierE.ConnectInput(amplifierD.Output);
-            amplifierA.ConnectInput(amplifierE.Output);
+            amplifierB.ConnectInput(amplifierA);
+            amplifierC.ConnectInput(amplifierB);
+            amplifierD.ConnectInput(amplifierC);
+            amplifierE.ConnectInput(amplifierD);
+            amplifierA.ConnectInput(amplifierE);
 
             //Starting the amplifier array
             var taskA = amplifierA.GetThrust();
@@ -53,11 +53,10 @@ namespace Aoc.Spaceship.Propulsion
             Task.WaitAll(taskA, taskB, taskC, taskD, taskE);
 
             //Get the last output for amplifierE
-            if (amplifierE.Computer.Output != null)
-                return amplifierE.Computer.Output[^1];
+            if (amplifierE.Thrust.HasValue)
+                return amplifierE.Thrust.Value;
 
-            //If we get here then something went wrong
-            throw new BrokenAmplifierArray("No output was produced for amplifier array");
+            throw new BrokenAmplifierArray("The amplifier array could not function with this configuration");
         }
     }
 }

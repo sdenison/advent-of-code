@@ -3,12 +3,12 @@ using Aoc.Spaceship.Computer;
 
 namespace Aoc.Spaceship.Propulsion
 {
-    public class Amplifier
+    public class Amplifier : IInputSource
     {
-        private int[] _program;
-        public IntcodeComputer Computer { get; }
-        public IInputSource Output => Computer;
-        public int[] Input { get; set; }
+        private readonly int[] _program;
+        private readonly int[] _input;
+        private IntcodeComputer Computer { get; }
+        internal int? Thrust => Computer.Output[^1];
 
         public Amplifier(int[] program, int input) : this(program, new [] {input})
         {
@@ -18,17 +18,22 @@ namespace Aoc.Spaceship.Propulsion
         {
             _program = program;
             Computer = new IntcodeComputer(input);
-            Input = input;
+            _input = input;
         }
 
         public async Task GetThrust()
         {
-            await Computer.RunProgramAsync(_program, Input);
+            await Computer.RunProgramAsync(_program, _input);
         }
 
         public void ConnectInput(IInputSource inputSource)
         {
             Computer.InputPort = inputSource;
+        }
+
+        public async Task<int> GetInput(int outputCounter)
+        {
+            return await Computer.GetInput(outputCounter);
         }
     }
 }
