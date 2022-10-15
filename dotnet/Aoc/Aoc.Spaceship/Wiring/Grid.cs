@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 
 namespace Aoc.Spaceship.Wiring
 {
@@ -33,12 +35,31 @@ namespace Aoc.Spaceship.Wiring
                 //This is like adding an index to a table
                 //It took the method from 10 minutes to under a second
                 var intersections = new List<Intersection>();
-                var wireADictionary = WireADictionary;
-                foreach (var stepB in _wireB.Path)
-                    if (wireADictionary.ContainsKey(stepB.Position))
-                        foreach (var stepA in wireADictionary[stepB.Position])
-                            if (stepA.Axis != stepB.Axis)
-                                intersections.Add(new Intersection(stepA.Position, stepA.TotalStepsSoFar + stepB.TotalStepsSoFar));
+                //var wireADictionary = WireADictionary;
+                //foreach (var stepB in _wireB.Path)
+                //    if (wireADictionary.ContainsKey(stepB.Position))
+                //        foreach (var stepA in wireADictionary[stepB.Position])
+                //            if (stepA.Axis != stepB.Axis)
+                //                intersections.Add(new Intersection(stepA.Position, stepA.TotalStepsSoFar + stepB.TotalStepsSoFar));
+
+
+
+
+                var intersects = _wireA.Path.Select(x => x.Position).Intersect(_wireB.Path.Select(x => x.Position));
+                foreach (var intersect in intersects)
+                {
+                    var wireASteps = _wireA.Path.Where(x => x.Position.Equals(intersect));
+                    var wireBSteps = _wireB.Path.Where(x => x.Position.Equals(intersect));
+                    foreach (var wireAStep in wireASteps)
+                    foreach (var wireBStep in wireBSteps)
+                        if (wireAStep.Axis != wireBStep.Axis)
+                            intersections.Add(new Intersection(wireAStep.Position, wireAStep.TotalStepsSoFar + wireBStep.TotalStepsSoFar));
+
+                }
+
+
+                //foreach (var intersect in intersects)
+
                 return intersections;
             }
         }
