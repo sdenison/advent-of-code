@@ -58,7 +58,6 @@ namespace Aoc.Spaceship.Computer
 
             //We should always see a halt operation at the end of the program
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
-
         }
 
         private Instruction GetNextInstruction()
@@ -102,6 +101,7 @@ namespace Aoc.Spaceship.Computer
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
         }
+
         private async Task<int> ExecuteInstructionAsync(Instruction instruction)
         {
             switch (instruction)
@@ -174,26 +174,29 @@ namespace Aoc.Spaceship.Computer
             {
                 await Task.Delay(1);
             }
-            var returnValue = Output[outputCounter];
-
-            return returnValue;
+            return Output[outputCounter];
         }
 
         private async Task<int> GetInput()
         {
-            int inputValue;
             if (_inputCounter > _input.Count - 1 && !(InputPort is null))
-            {
-                //Getting input from whatever we have plugged in to the input port
-                inputValue = await InputPort.GetInput(_outputCounter);
-                _outputCounter++;
-            }
-            else
-            {
-                //This is input that was given at the beginning of the run
-                inputValue = _input[_inputCounter];
-                _inputCounter++;
-            }
+                return await GetFromInputPort();
+            return GetFromInitialInput();
+        }
+
+        private int GetFromInitialInput()
+        {
+            //This is input that was given at the beginning of the run
+            var inputValue = _input[_inputCounter];
+            _inputCounter++;
+            return inputValue;
+        }
+
+        private async Task<int> GetFromInputPort()
+        {
+            //Getting input from whatever we have plugged in to the input port
+            var inputValue = await InputPort.GetInput(_outputCounter);
+            _outputCounter++;
             return inputValue;
         }
 

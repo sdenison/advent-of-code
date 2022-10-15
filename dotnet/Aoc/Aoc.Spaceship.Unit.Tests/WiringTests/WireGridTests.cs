@@ -172,7 +172,6 @@ namespace Aoc.Spaceship.Unit.Tests.WiringTests
             Assert.AreEqual(11432, lowestSteps);
         }
 
-
         public string[] GetTestDataDay3Step1MovesA()
         {
             return new[]

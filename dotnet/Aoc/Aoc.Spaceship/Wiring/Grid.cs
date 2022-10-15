@@ -1,52 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Aoc.Spaceship.Wiring
 {
     public class Grid
     {
-        private Wire _wireA;
-        private Wire _wireB;
+        private Wire _greenWire;
+        private Wire _redWire;
 
-        private Dictionary<Coordinate, List<Step>> WireADictionary
+        public Grid(Wire greenWire, Wire redWire)
         {
-            get
-            {
-                var wireADictionary = new Dictionary<Coordinate, List<Step>>();
-                foreach (var step in _wireA.Path)
-                    if (wireADictionary.ContainsKey(step.Position))
-                        wireADictionary[step.Position].Add(step);
-                    else
-                        wireADictionary.Add(step.Position, new List<Step> {step});
-                return wireADictionary;
-            }
+            _greenWire = greenWire;
+            _redWire = redWire;
         }
 
         public List<Intersection> Intersections
         {
             get
             {
-                //This is optimized for speed so it's hurting readability a bit
-                //I needed the speed to be improved so the unit test could run
-                //Get a Dictionary of the steps in wire A
-                //Loop only through wire B and look for values in the wire A dictionary
-                //This is like adding an index to a table
-                //It took the method from 10 minutes to under a second
                 var intersections = new List<Intersection>();
-                var wireADictionary = WireADictionary;
-                foreach (var stepB in _wireB.Path)
-                    if (wireADictionary.ContainsKey(stepB.Position))
-                        foreach (var stepA in wireADictionary[stepB.Position])
-                            if (stepA.Axis != stepB.Axis)
-                                intersections.Add(new Intersection(stepA.Position, stepA.TotalStepsSoFar + stepB.TotalStepsSoFar));
+                var intersects = _greenWire.Path.Keys.Intersect(_redWire.Path.Keys);
+                foreach (var intersect in intersects)
+                {
+                    var wireASteps = _greenWire.Path[intersect];
+                    var wireBSteps = _redWire.Path[intersect];
+                    intersections.AddRange(CompareSteps(wireASteps, wireBSteps));
+                }
+
                 return intersections;
             }
         }
 
-        public Grid(Wire wireA, Wire wireB)
+        private IEnumerable<Intersection> CompareSteps(List<Step> greenWireSteps, List<Step> redWireSteps)
         {
-            _wireA = wireA;
-            _wireB = wireB;
+            var intersections = (from greenWireStep in greenWireSteps
+                join redWireStep in redWireSteps on greenWireStep.Position equals redWireStep.Position
+                where greenWireStep.Axis != redWireStep.Axis
+                select new Intersection(redWireStep.Position, greenWireStep.TotalStepsSoFar + redWireStep.TotalStepsSoFar));
+            return intersections;
         }
 
         public static int GetManhattanDistance(Coordinate coordinateA, Coordinate coordinateB)
