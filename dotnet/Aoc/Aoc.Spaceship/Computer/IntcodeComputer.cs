@@ -1,20 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Aoc.Spaceship.Computer.Instructions;
 
 namespace Aoc.Spaceship.Computer
 {
-    public class IntcodeComputer {
+    public class IntcodeComputer
+    {
         private int[]? _memory;
         private List<int> _input;
         private int _inputCounter;
         private int _instructionPointer;
-        public List<int>? Output { get; set;  }
+        //Keeps track of how many times we've asked parent computer for input
+        private int _outputCounter = 0;
+        public IntcodeComputer ParentComputer { get; set; }
+        public string Name { get; set; }
+
+        public List<int>? Output { get; set; }
+
+        public IntcodeComputer() : this(new int[] {})
+        {
+        }
+
+        public IntcodeComputer(int[] input)
+        {
+            _input = input.ToList();
+        }
 
         public int[] RunProgram(int[] program)
         {
-            return RunProgram(program, new List<int>());
+            Initialize(program, _input.ToList());
+
+            //Main computer logic
+            _instructionPointer = 0;
+            while (_instructionPointer < _memory.Length)
+            {
+                var instruction = GetNextInstruction();
+                if (instruction is Halt)
+                    return _memory;
+                _instructionPointer = ExecuteInstruction(instruction);
+            }
+
+            //We should always see a halt operation at the end of the program
+            throw new InvalidIntcodeProgram("No halt instruction at end of program");return RunProgram(program, new List<int>());
         }
 
         public int[] RunProgram(int[] program, int input)
@@ -43,6 +72,26 @@ namespace Aoc.Spaceship.Computer
 
             //We should always see a halt operation at the end of the program
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
+        }
+
+        public async Task<int[]> RunProgramAsync(int[] program, int[] input)
+        {
+            Initialize(program, input.ToList());
+            var x = Name;
+
+            //Main computer logic
+            _instructionPointer = 0;
+            while (_instructionPointer < _memory.Length)
+            {
+                var instruction = GetNextInstruction();
+                if (instruction is Halt)
+                    return _memory;
+                _instructionPointer = await ExecuteInstructionAsync(instruction);
+            }
+
+            //We should always see a halt operation at the end of the program
+            throw new InvalidIntcodeProgram("No halt instruction at end of program");
+
         }
 
         private Instruction GetNextInstruction()
@@ -111,6 +160,30 @@ namespace Aoc.Spaceship.Computer
             return _instructionPointer + instruction.Length;
         }
 
+        private async Task<int> ExecuteInstructionAsync(Instruction instruction)
+        {
+            switch (instruction)
+            {
+                case Instructions.Math mathInstruction:
+                    ExecuteInstruction(mathInstruction);
+                    break;
+                case Display displayInstruction:
+                    ExecuteInstruction(displayInstruction);
+                    break;
+                case Put putInstruction:
+                    await ExecuteInstructionAsync(putInstruction);
+                    break;
+                case Jump jumpInstruction:
+                    return ExecuteInstruction(jumpInstruction);
+                case Compare compareInstruction:
+                    ExecuteInstruction(compareInstruction);
+                    break;
+                default: 
+                    throw new InvalidIntcodeProgram($"Unknown instruction {instruction}");
+            }
+            return _instructionPointer + instruction.Length;
+        }
+
         private int ExecuteInstruction(Jump instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
@@ -141,38 +214,54 @@ namespace Aoc.Spaceship.Computer
         {
             var outputValue = GetParameterValue(instruction, 1);
             Output.Add(outputValue);
-            if (HandleOutput != null)
-                HandleOutput(outputValue);
         }
-
-        public Action<int> HandleOutput { get; set; }
 
         private void ExecuteInstruction(Put instruction)
         {
-            var input = GetInput();
+            var input = GetInput().Result;
             if (instruction.ParameterModes[0] == ParameterMode.Immediate)
                 _memory[_instructionPointer + 1] = input;
             else
                 _memory[_memory[_instructionPointer + 1]] = input;
         }
 
-        private int GetInput()
+        private async Task ExecuteInstructionAsync(Put instruction)
+        {
+            var input = await GetInput();
+            if (instruction.ParameterModes[0] == ParameterMode.Immediate)
+                _memory[_instructionPointer + 1] = input;
+            else
+                _memory[_memory[_instructionPointer + 1]] = input;
+        }
+
+        public async Task<int> GetOutput(int outputCounter)
+        {
+            while (Output == null || Output.Count - 1 < outputCounter)
+            {
+                await Task.Delay(1);
+            }
+            var returnValue = Output[outputCounter];
+
+            return returnValue;
+        }
+
+        private async Task<int> GetInput()
         {
             int inputValue;
             if (_inputCounter > _input.Count - 1)
             {
-                inputValue = AcceptInput();
+                //This is output from our parent machine
+                inputValue = await ParentComputer.GetOutput(_outputCounter);
+                _outputCounter++;
             }
             else
             {
+                //This is input that was given at the beginning of the run
                 inputValue = _input[_inputCounter];
                 _inputCounter++;
             }
             return inputValue;
         }
-
-
-        public Func<int> AcceptInput { get; set; }
 
         private int GetParameterValue(Instruction instruction, int parameterPosition)
         {

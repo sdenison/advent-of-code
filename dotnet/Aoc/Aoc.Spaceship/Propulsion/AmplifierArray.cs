@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aoc.Spaceship.Propulsion
 {
@@ -17,93 +18,63 @@ namespace Aoc.Spaceship.Propulsion
             _program = program;
         }
 
-        public int GetThrust(int numberOfAmplifiers, int input, int[] phaseSettings)
-        {
-            var currentThrust = input;
-            for (int i = 0; i < numberOfAmplifiers; i++)
-            {
-                var amplifier = new Amplifier(_program);
-                currentThrust = amplifier.GetThrust(phaseSettings[i], currentThrust);
-            }
-            return currentThrust;
-        }
-
-        public int GetMaximumThrust(int numberOfAmplifiers, int[] initialPhaseSettings)
+        public int GetMaximumThrust(int[] initialPhaseSettings)
         {
             var maximumThrust = 0;
             var permutations = Permute(initialPhaseSettings);
             foreach (var phaseSettings in permutations)
             {
-                var thrust = GetThrust(numberOfAmplifiers, 0, phaseSettings.ToArray());
+                //var thrust = GetThrust(numberOfAmplifiers, 0, phaseSettings.ToArray());
+                var thrust = GetMaximumThrustWithFeedbackLoop(phaseSettings.ToArray()).Result;
                 if (thrust > maximumThrust)
                     maximumThrust = thrust;
             }
             return maximumThrust;
         }
 
-        public int GetMaximumThrustWithFeedbackLook(int[] initialPhaseSettings)
+        public async Task<int> GetMaximumThrustWithFeedbackLoop(int[] initialPhaseSettings)
         {
-            var amplifierA = new Amplifier(_program);
-            var amplifierB = new Amplifier(_program);
-            var amplifierC = new Amplifier(_program);
-            var amplifierD = new Amplifier(_program);
-            var amplifierE = new Amplifier(_program);
-            int maximumThrust = 0;
+            //var amplifierA = new Amplifier(_program, new[] {initialPhaseSettings[0], 0});
+            var amplifierA = new Amplifier(_program, new[] {initialPhaseSettings[0], 0});
+            var amplifierB = new Amplifier(_program, initialPhaseSettings[1]);
+            var amplifierC = new Amplifier(_program, initialPhaseSettings[2]);
+            var amplifierD = new Amplifier(_program, initialPhaseSettings[3]);
+            var amplifierE = new Amplifier(_program, initialPhaseSettings[4]);
 
-            int amplifierAOutput = 0;
-            amplifierA.HandleOutput = (output) =>
-            {
-                amplifierAOutput = output;
-                if (output > maximumThrust)
-                    maximumThrust = output;
-            };
-            amplifierB.AcceptInput = () => amplifierAOutput;
-
-            int amplifierBOutput = 0;
-            amplifierB.HandleOutput = (output) =>
-            {
-                amplifierBOutput = output;
-                if (output > maximumThrust)
-                    maximumThrust = output;
-            };
-            amplifierC.AcceptInput = () => amplifierBOutput;
-
-            int amplifierCOutput = 0;
-            amplifierC.HandleOutput = (output) =>
-            {
-                amplifierCOutput = output;
-                if (output > maximumThrust)
-                    maximumThrust = output;
-            };
-            amplifierD.AcceptInput = () => amplifierCOutput;
-
-            int amplifierDOutput = 0;
-            amplifierD.HandleOutput = (output) =>
-            {
-                amplifierDOutput = output;
-                if (output > maximumThrust)
-                    maximumThrust = output;
-            };
-            amplifierE.AcceptInput = () => amplifierDOutput;
-
-            int amplifierEOutput = 0;
-            amplifierE.HandleOutput = (output) =>
-            {
-                amplifierAOutput = output;
-                if (output > maximumThrust)
-                    maximumThrust = output;
-            };
-            amplifierA.AcceptInput = () => amplifierEOutput;
-
-            
-            var output = amplifierA.GetThrust(initialPhaseSettings[0], 0);
-            output = amplifierB.GetThrust(initialPhaseSettings[1], 0);
-            output = amplifierC.GetThrust(initialPhaseSettings[2], 0);
-            output = amplifierD.GetThrust(initialPhaseSettings[3], 0);
-            output = amplifierE.GetThrust(initialPhaseSettings[4], 0);
+            amplifierA.Computer.Name = "AAAAAAAAAAAAA";
+            amplifierB.Computer.Name = "BBBBBBBBBBBBB";
+            amplifierC.Computer.Name = "CCCCCCCCCCCCC";
+            amplifierD.Computer.Name = "DDDDDDDDDDDDD";
+            amplifierE.Computer.Name = "EEEEEEEEEEEEE";
 
 
-            return maximumThrust;
+            amplifierB.Computer.ParentComputer = amplifierA.Computer;
+            amplifierC.Computer.ParentComputer = amplifierB.Computer;
+            amplifierD.Computer.ParentComputer = amplifierC.Computer;
+            amplifierE.Computer.ParentComputer = amplifierD.Computer;
+            amplifierA.Computer.ParentComputer = amplifierE.Computer;
+
+            //int amplifierAOutput = 0;
+            //amplifierA.Computer.HandleOutput = amplifierB.Computer.AcceptInput2;
+            //amplifierB.Computer.HandleOutput = amplifierC.Computer.AcceptInput2;
+            //amplifierC.Computer.HandleOutput = amplifierD.Computer.AcceptInput2;
+            //amplifierC.Computer.HandleOutput = amplifierD.Computer.AcceptInput2;
+            //amplifierD.Computer.HandleOutput = amplifierE.Computer.AcceptInput2;
+            //amplifierE.Computer.HandleOutput = amplifierA.Computer.AcceptInput2;
+
+
+            var taskA = amplifierA.GetThrustAsync();
+            var taskB = amplifierB.GetThrustAsync();
+            var taskC = amplifierC.GetThrustAsync();
+            var taskD = amplifierD.GetThrustAsync();
+            var taskE = amplifierE.GetThrustAsync();
+
+            Task.WaitAll(taskA, taskB, taskC, taskD, taskE);
+            //Task.WaitAll(taskA);
+
+
+
+            return amplifierE.Computer.Output[amplifierE.Computer.Output.Count - 1];
         }
 
 

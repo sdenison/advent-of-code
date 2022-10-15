@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Aoc.Spaceship.Computer;
 
 namespace Aoc.Spaceship.Propulsion
@@ -6,27 +7,60 @@ namespace Aoc.Spaceship.Propulsion
     public class Amplifier
     {
         private int[] _program;
-        private IntcodeComputer _computer;
+        public IntcodeComputer Computer { get; }
         public Func<int> AcceptInput { get; set; }
         public Action<int> HandleOutput { get; set; }
+        public int[] Input { get; set; }
 
-
-        public Amplifier(int[] program)
+        public Amplifier(int[] program, int input) : this(program, new [] {input})
         {
-            _program = program;
-            _computer = new IntcodeComputer();
         }
 
+        public Amplifier(int[] program, int[] input)
+        {
+            _program = program;
+            Computer = new IntcodeComputer(input);
+            Input = input;
+        }
+
+        public int GetThrust()
+        {
+            Computer.RunProgram(_program);
+            return Computer.Output[Computer.Output.Count - 1];
+        }
 
         public int GetThrust(int phaseSetting, int input)
         {
-            var computer = new IntcodeComputer();
+            var computer = Computer;
             var computerInput = new int[] {phaseSetting, input};
-            computer.AcceptInput = AcceptInput;
-            computer.HandleOutput = HandleOutput;
+            //computer.AcceptInput = AcceptInput;
+            //computer.HandleOutput = HandleOutput;
             computer.RunProgram(_program, computerInput);
 
-            return computer.Output[0];
+            return computer.Output[computer.Output.Count - 1];
+        }
+
+
+        public int GetThrust(int phaseSetting)
+        {
+            var computer = Computer;
+            var computerInput = new int[] {phaseSetting};
+            //computer.AcceptInput = AcceptInput;
+            //computer.HandleOutput = HandleOutput;
+            computer.RunProgram(_program);
+
+            return computer.Output[computer.Output.Count - 1];
+        }
+
+        public async Task GetThrustAsync()
+        {
+            var computer = Computer;
+            //var computerInput = new int[] {phaseSetting};
+            //computer.AcceptInput = AcceptInput;
+            //computer.HandleOutput = HandleOutput;
+            await computer.RunProgramAsync(_program, Input);
+
+            //return computer.Output[computer.Output.Count - 1];
         }
 
 
