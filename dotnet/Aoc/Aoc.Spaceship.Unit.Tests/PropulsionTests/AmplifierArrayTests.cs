@@ -13,7 +13,7 @@ namespace Aoc.Spaceship.Unit.Tests.PropulsionTests
         public async Task Can_get_thrust_for_examples_given(int[] phaseSetting, int[] program, int expectedThrust)
         {
             var amplifierArray = new AmplifierArray(program);
-            var thrust = amplifierArray.GetMaximumThrustWithFeedbackLoop(phaseSetting);
+            var thrust = amplifierArray.GetMaximumThrust(phaseSetting);
             Assert.AreEqual(expectedThrust, thrust);
         }
 
