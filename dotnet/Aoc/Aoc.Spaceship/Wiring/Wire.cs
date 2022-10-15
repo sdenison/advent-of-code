@@ -4,12 +4,12 @@ namespace Aoc.Spaceship.Wiring
 {
     public class Wire
     {
-        public List<Step> Path { get; set; }
+        public Dictionary<Coordinate, List<Step>> Path { get; set; }
         public Coordinate CurrentCoordinate { get; set; }
 
         public Wire(List<Move> moves)
         {
-            Path = new List<Step>();
+            Path = new Dictionary<Coordinate, List<Step>>();
             CurrentCoordinate = new Coordinate(1, 1);
             GeneratePath(moves);
         }
@@ -43,24 +43,32 @@ namespace Aoc.Spaceship.Wiring
             {
                 case Direction.Right:
                     CurrentCoordinate = new Coordinate(CurrentCoordinate.X + 1, CurrentCoordinate.Y);
-                    Path.Add(new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
+                    AddStepToPath(CurrentCoordinate, new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
                     break;
                 case Direction.Left:
                     CurrentCoordinate = new Coordinate(CurrentCoordinate.X - 1, CurrentCoordinate.Y);
-                    Path.Add(new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
+                    AddStepToPath(CurrentCoordinate, new Step(CurrentCoordinate, Axis.X, totalStepsSoFar));
                     break;
                 case Direction.Up:
                     CurrentCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y + 1);
-                    Path.Add(new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
+                    AddStepToPath(CurrentCoordinate, new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
                     break;
                 case Direction.Down:
                     CurrentCoordinate = new Coordinate(CurrentCoordinate.X, CurrentCoordinate.Y - 1);
-                    Path.Add(new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
+                    AddStepToPath(CurrentCoordinate, new Step(CurrentCoordinate, Axis.Y, totalStepsSoFar));
                     break;
                 default:
                     throw new InvalidWiringConfiguration($"Direction unknown {direction}");
             }
             return totalStepsSoFar;
+        }
+
+        private void AddStepToPath(Coordinate position, Step step)
+        {
+            if (Path.ContainsKey(position))
+                Path[position].Add(step);
+            else
+                Path.Add(position, new List<Step>{step});
         }
     }
 }
