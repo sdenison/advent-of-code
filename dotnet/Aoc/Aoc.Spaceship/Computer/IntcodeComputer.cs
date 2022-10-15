@@ -6,7 +6,7 @@ using Aoc.Spaceship.Computer.Instructions;
 
 namespace Aoc.Spaceship.Computer
 {
-    public class IntcodeComputer
+    public class IntcodeComputer : IInputSource
     {
         private int[]? _memory;
         private List<int> _input;
@@ -14,7 +14,7 @@ namespace Aoc.Spaceship.Computer
         private int _instructionPointer;
         //Keeps track of how many times we've asked parent computer for input
         private int _outputCounter = 0;
-        public IntcodeComputer ParentComputer { get; set; }
+        public IInputSource InputPort { get; set; }
         public string Name { get; set; }
         public List<int>? Output { get; set; }
 
@@ -167,7 +167,8 @@ namespace Aoc.Spaceship.Computer
                 _memory[_memory[_instructionPointer + 1]] = input;
         }
 
-        public async Task<int> GetOutput(int outputCounter)
+        //Allows the computer to act as input for another computer
+        public async Task<int> GetInput(int outputCounter)
         {
             while (Output == null || Output.Count - 1 < outputCounter)
             {
@@ -181,10 +182,10 @@ namespace Aoc.Spaceship.Computer
         private async Task<int> GetInput()
         {
             int inputValue;
-            if (_inputCounter > _input.Count - 1 && !(ParentComputer is null))
+            if (_inputCounter > _input.Count - 1 && !(InputPort is null))
             {
-                //This is output from our parent machine
-                inputValue = await ParentComputer.GetOutput(_outputCounter);
+                //Getting input from whatever we have plugged in to the input port
+                inputValue = await InputPort.GetInput(_outputCounter);
                 _outputCounter++;
             }
             else

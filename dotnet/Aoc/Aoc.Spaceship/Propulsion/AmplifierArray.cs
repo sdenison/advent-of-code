@@ -36,11 +36,11 @@ namespace Aoc.Spaceship.Propulsion
             var amplifierE = new Amplifier(_program, initialPhaseSettings[4]);
 
             //Wiring the amplifiers together
-            amplifierB.Computer.ParentComputer = amplifierA.Computer;
-            amplifierC.Computer.ParentComputer = amplifierB.Computer;
-            amplifierD.Computer.ParentComputer = amplifierC.Computer;
-            amplifierE.Computer.ParentComputer = amplifierD.Computer;
-            amplifierA.Computer.ParentComputer = amplifierE.Computer;
+            amplifierB.ConnectInput(amplifierB.Output);
+            amplifierC.ConnectInput(amplifierB.Output);
+            amplifierD.ConnectInput(amplifierC.Output);
+            amplifierE.ConnectInput(amplifierD.Output);
+            amplifierA.ConnectInput(amplifierE.Output);
 
             //Starting the amplifier array
             var taskA = amplifierA.GetThrust();

@@ -7,6 +7,7 @@ namespace Aoc.Spaceship.Propulsion
     {
         private int[] _program;
         public IntcodeComputer Computer { get; }
+        public IInputSource Output => Computer;
         public int[] Input { get; set; }
 
         public Amplifier(int[] program, int input) : this(program, new [] {input})
@@ -23,6 +24,11 @@ namespace Aoc.Spaceship.Propulsion
         public async Task GetThrust()
         {
             await Computer.RunProgramAsync(_program, Input);
+        }
+
+        public void ConnectInput(IInputSource inputSource)
+        {
+            Computer.InputPort = inputSource;
         }
     }
 }
