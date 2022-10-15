@@ -36,7 +36,7 @@ namespace Aoc.Spaceship.Propulsion
             var amplifierE = new Amplifier(_program, initialPhaseSettings[4]);
 
             //Wiring the amplifiers together
-            amplifierB.ConnectInput(amplifierB.Output);
+            amplifierB.ConnectInput(amplifierA.Output);
             amplifierC.ConnectInput(amplifierB.Output);
             amplifierD.ConnectInput(amplifierC.Output);
             amplifierE.ConnectInput(amplifierD.Output);
