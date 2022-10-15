@@ -52,7 +52,7 @@ namespace Aoc.Spaceship.Propulsion
             //Wait for the amplifiers to finish processing
             Task.WaitAll(taskA, taskB, taskC, taskD, taskE);
 
-            //Get the last output for amplifierE
+            //Return the thrust for amplifierE
             if (amplifierE.Thrust.HasValue)
                 return amplifierE.Thrust.Value;
 

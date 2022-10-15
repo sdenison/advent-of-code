@@ -4,7 +4,7 @@ namespace Aoc.Spaceship.Utilities
 {
     internal static class ArrayFunctions
     {
-        public static IList<IList<int>> Permute(this int[] nums)
+        public static IList<IList<int>> GetPermutations(this int[] nums)
         {
             var list = new List<IList<int>>();
             return DoPermute(nums, 0, nums.Length - 1, list);
