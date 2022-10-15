@@ -26,7 +26,7 @@ namespace Aoc.Spaceship.Propulsion
             await Computer.RunProgramAsync(_program, _input);
         }
 
-        public void ConnectInput(IInputSource inputSource)
+        public void ConnectInputTo(IInputSource inputSource)
         {
             Computer.InputPort = inputSource;
         }

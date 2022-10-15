@@ -16,8 +16,8 @@ namespace Aoc.Spaceship.Propulsion
         public int GetMaximumThrust(int[] initialPhaseSettings)
         {
             var maximumThrust = 0;
-            var phaseSettingPermutations = initialPhaseSettings.GetPermutations();
-            foreach (var phaseSettings in phaseSettingPermutations)
+            var phaseSettingsPermutations = initialPhaseSettings.GetPermutations();
+            foreach (var phaseSettings in phaseSettingsPermutations)
             {
                 var thrust = GetThrust(phaseSettings.ToArray());
                 if (thrust > maximumThrust)
@@ -26,21 +26,21 @@ namespace Aoc.Spaceship.Propulsion
             return maximumThrust;
         }
 
-        public int GetThrust(int[] initialPhaseSettings)
+        public int GetThrust(int[] phaseSettings)
         {
             //Creating the amplifiers
-            var amplifierA = new Amplifier(_program, new[] {initialPhaseSettings[0], 0});
-            var amplifierB = new Amplifier(_program, initialPhaseSettings[1]);
-            var amplifierC = new Amplifier(_program, initialPhaseSettings[2]);
-            var amplifierD = new Amplifier(_program, initialPhaseSettings[3]);
-            var amplifierE = new Amplifier(_program, initialPhaseSettings[4]);
+            var amplifierA = new Amplifier(_program, new[] {phaseSettings[0], 0});
+            var amplifierB = new Amplifier(_program, phaseSettings[1]);
+            var amplifierC = new Amplifier(_program, phaseSettings[2]);
+            var amplifierD = new Amplifier(_program, phaseSettings[3]);
+            var amplifierE = new Amplifier(_program, phaseSettings[4]);
 
             //Wiring the amplifiers together
-            amplifierB.ConnectInput(amplifierA);
-            amplifierC.ConnectInput(amplifierB);
-            amplifierD.ConnectInput(amplifierC);
-            amplifierE.ConnectInput(amplifierD);
-            amplifierA.ConnectInput(amplifierE);
+            amplifierB.ConnectInputTo(amplifierA);
+            amplifierC.ConnectInputTo(amplifierB);
+            amplifierD.ConnectInputTo(amplifierC);
+            amplifierE.ConnectInputTo(amplifierD);
+            amplifierA.ConnectInputTo(amplifierE);
 
             //Starting the amplifier array
             var taskA = amplifierA.GetThrust();
