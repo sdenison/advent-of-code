@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 
 namespace Aoc.Spaceship.Wiring
 {
     public class Grid
     {
-        private Wire _wireA;
-        private Wire _wireB;
+        private Wire _greenWire;
+        private Wire _redWire;
+
+        public Grid(Wire greenWire, Wire redWire)
+        {
+            _greenWire = greenWire;
+            _redWire = redWire;
+        }
 
         public List<Intersection> Intersections
         {
             get
             {
                 var intersections = new List<Intersection>();
-                var intersects = _wireA.Path.Keys.Intersect(_wireB.Path.Keys);
+                var intersects = _greenWire.Path.Keys.Intersect(_redWire.Path.Keys);
                 foreach (var intersect in intersects)
                 {
-                    var wireASteps = _wireA.Path[intersect];
-                    var wireBSteps = _wireB.Path[intersect];
+                    var wireASteps = _greenWire.Path[intersect];
+                    var wireBSteps = _redWire.Path[intersect];
                     intersections.AddRange(CompareSteps(wireASteps, wireBSteps));
                 }
 
@@ -27,19 +32,13 @@ namespace Aoc.Spaceship.Wiring
             }
         }
 
-        private IEnumerable<Intersection> CompareSteps(List<Step> wireASteps, List<Step> wireBSteps)
+        private IEnumerable<Intersection> CompareSteps(List<Step> greenWireSteps, List<Step> redWireSteps)
         {
-            var intersections = (from wireAStep in wireASteps
-                join wireBStep in wireBSteps on wireAStep.Position equals wireBStep.Position
-                where wireAStep.Axis != wireBStep.Axis
-                select new Intersection(wireAStep.Position, wireAStep.TotalStepsSoFar + wireBStep.TotalStepsSoFar));
+            var intersections = (from greenWireStep in greenWireSteps
+                join redWireStep in redWireSteps on greenWireStep.Position equals redWireStep.Position
+                where greenWireStep.Axis != redWireStep.Axis
+                select new Intersection(redWireStep.Position, greenWireStep.TotalStepsSoFar + redWireStep.TotalStepsSoFar));
             return intersections;
-        }
-
-        public Grid(Wire wireA, Wire wireB)
-        {
-            _wireA = wireA;
-            _wireB = wireB;
         }
 
         public static int GetManhattanDistance(Coordinate coordinateA, Coordinate coordinateB)
