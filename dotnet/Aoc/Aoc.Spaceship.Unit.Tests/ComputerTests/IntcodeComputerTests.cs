@@ -1,7 +1,7 @@
-﻿using Aoc.Spaceship.Compute;
+﻿using Aoc.Spaceship.Computer;
 using NUnit.Framework;
 
-namespace Aoc.Spaceship.Unit.Tests.Compute;
+namespace Aoc.Spaceship.Unit.Tests.ComputerTests;
 
 [TestFixture]
 public class IntcodeComputerTests
@@ -221,9 +221,9 @@ public class IntcodeComputerTests
     [Test]
     public void Incomplete_instruction_should_throw_exception()
     {
-        var program = new[] {1, 2, 3, 2, 1, 3, 99}; 
+        var program = new[] {1, 2, 3, 2, 1, 3, 99};
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
@@ -234,7 +234,7 @@ public class IntcodeComputerTests
     {
         var program = new[] {1, 2, 3, 3, 88}; 
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
@@ -245,7 +245,7 @@ public class IntcodeComputerTests
     {
         var program = new[] {1, 2, 3, 2}; 
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });
@@ -256,7 +256,7 @@ public class IntcodeComputerTests
     {
         var program = new[] { 3, 0, 4, 0, 99 };
         var computer = new IntcodeComputer();
-        Assert.Throws<InvalidIntcodeProgram>(() =>
+        Assert.Throws<AggregateException>(() =>
         {
             var computedOutput = computer.RunProgram(program);
         });

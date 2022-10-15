@@ -1,20 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using Aoc.Spaceship.Compute.Instructions;
-using Math = Aoc.Spaceship.Compute.Instructions.Math;
+using System.Linq;
+using System.Threading.Tasks;
+using Aoc.Spaceship.Computer.Instructions;
 
-namespace Aoc.Spaceship.Compute
+namespace Aoc.Spaceship.Computer
 {
-    public class IntcodeComputer
+    public class IntcodeComputer : IInputSource
     {
         private int[]? _memory;
-        private int? _input = 0;
+        private List<int> _input;
+        private int _inputCounter;
         private int _instructionPointer;
-        public List<int>? Output { get; set;  }
+        //Keeps track of how many times we've asked parent computer for input
+        private int _outputCounter = 0;
+        public IInputSource InputPort { get; set; }
+        public string Name { get; set; }
+        public List<int>? Output { get; set; }
 
-        public int[] RunProgram(int[] program, int? input = null)
+        public IntcodeComputer() : this(new int[] {})
         {
-            Initialize(program, input);
+        }
+
+        public IntcodeComputer(int[] input)
+        {
+            _input = input.ToList();
+        }
+
+        public int[] RunProgram(int[] program)
+        {
+            return RunProgram(program, new int[]{});
+        }
+
+        public int[] RunProgram(int[] program, int input)
+        {
+            return RunProgram(program, new [] {input});
+        }
+
+        public int[] RunProgram(int[] program, int[] input)
+        {
+            return RunProgramAsync(program, input).Result;
+        }
+
+        public async Task<int[]> RunProgramAsync(int[] program, int[] input)
+        {
+            Initialize(program, input.ToList());
 
             //Main computer logic
             _instructionPointer = 0;
@@ -23,11 +53,12 @@ namespace Aoc.Spaceship.Compute
                 var instruction = GetNextInstruction();
                 if (instruction is Halt)
                     return _memory;
-                _instructionPointer = ExecuteInstruction(instruction);
+                _instructionPointer = await ExecuteInstructionAsync(instruction);
             }
 
             //We should always see a halt operation at the end of the program
             throw new InvalidIntcodeProgram("No halt instruction at end of program");
+
         }
 
         private Instruction GetNextInstruction()
@@ -59,10 +90,10 @@ namespace Aoc.Spaceship.Compute
                     instruction = new Compare(rawOpcode, compareFunction: (x, y) => x == y);
                     break;
                 case Opcodes.Add:
-                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x + y);
+                    instruction = new Instructions.Math(rawOpcode, mathOperation: (x, y) => x + y);
                     break;
                 case Opcodes.Multiply:
-                    instruction = new Math(rawOpcode, mathOperation: (x, y) => x * y);
+                    instruction = new Instructions.Math(rawOpcode, mathOperation: (x, y) => x * y);
                     break;
                 default:
                     throw new InvalidIntcodeProgram($"Opcode {opcode} unknown");
@@ -71,19 +102,18 @@ namespace Aoc.Spaceship.Compute
                 throw new InvalidIntcodeProgram("Last instruction is incomplete");
             return instruction;
         }
-
-        private int ExecuteInstruction(Instruction instruction)
+        private async Task<int> ExecuteInstructionAsync(Instruction instruction)
         {
             switch (instruction)
             {
-                case Math mathInstruction:
+                case Instructions.Math mathInstruction:
                     ExecuteInstruction(mathInstruction);
                     break;
                 case Display displayInstruction:
                     ExecuteInstruction(displayInstruction);
                     break;
                 case Put putInstruction:
-                    ExecuteInstruction(putInstruction);
+                    await ExecuteInstructionAsync(putInstruction);
                     break;
                 case Jump jumpInstruction:
                     return ExecuteInstruction(jumpInstruction);
@@ -113,7 +143,7 @@ namespace Aoc.Spaceship.Compute
             _memory[destinationAddress] = instruction.CompareFunction(parameter1, parameter2) ? 1 : 0;
         }
 
-        private void ExecuteInstruction(Math instruction)
+        private void ExecuteInstruction(Instructions.Math instruction)
         {
             int parameter1 = GetParameterValue(instruction, 1);
             int parameter2 = GetParameterValue(instruction, 2);
@@ -124,17 +154,47 @@ namespace Aoc.Spaceship.Compute
 
         private void ExecuteInstruction(Display instruction)
         {
-            Output.Add(GetParameterValue(instruction, 1));
+            var outputValue = GetParameterValue(instruction, 1);
+            Output.Add(outputValue);
         }
 
-        private void ExecuteInstruction(Put instruction)
+        private async Task ExecuteInstructionAsync(Put instruction)
         {
-            if (!_input.HasValue)
-                throw new InvalidIntcodeProgram("This program expects input from user and none was given");
+            var input = await GetInput();
             if (instruction.ParameterModes[0] == ParameterMode.Immediate)
-                _memory[_instructionPointer + 1] = _input.Value;
+                _memory[_instructionPointer + 1] = input;
             else
-                _memory[_memory[_instructionPointer + 1]] = _input.Value;
+                _memory[_memory[_instructionPointer + 1]] = input;
+        }
+
+        //Allows the computer to act as input for another computer
+        public async Task<int> GetInput(int outputCounter)
+        {
+            while (Output == null || Output.Count - 1 < outputCounter)
+            {
+                await Task.Delay(1);
+            }
+            var returnValue = Output[outputCounter];
+
+            return returnValue;
+        }
+
+        private async Task<int> GetInput()
+        {
+            int inputValue;
+            if (_inputCounter > _input.Count - 1 && !(InputPort is null))
+            {
+                //Getting input from whatever we have plugged in to the input port
+                inputValue = await InputPort.GetInput(_outputCounter);
+                _outputCounter++;
+            }
+            else
+            {
+                //This is input that was given at the beginning of the run
+                inputValue = _input[_inputCounter];
+                _inputCounter++;
+            }
+            return inputValue;
         }
 
         private int GetParameterValue(Instruction instruction, int parameterPosition)
@@ -144,10 +204,11 @@ namespace Aoc.Spaceship.Compute
             return _memory[_memory[_instructionPointer + parameterPosition]];
         }
 
-        private void Initialize(int[] program, int? input)
+        private void Initialize(int[] program, List<int> input)
         {
             //Make sure we don't use input from previous runs
             _input = input;
+            _inputCounter = 0;
             //Make sure we don't have output from previous program runs
             Output = new List<int>();
             //Don't surprise the user and make changes to the incoming program

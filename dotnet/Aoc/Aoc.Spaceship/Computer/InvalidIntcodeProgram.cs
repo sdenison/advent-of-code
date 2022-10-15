@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aoc.Spaceship.Compute
+namespace Aoc.Spaceship.Computer
 {
     public class InvalidIntcodeProgram : Exception
     {

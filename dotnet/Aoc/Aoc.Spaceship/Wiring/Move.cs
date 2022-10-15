@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Aoc.Spaceship.Hardware
+namespace Aoc.Spaceship.Wiring
 {
     public class Move
     {
-        public Directions Direction { get; set; }
+        public Direction Direction { get; set; }
         public int Distance { get; set; }
 
         public Move(string move)
@@ -21,22 +21,21 @@ namespace Aoc.Spaceship.Hardware
             return moves;
         }
 
-        private Directions ParseDirection(string move)
+        private Direction ParseDirection(string move)
         {
             var direction = move.Substring(0, 1).ToUpper();
             switch (direction)
             {
                 case "U":
-                    return Directions.Up;
+                    return Direction.Up;
                 case "D":
-                    return Directions.Down;
+                    return Direction.Down;
                 case "R":
-                    return Directions.Right;
+                    return Direction.Right;
                 case "L":
-                    return Directions.Left;
-                default: throw new InvalidHardware($"Unknown direction {direction}");
+                    return Direction.Left;
+                default: throw new InvalidWiringConfiguration($"Unknown direction {direction}");
             }
         }
-
     }
 }

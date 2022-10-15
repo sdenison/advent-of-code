@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Aoc.Spaceship.Hardware
+namespace Aoc.Spaceship.Wiring
 {
     public class Grid
     {

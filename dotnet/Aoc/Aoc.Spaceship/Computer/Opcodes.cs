@@ -1,4 +1,4 @@
-﻿namespace Aoc.Spaceship.Compute
+﻿namespace Aoc.Spaceship.Computer
 {
     internal enum Opcodes
     {
