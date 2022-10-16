@@ -1,6 +1,6 @@
 import unittest
 
-from domain.compute.intcode_computer import *
+from spaceship.computer.intcode_computer import *
 
 
 class TestsIntcodeComputerUnit(unittest.TestCase):

@@ -20,11 +20,11 @@ namespace Aoc.Spaceship.Wiring
             get
             {
                 var intersections = new List<Intersection>();
-                var intersects = _greenWire.Path.Keys.Intersect(_redWire.Path.Keys);
-                foreach (var intersect in intersects)
+                var coordinateMatches = _greenWire.Path.Keys.Intersect(_redWire.Path.Keys);
+                foreach (var coordinateMatch in coordinateMatches)
                 {
-                    var wireASteps = _greenWire.Path[intersect];
-                    var wireBSteps = _redWire.Path[intersect];
+                    var wireASteps = _greenWire.Path[coordinateMatch];
+                    var wireBSteps = _redWire.Path[coordinateMatch];
                     intersections.AddRange(CompareSteps(wireASteps, wireBSteps));
                 }
 
