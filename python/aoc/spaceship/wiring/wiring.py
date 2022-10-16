@@ -115,20 +115,16 @@ class Wire:
         match direction:
             case Direction.right:
                 self._current_coordinate = Coordinate(self._current_coordinate.x + 1, self._current_coordinate.y)
-                self.__add_step_to_path(self._current_coordinate,
-                                        Step(self._current_coordinate, Axis.X, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.X, total_steps_so_far))
             case Direction.left:
                 self._current_coordinate = Coordinate(self._current_coordinate.x - 1, self._current_coordinate.y)
-                self.__add_step_to_path(self._current_coordinate,
-                                        Step(self._current_coordinate, Axis.X, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.X, total_steps_so_far))
             case Direction.up:
                 self._current_coordinate = Coordinate(self._current_coordinate.x, self._current_coordinate.y + 1)
-                self.__add_step_to_path(self._current_coordinate,
-                                        Step(self._current_coordinate, Axis.Y, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.Y, total_steps_so_far))
             case Direction.down:
                 self._current_coordinate = Coordinate(self._current_coordinate.x, self._current_coordinate.y - 1)
-                self.__add_step_to_path(self._current_coordinate,
-                                        Step(self._current_coordinate, Axis.Y, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.Y, total_steps_so_far))
         return total_steps_so_far
 
     def __add_step_to_path(self, position: Coordinate, step: Step) -> None:
@@ -141,6 +137,7 @@ def parse_coordinate(coordinate_string: str) -> Coordinate:
     x = coordinate_string.strip("(").strip(")").split(",")[0]
     y = coordinate_string.strip("(").strip(")").split(",")[1]
     return Coordinate(int(x), int(y))
+
 
 class Grid:
     def __init__(self, green_wire: Wire, red_wire: Wire):
