@@ -39,6 +39,12 @@ class Coordinate:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+    def __ne__(self, other):
+        return self.x != other.x or self.y != other.y
+
+    def __str__(self):
+        return "({x}, {y})".format(x=self.x, y=self.y)
+
 
 class Axis(Enum):
     X = 0
@@ -109,16 +115,20 @@ class Wire:
         match direction:
             case Direction.right:
                 self._current_coordinate = Coordinate(self._current_coordinate.x + 1, self._current_coordinate.y)
-                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.X, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate,
+                                        Step(self._current_coordinate, Axis.X, total_steps_so_far))
             case Direction.left:
                 self._current_coordinate = Coordinate(self._current_coordinate.x - 1, self._current_coordinate.y)
-                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.X, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate,
+                                        Step(self._current_coordinate, Axis.X, total_steps_so_far))
             case Direction.up:
                 self._current_coordinate = Coordinate(self._current_coordinate.x, self._current_coordinate.y + 1)
-                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.Y, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate,
+                                        Step(self._current_coordinate, Axis.Y, total_steps_so_far))
             case Direction.down:
                 self._current_coordinate = Coordinate(self._current_coordinate.x, self._current_coordinate.y - 1)
-                self.__add_step_to_path(self._current_coordinate, Step(self._current_coordinate, Axis.Y, total_steps_so_far))
+                self.__add_step_to_path(self._current_coordinate,
+                                        Step(self._current_coordinate, Axis.Y, total_steps_so_far))
         return total_steps_so_far
 
     def __add_step_to_path(self, position: Coordinate, step: Step) -> None:
@@ -127,8 +137,31 @@ class Wire:
         self._path[str(position)].append(step)
 
 
+def parse_coordinate(coordinate_string: str) -> Coordinate:
+    x = coordinate_string.strip("(").strip(")").split(",")[0]
+    y = coordinate_string.strip("(").strip(")").split(",")[1]
+    return Coordinate(int(x), int(y))
 
+class Grid:
+    def __init__(self, green_wire: Wire, red_wire: Wire):
+        self._green_wire = green_wire
+        self._red_wire = red_wire
 
+    def get_intersections(self) -> list[Intersection]:
+        intersections = list[Intersection]()
+        for coordinate, steps in self._green_wire.path.items():
+            if self._red_wire.path.get(coordinate) is None:
+                continue
+            green_steps = self._green_wire.path[coordinate]
+            red_steps = self._red_wire.path[coordinate]
+            for green_step in green_steps:
+                for red_step in red_steps:
+                    if green_step.axis != red_step.axis:
+                        intersections.append(Intersection(parse_coordinate(coordinate), red_step.total_steps_so_far + green_step.total_steps_so_far))
+        return intersections
 
-
-
+    @staticmethod
+    def get_manhattan_distance(coordinate_a: Coordinate, coordinate_b: Coordinate) -> int:
+        x_distance = abs(coordinate_a.x - coordinate_b.x)
+        y_distance = abs(coordinate_a.y - coordinate_b.y)
+        return x_distance + y_distance
