@@ -1,4 +1,4 @@
-from domain.compute.instructions import *
+from domain.computer.instructions import *
 
 
 class IntcodeComputer(object):
