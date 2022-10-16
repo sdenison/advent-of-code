@@ -3,5 +3,5 @@ engine:
   load-pytest-plugins: false
   runtime: pytest
 pinned-tests:
-- tests.domain.computer.tests_instruction:TestsInstructions::test_something
-- tests.domain.computer.tests_instruction:TestsInstructions::test_create_instruction
+- tests.spaceship.computer.tests_instruction:TestsInstructions::test_something
+- tests.spaceship.computer.tests_instruction:TestsInstructions::test_create_instruction

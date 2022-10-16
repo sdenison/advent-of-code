@@ -1,4 +1,4 @@
-from domain.computer.instructions import *
+from spaceship.computer.instructions import *
 
 
 class IntcodeComputer(object):
