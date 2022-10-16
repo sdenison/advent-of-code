@@ -1,3 +1,4 @@
+import sys
 import unittest
 
 from spaceship.wiring.wiring import *
@@ -47,4 +48,28 @@ class TestWiringUnit(unittest.TestCase):
         expected_manhattan_distance = 6
         manhattan_distance = Grid.get_manhattan_distance(port, grid.get_intersections()[1].coordinate)
         self.assertEqual(expected_manhattan_distance, manhattan_distance)
+
+    def test_can_get_manhattan_distance(self):
+        coordinate_a = Coordinate(0, 0)
+        coordinate_b = Coordinate(5, 7)
+        expected_manhattan_distance = 12
+        manhattan_distance = Grid.get_manhattan_distance(coordinate_a, coordinate_b)
+        self.assertEqual(expected_manhattan_distance, manhattan_distance)
+
+    def test_can_get_manhattan_distance_for_examples_given_2(self):
+        moves_a = ["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"]
+        moves_b = ["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
+        wire_a = Wire(moves_a)
+        wire_b = Wire(moves_b)
+        grid = Grid(wire_a, wire_b)
+        port = Coordinate(1, 1)
+        lowest_manhattan = sys.maxsize
+        for intersection in grid.get_intersections():
+            manhattan = Grid.get_manhattan_distance(port, intersection.coordinate)
+            if manhattan < lowest_manhattan:
+                lowest_manhattan = manhattan
+        self.assertEqual(159, lowest_manhattan)
+
+
+
 
