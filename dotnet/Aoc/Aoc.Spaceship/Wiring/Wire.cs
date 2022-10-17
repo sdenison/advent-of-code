@@ -31,7 +31,7 @@ namespace Aoc.Spaceship.Wiring
         {
             for (var i = 0; i < move.Distance; i++)
             {
-                TakeStep(move.Direction, totalStepsSoFar);
+                totalStepsSoFar = TakeStep(move.Direction, totalStepsSoFar);
             }
             return totalStepsSoFar;
         }
