@@ -1,5 +1,15 @@
 def validate_password(candidate: int) -> bool:
-    return number_has_duplicate_digit(candidate)
+    return number_has_duplicate_digit(candidate) and digits_always_increase(candidate)
+
+
+def get_candidate_passwords(start_index: int, end_index: int) -> list[int]:
+    candidates: list[int] = []
+    candidate = start_index
+    while candidate <= end_index:
+        if validate_password(candidate):
+            candidates.append(candidate)
+        candidate += 1
+    return candidates
 
 
 def number_has_duplicate_digit(candidate: int) -> bool:
@@ -12,6 +22,18 @@ def number_has_duplicate_digit(candidate: int) -> bool:
             if len(matching_digits) == 2:
                 has_double = True
             matching_digits = [candidate_char]
-        if len(matching_digits) == 2:
-            has_double = True
-        return has_double
+    if len(matching_digits) == 2:
+        has_double = True
+    return has_double
+
+
+def digits_always_increase(candidate: int) -> bool:
+    candidate_string = str(candidate)
+    biggest_number = 0
+    for candidateChar in list(candidate_string):
+        digit = int(candidateChar)
+        if biggest_number > digit:
+            return False
+        biggest_number = digit
+    return True
+
