@@ -2,48 +2,46 @@
 
 namespace Aoc.Spaceship.Security
 {
-    public class PasswordGenerator
+    public static class PasswordGenerator
     {
-        public bool Check(int candidate)
+        public static bool ValidatePassword(int candidate)
         {
-            var passesTests = NumberHasDuplicateDigit(candidate);
-            passesTests = passesTests && DigitsAlwaysIncrease(candidate);
-            return passesTests;
+            return NumberHasDuplicateDigit(candidate) && DigitsAlwaysIncrease(candidate);
         }
 
-        public bool NumberHasDuplicateDigit(int candidate)
+        public static List<int> GetCandidatePasswords(int startIndex, int endIndex)
         {
-            var candidateString = candidate.ToString();
+            var candidates = new List<int>();
+            for (var candidate = startIndex; candidate <= endIndex; candidate++)
+            {
+                if (ValidatePassword(candidate))
+                    candidates.Add(candidate);
+            }
+            return candidates;
+        }
+
+        private static bool NumberHasDuplicateDigit(int candidate)
+        {
             var matchingDigits = new List<char>();
             var hasDouble = false;
-            foreach (var candidateChar in candidateString.ToCharArray())
+            foreach (var candidateChar in candidate.ToString().ToCharArray())
             {
-                if (matchingDigits.Count > 0)
-                {
-                    if (matchingDigits[0] == candidateChar)
-                    {
-                        matchingDigits.Add(candidateChar);
-                    }
-                    else
-                    {
-                        if (matchingDigits.Count == 2)
-                            hasDouble = true;
-                        matchingDigits.Clear();
-                        matchingDigits.Add(candidateChar);
-                    }
-                }
+                if (matchingDigits.Count == 0 || matchingDigits[0] == candidateChar)
+                    matchingDigits.Add(candidateChar);
                 else
                 {
+                    if (matchingDigits.Count == 2)
+                        hasDouble = true;
+                    matchingDigits.Clear();
                     matchingDigits.Add(candidateChar);
                 }
             }
-
             if (matchingDigits.Count == 2)
                 hasDouble = true;
             return hasDouble;
         }
 
-        public bool DigitsAlwaysIncrease(int candidate)
+        private static bool DigitsAlwaysIncrease(int candidate)
         {
             var candidateString = candidate.ToString();
             var biggestNumber = 0;
@@ -55,17 +53,6 @@ namespace Aoc.Spaceship.Security
                 biggestNumber = digit;
             }
             return true;
-        }
-
-        public List<int> GetCandidatePasswords(int startIndex, int endIndex)
-        {
-            var candidates = new List<int>();
-            for (var candidate = startIndex; candidate <= endIndex; candidate++)
-            {
-                if (Check(candidate))
-                    candidates.Add(candidate);
-            }
-            return candidates;
         }
     }
 }
