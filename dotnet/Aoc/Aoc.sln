@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aoc.Spaceship", "Aoc.Spaces
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aoc.Spaceship.Unit.Tests", "Aoc.Spaceship.Unit.Tests\Aoc.Spaceship.Unit.Tests.csproj", "{51839505-7A00-40CF-B1ED-C3A2FD793A81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aoc.Spaceship.Web", "Aoc.Spaceship.Web\Aoc.Spaceship.Web.csproj", "{754494D1-6699-4AAC-83D2-F0DAAC9EB0E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{51839505-7A00-40CF-B1ED-C3A2FD793A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51839505-7A00-40CF-B1ED-C3A2FD793A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51839505-7A00-40CF-B1ED-C3A2FD793A81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{754494D1-6699-4AAC-83D2-F0DAAC9EB0E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{754494D1-6699-4AAC-83D2-F0DAAC9EB0E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{754494D1-6699-4AAC-83D2-F0DAAC9EB0E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{754494D1-6699-4AAC-83D2-F0DAAC9EB0E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

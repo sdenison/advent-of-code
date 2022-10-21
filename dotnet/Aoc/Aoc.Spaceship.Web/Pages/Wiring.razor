@@ -1,0 +1,17 @@
+﻿@page "/wiring"
+
+<h3>Wiring</h3>
+
+@for(int i = 0; i < rowSize; i++)
+{
+    for(int j = 0; j < columns; j++)
+    {
+        <span class="dot"></span>
+    }
+    <br />
+}
+
+@code {
+    int rowSize = 10;
+    int columns = 10;
+}
