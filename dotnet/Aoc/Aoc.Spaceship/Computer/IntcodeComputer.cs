@@ -184,19 +184,19 @@ namespace Aoc.Spaceship.Computer
             return GetFromInitialInput();
         }
 
-        private int GetFromInitialInput()
-        {
-            //This is input that was given at the beginning of the run
-            var inputValue = _input[_inputCounter];
-            _inputCounter++;
-            return inputValue;
-        }
-
         private async Task<int> GetFromInputPort()
         {
             //Getting input from whatever we have plugged in to the input port
             var inputValue = await InputPort.GetInput(_outputCounter);
             _outputCounter++;
+            return inputValue;
+        }
+
+        private int GetFromInitialInput()
+        {
+            //This is input that was given at the beginning of the run
+            var inputValue = _input[_inputCounter];
+            _inputCounter++;
             return inputValue;
         }
 

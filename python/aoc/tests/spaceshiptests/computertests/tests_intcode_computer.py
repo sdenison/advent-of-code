@@ -17,10 +17,14 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         self.assertEqual(memory_output, expected_memory_output)
 
     def test_that_multiply_works(self):
+
+        # run program on computer
         computer = IntcodeComputer()
         program = [2, 2, 3, 2, 99]
-        expected_computed_output = [2, 2, 6, 2, 99]
         computed_output = computer.run_program(program, None)
+
+
+        expected_computed_output = [2, 2, 6, 2, 99]
         self.assertEqual(expected_computed_output, computed_output)
 
     @staticmethod
@@ -75,11 +79,19 @@ class TestsIntcodeComputerUnit(unittest.TestCase):
         self.assertEqual(6635, solution_value)
 
     def test_that_new_display_and_put_instructions_work(self):
-        computer = IntcodeComputer()
-        program = [3, 0, 4, 0, 99]
         expected_computed_output = [55, 0, 4, 0, 99]
-        computed_output = computer.run_program(program, 55)
-        self.assertEqual(expected_computed_output, computed_output)
+
+        # This is the program
+        program = [3, 0, 4, 0, 99]
+
+        # Create a computer
+        computer = IntcodeComputer()
+
+        # Run a program on the computer
+        computer.run_program(program, 55)
+
+        # Look at the output
+        self.assertEqual(computer.output[0], 55)
 
     def test_that_parameter_modes_work(self):
         computer = IntcodeComputer()
