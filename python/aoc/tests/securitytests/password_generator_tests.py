@@ -15,7 +15,6 @@ class TestPasswordGenerator(unittest.TestCase):
         candidate_passwords = get_candidate_passwords(245182, 790572)
         self.assertEqual(710, len(candidate_passwords))
 
-
     @staticmethod
     def get_test_cases():
         return [

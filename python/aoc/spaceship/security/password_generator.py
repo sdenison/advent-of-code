@@ -2,13 +2,11 @@ def validate_password(candidate: int) -> bool:
     return number_has_duplicate_digit(candidate) and digits_always_increase(candidate)
 
 
-def get_candidate_passwords(start_index: int, end_index: int) -> list[int]:
+def get_candidate_passwords(starting_number: int, ending_number: int) -> list[int]:
     candidates: list[int] = []
-    candidate = start_index
-    while candidate <= end_index:
+    for candidate in range(starting_number, ending_number):
         if validate_password(candidate):
             candidates.append(candidate)
-        candidate += 1
     return candidates
 
 
