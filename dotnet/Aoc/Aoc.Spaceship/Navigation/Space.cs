@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace Aoc.Spaceship.Navigation
@@ -22,6 +23,7 @@ namespace Aoc.Spaceship.Navigation
             for(var orbit = 1; orbit <= maxOrbits; orbit++)
             {
                 coordinatesWithAsteroids.AddRange(GetQuadrant1Asteroids(orbit));
+                coordinatesWithAsteroids.AddRange(GetQuadrant2Asteroids(orbit));
             }
             return coordinatesWithAsteroids;
         }
@@ -29,22 +31,71 @@ namespace Aoc.Spaceship.Navigation
         public IList<Coordinate> GetQuadrant1Asteroids(int orbit)
         {
             var coordinatesWithAsteroids = new List<Coordinate>();
-            for(var y = 0; y < orbit; y++)
+            for(var y = 0; y <= orbit; y++)
             {
                 var x = orbit;
                 var coordinateXy = new Coordinate(x, y);
-                var translatedCoordinate = TranslatedCoordinateToMap(coordinateXy);
-                if (_map[translatedCoordinate.X, translatedCoordinate.Y] == '#')
-                    coordinatesWithAsteroids.Add(translatedCoordinate);
+                try
+                {
+                    var charToTest = GetValueAtXyCoordinate(coordinateXy);
+                    if (charToTest == '#')
+                        coordinatesWithAsteroids.Add(coordinateXy);
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    break;
+                }
             }
 
             for(var x = 0; x < orbit; x++)
             {
                 var y = orbit;
                 var coordinateXy = new Coordinate(x, y);
-                var translatedCoordinate = TranslatedCoordinateToMap(coordinateXy);
-                if (_map[translatedCoordinate.X, translatedCoordinate.Y] == '#')
-                    coordinatesWithAsteroids.Add(translatedCoordinate);
+                try
+                {
+                    var charToTest = GetValueAtXyCoordinate(coordinateXy);
+                    if (charToTest == '#')
+                        coordinatesWithAsteroids.Add(coordinateXy);
+                }catch(IndexOutOfRangeException)
+                {
+                    break;
+                }
+            }
+
+            return coordinatesWithAsteroids;
+        }
+
+        public IList<Coordinate> GetQuadrant2Asteroids(int orbit)
+        {
+            var coordinatesWithAsteroids = new List<Coordinate>();
+            for (var y = 0; y <= orbit; y++)
+            {
+                var x = -1 * orbit;
+                var coordinateXy = new Coordinate(x, y);
+                try
+                {
+                    var charToTest = GetValueAtXyCoordinate(coordinateXy);
+                    if (charToTest == '#')
+                        coordinatesWithAsteroids.Add(coordinateXy);
+                }catch(IndexOutOfRangeException)
+                {
+                    break;
+                }
+            }
+
+            for (var x = -1; x > -1 * orbit; x--)
+            {
+                var y = orbit;
+                var coordinateXy = new Coordinate(x, y);
+                try
+                {
+                    var charToTest = GetValueAtXyCoordinate(coordinateXy);
+                    if (charToTest == '#')
+                        coordinatesWithAsteroids.Add(coordinateXy);
+                }catch(IndexOutOfRangeException)
+                {
+                    break;
+                }
             }
 
             return coordinatesWithAsteroids;
@@ -67,22 +118,29 @@ namespace Aoc.Spaceship.Navigation
 
         public Coordinate TranslatedCoordinateToMap(Coordinate coordinate)
         {
-            return new Coordinate(coordinate.Y + _coordinateToCheck.X, coordinate.X + _coordinateToCheck.Y);
+            return new Coordinate(coordinate.X + _coordinateToCheck.X, Math.Abs(_coordinateToCheck.Y - coordinate.Y));
         }
 
         public Coordinate TranslatedCoordinateToXy(Coordinate coordinate)
         {
-            return new Coordinate(coordinate.X + _coordinateToCheck.X, coordinate.Y + _coordinateToCheck.Y);
+            return new Coordinate(coordinate.X + _coordinateToCheck.X, Math.Abs(coordinate.Y - _coordinateToCheck.Y));
         }
 
-        public char GetCoordinate(int x, int y)
+        public char GetValueAtMapCoordinate(int x, int y)
         {
             return _map[y, x];
         }
 
-        public char GetCoordinate(Coordinate coordinate)
+        public char GetValueAtXyCoordinate(int x, int y)
         {
-            return _map[coordinate.Y, coordinate.X];
+            var xyCoordinate = new Coordinate(x, y);
+            return GetValueAtXyCoordinate(xyCoordinate);
+        }
+
+        public char GetValueAtXyCoordinate(Coordinate xyCoordinate)
+        {
+            var mapCoordinate = TranslatedCoordinateToXy(xyCoordinate);
+            return _map[mapCoordinate.Y, mapCoordinate.X];
         }
     }
 }

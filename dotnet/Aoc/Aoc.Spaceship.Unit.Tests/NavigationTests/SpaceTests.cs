@@ -92,31 +92,6 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
         }
 
         [Test]
-        public void Can_get_coordinate_transaction_for_center_at_3_2()
-        {
-            char[,] map =
-            {
-                {'#', '#', '.', '.'},
-                {'#', '#', '.', '.'},
-                {'#', '#', '.', '.'},
-                {'#', '#', '.', '.'},
-            };
-            var proposedCenter = new Coordinate(3, 2);
-            var space = new Space(map, proposedCenter);
-
-            //There should be no transactions for 0, 0
-            var coordinateToTranslate = new Coordinate(2, 2);
-            var expectedCoordinate = new Coordinate(-1, 0);
-            var translatedCoordinate = space.TranslatedCoordinateToMap(coordinateToTranslate);
-            expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
-
-            coordinateToTranslate = new Coordinate(3, 3);
-            expectedCoordinate = new Coordinate(0, 1);
-            translatedCoordinate = space.TranslatedCoordinateToMap(coordinateToTranslate);
-            expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
-        }
-
-        [Test]
         public void Can_translate_coordinates_the_other_way()
         {
             char[,] map =
@@ -135,66 +110,116 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             var translatedCoordinate = space.TranslatedCoordinateToXy(coordinateToTranslate);
             expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
 
-            coordinateToTranslate = new Coordinate(0, 1);
+            coordinateToTranslate = new Coordinate(0, -1);
             expectedCoordinate = new Coordinate(3, 3);
             translatedCoordinate = space.TranslatedCoordinateToXy(coordinateToTranslate);
             expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
         }
 
         [Test]
-        public void Can_get_visible_asteroids_3_by_3()
+        public void Can_get_translate_coordinates()
         {
-            var eMap = new[] {
-                new[] { 'a', 'b', 'c' },
-                new[] { 'd', 'e', 'f' },
-                new[] { 'g', 'h', 'i' }
-            };
-            char[,] emptyMap = new char[,]
+            char[,] map = new char[,]
             {
                 {'A', 'B', 'C'},
                 {'D', 'E', 'F'},
                 {'G', 'H', 'I'},
             };
-            Assert.AreEqual('C', emptyMap[0, 2]);
-            Assert.AreEqual('G', emptyMap[2, 0]);
-
-            Assert.AreEqual('c', eMap[0][2]);
-            var coordinateToTest = new Coordinate(0, 2);
-
-            var space = new Space(emptyMap, coordinateToTest);
-            Assert.AreEqual('G', space.GetCoordinate(0, 2));
-
-            var xyCoordinates = new Coordinate(1, 0);
-            var expectedMapCoordinate = new Coordinate(1, 2);
-            var mapCoordinate = space.TranslatedCoordinateToMap(xyCoordinates);
-            //expectedMapCoordinate.Should().BeEquivalentTo(mapCoordinate);
-
-            //xyCoordinates = new Coordinate(0, 1);
-            //expectedMapCoordinate = new Coordinate(0, 1);
-            //mapCoordinate = space.TranslatedCoordinateToMap(xyCoordinates);
-            //expectedMapCoordinate.Should().BeEquivalentTo(mapCoordinate);
-
-
-            //var visibleAsteroids = space.GetVisibleAsteroids();
-            //Assert.AreEqual(4, visibleAsteroids.Count);
-
-            ////Starting from immediately to the right
-            //coordinateToTest = new Coordinate(1, 0);
-            //visibleAsteroids = space.GetVisibleAsteroids();
+            var coordinateToTest = new Coordinate(0, 2); 
+            var space = new Space(map, coordinateToTest);
+            // (0, 2) map coordinates is the same as (0, 0) x, y coordinates
+            Assert.AreEqual('G', space.GetValueAtMapCoordinate(0, 2));
+            Assert.AreEqual('G', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('H', space.GetValueAtXyCoordinate(1, 0));
+            Assert.AreEqual('I', space.GetValueAtXyCoordinate(2, 0));
+            Assert.AreEqual('D', space.GetValueAtXyCoordinate(0, 1));
+            Assert.AreEqual('C', space.GetValueAtXyCoordinate(2, 2));
         }
 
-        //[Test]
-        //public void Can_get_visible_asteroids_3_by_3()
-        //{
-        //    char[,] emptyMap = new char[,]
-        //    {
-        //        {'#', '.', '#'},
-        //        {'.', '.', '#'},
-        //        {'#', '#', '#'},
-        //    };
-        //    var space = new Space(emptyMap);
-        //    var coordinateToTest = new Coordinate(0, 0);
-        //    var visibleAsteroids = space.GetVisibleAsteroids(coordinateToTest);
-        //}
+        [Test]
+        public void Can_get_translate_coordinates_on_5_by_5()
+        {
+            char[,] map = new char[,]
+            {
+                {'A', 'B', 'C', 'D', 'E'},
+                {'F', 'G', 'H', 'I', 'J'},
+                {'K', 'L', 'M', 'N', 'O'},
+                {'P', 'Q', 'R', 'S', 'T'},
+                {'U', 'V', 'W', 'X', 'Y'},
+            };
+            var coordinateToTest = new Coordinate(3, 2);
+            var space = new Space(map, coordinateToTest);
+            // (0, 2) map coordinates is the same as (0, 0) x, y coordinates
+            Assert.AreEqual('N', space.GetValueAtMapCoordinate(3, 2));
+            Assert.AreEqual('N', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('O', space.GetValueAtXyCoordinate(1, 0));
+            Assert.AreEqual('L', space.GetValueAtXyCoordinate(-2, 0));
+            Assert.AreEqual('P', space.GetValueAtXyCoordinate(-3, -1));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(-2,2));
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_1()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#'},
+                {'.', '.', '#'},
+                {'#', '#', '#'},
+            };
+            var coordinateToTest = new Coordinate(0, 2);
+            var space = new Space(map, coordinateToTest);
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(6, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_1_5_by_5()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'.', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'#', '.', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(0, 4);
+            var space = new Space(map, coordinateToTest);
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(13, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_2()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#'},
+                {'.', '.', '#'},
+                {'#', '#', '#'},
+            };
+            var coordinateToTest = new Coordinate(2, 2);
+            var space = new Space(map, coordinateToTest);
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(6, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_1_and_two_combined()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'.', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'#', '.', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(1, 4);
+            var space = new Space(map, coordinateToTest);
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(14, visibleAsteroids.Count);
+        }
     }
 }
