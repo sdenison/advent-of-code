@@ -36,5 +36,10 @@ namespace Aoc.Spaceship.Navigation
                 maxOrbits = (ySize - coordinate.Y) - 1;
             return maxOrbits;
         }
+
+        public Coordinate TranslatedCoordinate(Coordinate newCenter, Coordinate coordinate)
+        {
+            return new Coordinate(coordinate.X - newCenter.X, coordinate.Y - newCenter.Y);
+        }
     }
 }
