@@ -77,16 +77,6 @@ namespace Aoc.Spaceship.Navigation
                 blastedAsteroids.Add(asteroidStraightUp);
                 asteroids.Remove(asteroidStraightUp);
             }
-
-            var quadrent1s = asteroids.Where(x => x.Quadrant == 1).OrderByDescending(x => Math.Abs(x.Slope.Value));
-            foreach (var quadrent1 in quadrent1s)
-            {
-                var x = quadrent1.X;
-                var y = quadrent1.Y;
-                var quadrent = quadrent1.Quadrant;
-            }
-                
-
             var slopes = asteroids.Where(x => x.Quadrant == 1).OrderByDescending(x => Math.Abs(x.Slope.Value))
                 .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
             foreach(var slope in slopes)
@@ -102,20 +92,49 @@ namespace Aoc.Spaceship.Navigation
         {
             var blastedAsteroids = new List<Coordinate>();
 
+            var slopes = asteroids.Where(x => x.Quadrant == 4 && x.Slope.HasValue).OrderBy(x => Math.Abs(x.Slope.Value))
+                .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
+            foreach (var slope in slopes)
+            {
+                var asteroidToBlast = asteroids.First(x => x.Quadrant == 4 && x.Slope.HasValue && x.Slope.Value == slope);
+                blastedAsteroids.Add(asteroidToBlast);
+                asteroids.Remove(asteroidToBlast);
+            }
+            var hasValueStraightDown = asteroids.Any(x => x.Quadrant == 4 && !x.Slope.HasValue);
+            if (hasValueStraightDown)
+            {
+                var asteroidStraightUp = asteroids.First(x => x.Quadrant == 4 && !x.Slope.HasValue);
+                blastedAsteroids.Add(asteroidStraightUp);
+                asteroids.Remove(asteroidStraightUp);
+            }
             return blastedAsteroids;
         }
 
         public IList<Coordinate> BlastQuadrant3(IList<Coordinate> asteroids)
         {
             var blastedAsteroids = new List<Coordinate>();
-
+            var slopes = asteroids.Where(x => x.Quadrant == 3 && x.Slope.HasValue).OrderByDescending(x => Math.Abs(x.Slope.Value))
+                .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
+            foreach (var slope in slopes)
+            {
+                var asteroidToBlast = asteroids.First(x => x.Quadrant == 3 && x.Slope.Value == slope);
+                blastedAsteroids.Add(asteroidToBlast);
+                asteroids.Remove(asteroidToBlast);
+            }
             return blastedAsteroids;
         }
 
         public IList<Coordinate> BlastQuadrant2(IList<Coordinate> asteroids)
         {
             var blastedAsteroids = new List<Coordinate>();
-
+            var slopes = asteroids.Where(x => x.Quadrant == 2 && x.Slope.HasValue).OrderBy(x => Math.Abs(x.Slope.Value))
+                .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
+            foreach (var slope in slopes)
+            {
+                var asteroidToBlast = asteroids.First(x => x.Quadrant == 2 && x.Slope.HasValue && x.Slope.Value == slope);
+                blastedAsteroids.Add(asteroidToBlast);
+                asteroids.Remove(asteroidToBlast);
+            }
             return blastedAsteroids;
         }
 
@@ -339,11 +358,6 @@ namespace Aoc.Spaceship.Navigation
 
         public char GetValueAtXyCoordinate(int x, int y)
         {
-            //if (x > XMax() || x < XMin())
-            //    throw new IndexOutOfRangeException("x axis");
-            //if (y > YMax() || y < YMin())
-            //    throw new IndexOutOfRangeException("y axis");
-
             var xyCoordinate = new Coordinate(x, y);
             return GetValueAtXyCoordinate(xyCoordinate);
         }

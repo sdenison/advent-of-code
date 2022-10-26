@@ -117,6 +117,31 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
         }
 
         [Test]
+        public void Can_translate_coordinates_the_other_way_2()
+        {
+            char[,] map =
+            {
+                {'.', '.', '.', '.'},
+                {'.', '.', '.', '.'},
+                {'.', 'X', '.', '.'},
+                {'.', '.', '.', '.'},
+            };
+            var proposedCenter = new Coordinate(1, 2);
+            var space = new Space(map, proposedCenter);
+
+            //There should be no transactions for 0, 0
+            var coordinateToTranslate = new Coordinate(-1, 0);
+            var expectedCoordinate = new Coordinate(0, 2);
+            var translatedCoordinate = space.TranslatedCoordinateToXy(coordinateToTranslate);
+            expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
+
+            coordinateToTranslate = new Coordinate(0, -1);
+            expectedCoordinate = new Coordinate(1, 3);
+            translatedCoordinate = space.TranslatedCoordinateToXy(coordinateToTranslate);
+            expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
+        }
+
+        [Test]
         public void Can_get_translate_coordinates()
         {
             char[,] map = new char[,]
@@ -470,7 +495,8 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
                 {'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',},
                 {'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
             };
-            var coordinateToTest = new Coordinate(9, 3);
+
+            var coordinateToTest = new Coordinate(8, 3);
             var space = new Space(map, coordinateToTest);
             var allAsteroids = space.GetAllAsteroids();
             var getVisibleAsteroids = space.GetVisibleAsteroids();
@@ -478,20 +504,87 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             var blastedAsteroids = space.BlastQuadrant1(allAsteroids);
             var expectedBestLocation = new Coordinate(0, 2);
             expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[0]);
+            expectedBestLocation = new Coordinate(1, 3);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[1]);
+            expectedBestLocation = new Coordinate(7, 2);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[8]);
 
+            allAsteroids = space.GetAllAsteroids();
+            blastedAsteroids = space.RotateLaser();
+            expectedBestLocation = new Coordinate(0, 2);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[0]);
 
+            expectedBestLocation = new Coordinate(-4, -1);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[17]);
+
+            expectedBestLocation = new Coordinate(-3, 2);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[26]);
+
+            expectedBestLocation = new Coordinate(6, 0);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[35]);
         }
 
-        /*
-{'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',}
-{'#','#','.','.','.','#','#','.','#','#','#','#','#','.','.','#','#',}
-{'#','#','.','.','.','#','.','.','.','#','.','#','#','#','#','#','.',}
-{'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',}
-{'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
-        */
+        [Test]
+        public void Day_10_step_2_examples()
+        {
+            char[,] map = new char[,]
+            {
+                {'.','#','.','.','#','#','.','#','#','#','.','.','.','#','#','#','#','#','#','#',},
+                {'#','#','.','#','#','#','#','#','#','#','#','#','#','#','#','.','.','#','#','.',},
+                {'.','#','.','#','#','#','#','#','#','.','#','#','#','#','#','#','#','#','.','#',},
+                {'.','#','#','#','.','#','#','#','#','#','#','#','.','#','#','#','#','.','#','.',},
+                {'#','#','#','#','#','.','#','#','.','#','.','#','#','.','#','#','#','.','#','#',},
+                {'.','.','#','#','#','#','#','.','.','#','.','#','#','#','#','#','#','#','#','#',},
+                {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',},
+                {'#','.','#','#','#','#','.','.','.','.','#','#','#','.','#','.','#','.','#','#',},
+                {'#','#','.','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',},
+                {'#','#','#','#','#','.','#','#','.','#','#','#','.','.','#','#','#','#','.','.',},
+                {'.','.','#','#','#','#','#','#','.','.','#','#','.','#','#','#','#','#','#','#',},
+                {'#','#','#','#','.','#','#','.','#','#','#','#','.','.','.','#','#','.','.','#',},
+                {'.','#','#','#','#','#','.','.','#','.','#','#','#','#','#','#','.','#','#','#',},
+                {'#','#','.','.','.','#','.','#','#','#','#','X','#','#','#','#','#','.','.','.',},
+                {'#','.','#','#','#','#','#','#','#','#','#','#','.','#','#','#','#','#','#','#',},
+                {'.','#','#','#','#','.','#','.','#','#','#','.','#','#','#','.','#','.','#','#',},
+                {'.','.','.','.','#','#','.','#','#','.','#','#','#','.','.','#','#','#','#','#',},
+                {'.','#','.','#','.','#','#','#','#','#','#','#','#','#','#','#','.','#','#','#',},
+                {'#','.','#','.','#','.','#','#','#','#','#','.','#','#','#','#','.','#','#','#',},
+                {'#','#','#','.','#','#','.','#','#','#','#','.','#','#','.','#','.','.','#','#',}
+            };
+            var coordinateToTest = new Coordinate(11, 13);
+            var space = new Space(map, coordinateToTest);
+            var blastedAsteroids = space.RotateLaser();
 
+            var mapCoordinate = new Coordinate(11, 12);
+            var coordToTest= space.TranslatedCoordinateToMap(blastedAsteroids[0]);
+            coordToTest.Should().BeEquivalentTo(mapCoordinate);
 
+            mapCoordinate = new Coordinate(12, 1);
+            coordToTest= space.TranslatedCoordinateToMap(blastedAsteroids[1]);
+            coordToTest.Should().BeEquivalentTo(mapCoordinate);
 
+            mapCoordinate = new Coordinate(16, 9);
+            coordToTest= space.TranslatedCoordinateToMap(blastedAsteroids[49]);
+            coordToTest.Should().BeEquivalentTo(mapCoordinate);
+
+            mapCoordinate = new Coordinate(8, 2);
+            coordToTest= space.TranslatedCoordinateToMap(blastedAsteroids[199]);
+            coordToTest.Should().BeEquivalentTo(mapCoordinate);
+        }
+
+        [Test]
+        public void Get_day_10_part_2_solution()
+        {
+            char[,] map = GetDay10Input();
+            var coordinateToTest = new Coordinate(23, 20);
+            var space = new Space(map, coordinateToTest);
+
+            var blastedAsteroids = space.RotateLaser();
+            var coordToTest = space.TranslatedCoordinateToMap(blastedAsteroids[199]);
+            Assert.AreEqual(11, coordToTest.X);
+            Assert.AreEqual(19, coordToTest.Y);
+            var answer = 11 * 100 + 19;
+            Assert.AreEqual(1119, answer);
+        }
 
         public char[,] GetDay10Input()
         {
@@ -531,7 +624,6 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
                 {'.','#','#','#','#','.','#','#','.','.','.','#','.','.','.','.','.','.','.','#','#','#','#','.','.','#','.','.','.','.','#','#','.','.',},
                 {'.','#','.','#','.','.','.','.','.','.','.','#','.','.','.','.','.','.','#','.','#','#','.','.','#','#','.','#','.','#','.','.','#','#',},
                 {'.','.','.','.','.','.','#','#','.','.','.','.','.','#','#','.','.','.','#','#','.','#','#','.','.','.','#','#','.','.','.','.','.','.',}
-
             };
             return map;
         }
