@@ -6,7 +6,8 @@ namespace Aoc.Spaceship.Navigation
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public float? Slope => X == 0 ? (float?) null : Math.Abs((float)Y / (float) X);
+        //public float? Slope => X == 0 ? (float?) null : Math.Abs((float)Y / (float) X);
+        public decimal? Slope => X == 0 ? (decimal?) null : Math.Abs((decimal)Y / (decimal) X);
         public int VisibleAsteroids { get; set; }
 
         public int Quadrant

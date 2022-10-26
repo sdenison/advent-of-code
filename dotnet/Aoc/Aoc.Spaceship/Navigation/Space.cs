@@ -53,16 +53,61 @@ namespace Aoc.Spaceship.Navigation
 
         public IList<Coordinate> RotateLaser()
         {
-            var coordinatesWithAsteroids = new List<Coordinate>();
+            var blastedCoordinates = new List<Coordinate>();
             var maxOrbits = MaxOrbits(_coordinateToCheck);
+            var allAsteroids = GetAllAsteroids();
             for (var orbit = 1; orbit <= maxOrbits; orbit++)
             {
-                coordinatesWithAsteroids.AddRange(GetQuadrant1Asteroids(orbit));
-                coordinatesWithAsteroids.AddRange(GetQuadrant2Asteroids(orbit));
-                coordinatesWithAsteroids.AddRange(GetQuadrant3Asteroids(orbit));
-                coordinatesWithAsteroids.AddRange(GetQuadrant4Asteroids(orbit));
+                blastedCoordinates.AddRange(BlastQuadrant1(allAsteroids));
+                blastedCoordinates.AddRange(BlastQuadrant4(allAsteroids));
+                blastedCoordinates.AddRange(BlastQuadrant3(allAsteroids));
+                blastedCoordinates.AddRange(BlastQuadrant2(allAsteroids));
             }
-            return coordinatesWithAsteroids;
+            return blastedCoordinates;
+        }
+
+        public IList<Coordinate> BlastQuadrant1(IList<Coordinate> asteroids)
+        {
+            var blastedAsteroids = new List<Coordinate>();
+            //Look straight up
+            var hasValueStraightUp = asteroids.Any(x => x.Quadrant == 1 && !x.Slope.HasValue);
+            if (hasValueStraightUp)
+            {
+                var asteroidStraightUp = asteroids.First(x => x.Quadrant == 1 && !x.Slope.HasValue);
+                blastedAsteroids.Add(asteroidStraightUp);
+                asteroids.Remove(asteroidStraightUp);
+            }
+
+            var slopes = asteroids.Where(x => x.Quadrant == 1).OrderByDescending(x => Math.Abs(x.Slope.Value))
+                .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
+            foreach(var slope in slopes)
+            {
+                var asteroidToBlast = asteroids.First(x => x.Quadrant == 1 && x.Slope.Value == slope);
+                blastedAsteroids.Add(asteroidToBlast);
+                asteroids.Remove(asteroidToBlast);
+            }
+            return blastedAsteroids;
+        }
+
+        public IList<Coordinate> BlastQuadrant4(IList<Coordinate> asteroids)
+        {
+            var blastedAsteroids = new List<Coordinate>();
+
+            return blastedAsteroids;
+        }
+
+        public IList<Coordinate> BlastQuadrant3(IList<Coordinate> asteroids)
+        {
+            var blastedAsteroids = new List<Coordinate>();
+
+            return blastedAsteroids;
+        }
+
+        public IList<Coordinate> BlastQuadrant2(IList<Coordinate> asteroids)
+        {
+            var blastedAsteroids = new List<Coordinate>();
+
+            return blastedAsteroids;
         }
 
         public IList<Coordinate> GetVisibleAsteroids()
