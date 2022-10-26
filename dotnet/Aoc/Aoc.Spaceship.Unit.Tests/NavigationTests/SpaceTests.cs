@@ -159,6 +159,26 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
         }
 
         [Test]
+        public void Can_get_translate_coordinates_on_7_by_4()
+        {
+            char[,] map = new char[,]
+            {
+                {'A', 'B', 'C', 'D', 'E', 'F', 'G'},
+                {'H', 'I', 'J', 'K', 'L', 'M', 'N'},
+                {'O', 'P', 'Q', 'R', 'S', 'T', 'U'},
+                {'V', 'W', 'X', 'Y', 'Z', '1', '2'},
+            };
+            var coordinateToTest = new Coordinate(3, 2);
+            var space = new Space(map, coordinateToTest);
+            Assert.AreEqual('R', space.GetValueAtMapCoordinate(3, 2));
+            Assert.AreEqual('R', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('S', space.GetValueAtXyCoordinate(1, 0));
+            Assert.AreEqual('P', space.GetValueAtXyCoordinate(-2, 0));
+            Assert.AreEqual('V', space.GetValueAtXyCoordinate(-3, -1));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(-2, 2));
+        }
+
+        [Test]
         public void Can_get_all_asteroids_from_quadrent_1()
         {
             char[,] map = new char[,]
@@ -438,6 +458,38 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             Assert.AreEqual(20, bestLocation.Y);
             expectedBestLocation.Should().BeEquivalentTo(bestLocation);
         }
+
+        //[Test]
+        //public void Can_blast_asteroids_day_10_step_2_example_1()
+        //{
+        //    char[,] map = new char[,]
+        //    {
+        //        {'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',},
+        //        {'#','#','.','.','.','#','#','.','#','#','#','#','#','.','.','#','#',},
+        //        {'#','#','.','.','.','#','.','.','.','#','.','#','#','#','#','#','.',},
+        //        {'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',},
+        //        {'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
+        //    };
+        //    var coordinateToTest = new Coordinate(9, 3);
+        //    var space = new Space(map, coordinateToTest);
+        //    var allAsteroids = space.GetAllAsteroids();
+
+        //    var blastedAsteroids = space.BlastQuadrant1(allAsteroids);
+        //    var expectedBestLocation = new Coordinate(9, 1);
+        //    expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[0]);
+
+
+        //}
+
+        /*
+{'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',}
+{'#','#','.','.','.','#','#','.','#','#','#','#','#','.','.','#','#',}
+{'#','#','.','.','.','#','.','.','.','#','.','#','#','#','#','#','.',}
+{'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',}
+{'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
+        */
+
+
 
 
         public char[,] GetDay10Input()

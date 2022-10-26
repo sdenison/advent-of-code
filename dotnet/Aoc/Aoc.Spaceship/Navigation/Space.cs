@@ -78,6 +78,15 @@ namespace Aoc.Spaceship.Navigation
                 asteroids.Remove(asteroidStraightUp);
             }
 
+            var quadrent1s = asteroids.Where(x => x.Quadrant == 1).OrderByDescending(x => Math.Abs(x.Slope.Value));
+            foreach (var quadrent1 in quadrent1s)
+            {
+                var x = quadrent1.X;
+                var y = quadrent1.Y;
+                var quadrent = quadrent1.Quadrant;
+            }
+                
+
             var slopes = asteroids.Where(x => x.Quadrant == 1).OrderByDescending(x => Math.Abs(x.Slope.Value))
                 .GroupBy(x => Math.Abs(x.Slope.Value)).Select(x => x.First().Slope);
             foreach(var slope in slopes)
