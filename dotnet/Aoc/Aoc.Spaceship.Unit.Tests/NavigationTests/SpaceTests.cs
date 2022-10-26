@@ -24,7 +24,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
         [Test]
         public void Can_get_max_orbitsl()
         {
-            char[,] emptyMap = 
+            char[,] emptyMap =
             {
                 {'#', '#'},
                 {'#', '#'},
@@ -85,7 +85,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             var translatedCoordinate = space.TranslatedCoordinateToMap(coordinateToTranslate);
             expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
 
-            coordinateToTranslate = new Coordinate(3, 2);
+            coordinateToTranslate = new Coordinate(3, -2);
             expectedCoordinate = new Coordinate(3, 2);
             translatedCoordinate = space.TranslatedCoordinateToMap(coordinateToTranslate);
             expectedCoordinate.Should().BeEquivalentTo(translatedCoordinate);
@@ -125,7 +125,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
                 {'D', 'E', 'F'},
                 {'G', 'H', 'I'},
             };
-            var coordinateToTest = new Coordinate(0, 2); 
+            var coordinateToTest = new Coordinate(0, 2);
             var space = new Space(map, coordinateToTest);
             // (0, 2) map coordinates is the same as (0, 0) x, y coordinates
             Assert.AreEqual('G', space.GetValueAtMapCoordinate(0, 2));
@@ -155,7 +155,9 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             Assert.AreEqual('O', space.GetValueAtXyCoordinate(1, 0));
             Assert.AreEqual('L', space.GetValueAtXyCoordinate(-2, 0));
             Assert.AreEqual('P', space.GetValueAtXyCoordinate(-3, -1));
-            Assert.AreEqual('B', space.GetValueAtXyCoordinate(-2,2));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(-2, 2));
+
+
         }
 
         [Test]
@@ -220,6 +222,111 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             var space = new Space(map, coordinateToTest);
             var visibleAsteroids = space.GetVisibleAsteroids();
             Assert.AreEqual(14, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_2_2()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'.', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', 'B'},
+                {'#', '.', '#', '.', 'A'},
+            };
+            var coordinateToTest = new Coordinate(4, 4);
+            var space = new Space(map, coordinateToTest);
+            Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, 1));
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(12, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_3()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', 'A'},
+                {'.', '.', '#', '.', 'B'},
+                {'.', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'#', '.', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(4, 0);
+            var space = new Space(map, coordinateToTest);
+            //Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, -1));
+            //var x = space.GetValueAtXyCoordinate(0, 1);
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(12, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_4()
+        {
+            char[,] map = new char[,]
+            {
+                {'A', '#', '#', '.', '#'},
+                {'B', '.', '#', '.', '#'},
+                {'#', '#', '.', '.', '#'},
+                {'.', '.', '.', '.', '#'},
+                {'C', '#', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(0, 0);
+            var space = new Space(map, coordinateToTest);
+
+            //There should be no (1, 1)
+            //Assert.AreEqual('A', space.GetValueAtXyCoordinate(1, 1));
+
+            Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, -1));
+            Assert.AreEqual('C', space.GetValueAtXyCoordinate(0, -4));
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(12, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_all()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'#', '#', 'A', '.', '#'},
+                {'.', '.', 'B', '.', '#'},
+                {'#', '#', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(2, 2);
+            var space = new Space(map, coordinateToTest);
+            Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, -1));
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(14, visibleAsteroids.Count);
+        }
+
+        [Test]
+        public void Can_make_sure_x_y_coordinates_translate()
+        {
+            char[,] map = new char[,]
+            {
+                {'A', '#', '#', '.', '#'},
+                {'B', 'X', '#', '.', '#'},
+                {'#', '#', '.', '.', '#'},
+                {'.', '.', '.', '.', '#'},
+                {'C', '#', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(2, 2);
+            var space = new Space(map, coordinateToTest);
+
+            //There should be no (1, 1)
+            //Assert.AreEqual('X', space.GetValueAtXyCoordinate(1, 1));
+
+            Assert.AreEqual(2, space.XMax());
+            Assert.AreEqual(-2, space.XMin());
+            Assert.AreEqual(-2, space.YMin());
+            Assert.AreEqual(2, space.YMax());
         }
     }
 }
