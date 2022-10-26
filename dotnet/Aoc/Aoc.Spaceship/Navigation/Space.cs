@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace Aoc.Spaceship.Navigation
@@ -36,7 +37,7 @@ namespace Aoc.Spaceship.Navigation
             return (_map.GetLength(1) - 1) + YMin();
         }
 
-        public IList<Coordinate> GetVisibleAsteroids()
+        public IList<Coordinate> GetAllAsteroids()
         {
             var coordinatesWithAsteroids = new List<Coordinate>();
             var maxOrbits = MaxOrbits(_coordinateToCheck);
@@ -50,17 +51,39 @@ namespace Aoc.Spaceship.Navigation
             return coordinatesWithAsteroids;
         }
 
-        public IList<Coordinate> GetVisibleQuadrant3Asteroids()
+        public IList<Coordinate> GetVisibleAsteroids()
         {
-            var coordinatesWithAsteroids = new List<Coordinate>();
-            var maxOrbits = MaxOrbits(_coordinateToCheck);
-            for (var orbit = 1; orbit <= maxOrbits; orbit++)
+            var visibleAsteroids = new List<Coordinate>();
+            var allAsteroids = GetAllAsteroids();
+            foreach (var asteroid in allAsteroids)
             {
-                coordinatesWithAsteroids.AddRange(GetQuadrant3Asteroids(orbit));
+                if (!visibleAsteroids.Any(x => x.Quadrant == asteroid.Quadrant && x.Slope == asteroid.Slope))
+                    visibleAsteroids.Add(asteroid);
             }
-            return coordinatesWithAsteroids;
+            return visibleAsteroids;
         }
 
+        public Coordinate FindBestLocation()
+        {
+            var maxVisibleAsteroids = 0;
+            Coordinate bestCoordinate = null;
+            for (var x = 0; x < _map.GetLength(0); x++)
+                for (var y = 0; y < _map.GetLength(1); y++)
+                {
+                    if ('#' == GetValueAtMapCoordinate(x, y))
+                    {
+                        _coordinateToCheck = new Coordinate(x, y);
+                        var visibleAsteroids = GetVisibleAsteroids().Count;
+                        if (visibleAsteroids > maxVisibleAsteroids)
+                        {
+                            maxVisibleAsteroids = visibleAsteroids;
+                            bestCoordinate = _coordinateToCheck;
+                        }
+                    }
+                }
+
+            return bestCoordinate;
+        }
 
         public IList<Coordinate> GetQuadrant1Asteroids(int orbit)
         {
@@ -192,7 +215,6 @@ namespace Aoc.Spaceship.Navigation
                 }
             }
 
-            //for (var x = 0; x < Math.Max(orbit, XMax()); x++)
             for (var x = 0; x < orbit; x++)
             {
                 var y = -1 * orbit;
