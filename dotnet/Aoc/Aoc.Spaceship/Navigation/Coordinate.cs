@@ -6,19 +6,22 @@ namespace Aoc.Spaceship.Navigation
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public float? Slope => X == 0 ? (float?) null : Math.Abs(Y / X);
+        public float? Slope => X == 0 ? (float?) null : Math.Abs((float)Y / (float) X);
+        public int VisibleAsteroids { get; set; }
 
         public int Quadrant
         {
             get
             {
-                if (X >= 0 && Y > 0)
+                if (X > 0 && Y >= 0)
                     return 1;
-                if (X > 0 && Y <= 0)
+                if (X <= 0 && Y > 0)
                     return 2;
-                if (X <= 0 && Y < 0)
+                if (X < 0 && Y <= 0)
                     return 3;
-                return 4;
+                if (X >= 0 && Y < 0)
+                    return 4;
+                throw new Exception("Quadrant not defined");
             }
         }
 

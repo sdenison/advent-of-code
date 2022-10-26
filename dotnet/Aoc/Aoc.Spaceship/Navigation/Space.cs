@@ -70,6 +70,10 @@ namespace Aoc.Spaceship.Navigation
             for (var x = 0; x < _map.GetLength(0); x++)
                 for (var y = 0; y < _map.GetLength(1); y++)
                 {
+                    if (x == 5 && y == 8)
+                    {
+                        var z = "let's see";
+                    }
                     if ('#' == GetValueAtMapCoordinate(x, y))
                     {
                         _coordinateToCheck = new Coordinate(x, y);
@@ -78,6 +82,7 @@ namespace Aoc.Spaceship.Navigation
                         {
                             maxVisibleAsteroids = visibleAsteroids;
                             bestCoordinate = _coordinateToCheck;
+                            bestCoordinate.VisibleAsteroids = visibleAsteroids;
                         }
                     }
                 }

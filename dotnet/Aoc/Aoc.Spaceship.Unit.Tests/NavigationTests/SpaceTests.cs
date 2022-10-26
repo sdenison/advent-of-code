@@ -334,5 +334,84 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             var expectedBestLocation = new Coordinate(3, 4);
             expectedBestLocation.Should().BeEquivalentTo(bestLocation);
         }
+
+        [Test]
+        public void Get_best_location_second_example()
+        {
+            char[,] map = new char[,]
+            {
+                {'.','.','.','.','.','.','.','#','#','.'},
+                {'#','.','.','#','.','#','.','.','.','.'},
+                {'.','.','#','#','#','#','#','#','#','.'},
+                {'.','#','.','#','.','#','#','#','.','.'},
+                {'.','#','.','.','#','.','.','.','.','.'},
+                {'.','.','#','.','.','.','.','#','.','#'},
+                {'#','.','.','#','.','.','.','.','#','.'},
+                {'.','#','#','.','#','.','.','#','#','#'},
+                {'#','#','.','.','.','#','.','.','#','.'},
+                {'.','#','.','.','.','.','#','#','#','#' }
+            };
+            var coordinateToTest = new Coordinate(5, 8);
+            var space = new Space(map, coordinateToTest);
+            var allAsteroids = space.GetAllAsteroids();
+            Assert.AreEqual(39, allAsteroids.Count);
+
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(33, visibleAsteroids.Count);
+            var bestLocation = space.FindBestLocation();
+            var expectedBestLocation = new Coordinate(5, 8);
+            expectedBestLocation.Should().BeEquivalentTo(bestLocation);
+        }
+
+        [Test]
+        public void Get_best_location_third_example()
+        {
+            char[,] map = new char[,]
+            {
+                {'#','.','#','.','.','.','#','.','#','.'},
+                {'.','#','#','#','.','.','.','.','#','.'},
+                {'.','#','.','.','.','.','#','.','.','.'},
+                {'#','#','.','#','.','#','.','#','.','#'},
+                {'.','.','.','.','#','.','#','.','#','.'},
+                {'.','#','#','.','.','#','#','#','.','#'},
+                {'.','.','#','.','.','.','#','#','.','.'},
+                {'.','.','#','#','.','.','.','.','#','#'},
+                {'.','.','.','.','.','.','#','.','.','.'},
+                {'.','#','#','#','#','.','#','#','#','.'}
+            };
+            var coordinateToTest = new Coordinate(2, 2);
+            var space = new Space(map, coordinateToTest);
+            var allAsteroids = space.GetAllAsteroids();
+
+            var bestLocation = space.FindBestLocation();
+            var expectedBestLocation = new Coordinate(1, 2);
+            Assert.AreEqual(35, bestLocation.VisibleAsteroids);
+            expectedBestLocation.Should().BeEquivalentTo(bestLocation);
+        }
+
+        /*
+.#..##.###...#######
+##.############..##.
+.#.######.########.#
+.###.#######.####.#.
+#####.##.#.##.###.##
+..#####..#.#########
+####################
+#.####....###.#.#.##
+##.#################
+#####.##.###..####..
+..######..##.#######
+####.##.####...##..#
+.#####..#.######.###
+##...#.##########...
+#.##########.#######
+.####.#.###.###.#.##
+....##.##.###..#####
+.#.#.###########.###
+#.#.#.#####.####.###
+###.##.####.##.#..##
+         */
+
+
     }
 }
