@@ -261,7 +261,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             //var x = space.GetValueAtXyCoordinate(0, 1);
             //var visibleAsteroids = space.GetVisibleAsteroids();
             var visibleAsteroids = space.GetVisibleQuadrant3Asteroids();
-            Assert.AreEqual(6, visibleAsteroids.Count);
+            Assert.AreEqual(9, visibleAsteroids.Count);
         }
 
         [Test]
@@ -288,24 +288,24 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             Assert.AreEqual(12, visibleAsteroids.Count);
         }
 
-        //[Test]
-        //public void Can_get_visible_asteroids_from_quadrent_all()
-        //{
-        //    char[,] map = new char[,]
-        //    {
-        //        {'#', '#', '#', '.', '#'},
-        //        {'.', '.', '#', '.', '#'},
-        //        {'#', '#', 'A', '.', '#'},
-        //        {'.', '.', 'B', '.', '#'},
-        //        {'#', '#', '#', '.', '#'},
-        //    };
-        //    var coordinateToTest = new Coordinate(2, 2);
-        //    var space = new Space(map, coordinateToTest);
-        //    Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
-        //    Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, -1));
-        //    var visibleAsteroids = space.GetVisibleAsteroids();
-        //    Assert.AreEqual(14, visibleAsteroids.Count);
-        //}
+        [Test]
+        public void Can_get_visible_asteroids_from_quadrent_all()
+        {
+            char[,] map = new char[,]
+            {
+                {'#', '#', '#', '.', '#'},
+                {'.', '.', '#', '.', '#'},
+                {'#', '#', 'A', '.', '#'},
+                {'.', '.', 'B', '.', '#'},
+                {'#', '#', '#', '.', '#'},
+            };
+            var coordinateToTest = new Coordinate(2, 2);
+            var space = new Space(map, coordinateToTest);
+            Assert.AreEqual('A', space.GetValueAtXyCoordinate(0, 0));
+            Assert.AreEqual('B', space.GetValueAtXyCoordinate(0, -1));
+            var visibleAsteroids = space.GetVisibleAsteroids();
+            Assert.AreEqual(14, visibleAsteroids.Count);
+        }
 
         [Test]
         public void Can_make_sure_x_y_coordinates_translate()

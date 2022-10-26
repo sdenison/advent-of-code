@@ -81,7 +81,7 @@ namespace Aoc.Spaceship.Navigation
                 }
             }
 
-            for(var x = 0; x < orbit; x++)
+            for(var x = 1; x < orbit; x++)
             {
                 var y = orbit;
                 var coordinateXy = new Coordinate(x, y);
@@ -102,7 +102,7 @@ namespace Aoc.Spaceship.Navigation
         public IList<Coordinate> GetQuadrant2Asteroids(int orbit)
         {
             var coordinatesWithAsteroids = new List<Coordinate>();
-            for (var y = 0; y <= orbit; y++)
+            for (var y = 1; y <= orbit; y++)
             {
                 var x = -1 * orbit;
                 var coordinateXy = new Coordinate(x, y);
@@ -117,7 +117,7 @@ namespace Aoc.Spaceship.Navigation
                 }
             }
 
-            for (var x = -1; x > -1 * orbit; x--)
+            for (var x = 0; x > -1 * orbit; x--)
             {
                 var y = orbit;
                 var coordinateXy = new Coordinate(x, y);
@@ -138,7 +138,7 @@ namespace Aoc.Spaceship.Navigation
         public IList<Coordinate> GetQuadrant3Asteroids(int orbit)
         {
             var coordinatesWithAsteroids = new List<Coordinate>();
-            for (var y = -1; y > -1 * orbit; y--)
+            for (var y = 0; y >= -1 * orbit; y--)
             {
                 var x = -1 * orbit;
                 var coordinateXy = new Coordinate(x, y);
@@ -154,7 +154,7 @@ namespace Aoc.Spaceship.Navigation
                 }
             }
 
-            for (var x = -1; x >= -1 * orbit; x--)
+            for (var x = -1; x > -1 * orbit; x--)
             {
                 var y = -1 * orbit;
                 var coordinateXy = new Coordinate(x, y);
