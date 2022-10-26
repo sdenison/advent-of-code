@@ -424,7 +424,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             expectedBestLocation.Should().BeEquivalentTo(bestLocation);
         }
 
-        [Test]
+        [Test, Ignore("Takes too long")]
         public void Get_day_10_part_1_solution()
         {
             char[,] map = GetDay10Input();

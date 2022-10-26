@@ -51,6 +51,20 @@ namespace Aoc.Spaceship.Navigation
             return coordinatesWithAsteroids;
         }
 
+        public IList<Coordinate> RotateLaser()
+        {
+            var coordinatesWithAsteroids = new List<Coordinate>();
+            var maxOrbits = MaxOrbits(_coordinateToCheck);
+            for (var orbit = 1; orbit <= maxOrbits; orbit++)
+            {
+                coordinatesWithAsteroids.AddRange(GetQuadrant1Asteroids(orbit));
+                coordinatesWithAsteroids.AddRange(GetQuadrant2Asteroids(orbit));
+                coordinatesWithAsteroids.AddRange(GetQuadrant3Asteroids(orbit));
+                coordinatesWithAsteroids.AddRange(GetQuadrant4Asteroids(orbit));
+            }
+            return coordinatesWithAsteroids;
+        }
+
         public IList<Coordinate> GetVisibleAsteroids()
         {
             var visibleAsteroids = new List<Coordinate>();
