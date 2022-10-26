@@ -70,10 +70,10 @@ namespace Aoc.Spaceship.Navigation
         {
             var blastedAsteroids = new List<Coordinate>();
             //Look straight up
-            var hasValueStraightUp = asteroids.Any(x => x.Quadrant == 1 && !x.Slope.HasValue);
+            var hasValueStraightUp = asteroids.Any(x => x.Quadrant == 2 && !x.Slope.HasValue);
             if (hasValueStraightUp)
             {
-                var asteroidStraightUp = asteroids.First(x => x.Quadrant == 1 && !x.Slope.HasValue);
+                var asteroidStraightUp = asteroids.First(x => x.Quadrant == 2 && !x.Slope.HasValue);
                 blastedAsteroids.Add(asteroidStraightUp);
                 asteroids.Remove(asteroidStraightUp);
             }

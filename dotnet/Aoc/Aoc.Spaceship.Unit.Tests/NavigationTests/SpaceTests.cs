@@ -459,27 +459,28 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             expectedBestLocation.Should().BeEquivalentTo(bestLocation);
         }
 
-        //[Test]
-        //public void Can_blast_asteroids_day_10_step_2_example_1()
-        //{
-        //    char[,] map = new char[,]
-        //    {
-        //        {'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',},
-        //        {'#','#','.','.','.','#','#','.','#','#','#','#','#','.','.','#','#',},
-        //        {'#','#','.','.','.','#','.','.','.','#','.','#','#','#','#','#','.',},
-        //        {'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',},
-        //        {'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
-        //    };
-        //    var coordinateToTest = new Coordinate(9, 3);
-        //    var space = new Space(map, coordinateToTest);
-        //    var allAsteroids = space.GetAllAsteroids();
+        [Test]
+        public void Can_blast_asteroids_day_10_step_2_example_1()
+        {
+            char[,] map = new char[,]
+            {
+                {'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',},
+                {'#','#','.','.','.','#','#','.','#','#','#','#','#','.','.','#','#',},
+                {'#','#','.','.','.','#','.','.','.','#','.','#','#','#','#','#','.',},
+                {'.','.','#','.','.','.','.','.','X','.','.','.','#','#','#','.','.',},
+                {'.','.','#','.','#','.','.','.','.','.','#','.','.','.','.','#','#',}
+            };
+            var coordinateToTest = new Coordinate(9, 3);
+            var space = new Space(map, coordinateToTest);
+            var allAsteroids = space.GetAllAsteroids();
+            var getVisibleAsteroids = space.GetVisibleAsteroids();
 
-        //    var blastedAsteroids = space.BlastQuadrant1(allAsteroids);
-        //    var expectedBestLocation = new Coordinate(9, 1);
-        //    expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[0]);
+            var blastedAsteroids = space.BlastQuadrant1(allAsteroids);
+            var expectedBestLocation = new Coordinate(0, 2);
+            expectedBestLocation.Should().BeEquivalentTo(blastedAsteroids[0]);
 
 
-        //}
+        }
 
         /*
 {'.','#','.','.','.','.','#','#','#','#','#','.','.','.','#','.','.',}
