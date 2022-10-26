@@ -317,16 +317,13 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
                 {'.', '.', '.', '.', '#'},
                 {'C', '#', '#', '.', '#'},
             };
-            var coordinateToTest = new Coordinate(2, 2);
+            var coordinateToTest = new Coordinate(1, 1);
             var space = new Space(map, coordinateToTest);
 
-            //There should be no (1, 1)
-            //Assert.AreEqual('X', space.GetValueAtXyCoordinate(1, 1));
-
-            Assert.AreEqual(2, space.XMax());
-            Assert.AreEqual(-2, space.XMin());
-            Assert.AreEqual(-2, space.YMin());
-            Assert.AreEqual(2, space.YMax());
+            Assert.AreEqual(3, space.XMax());
+            Assert.AreEqual(-1, space.XMin());
+            Assert.AreEqual(1, space.YMax());
+            Assert.AreEqual(-3, space.YMin());
         }
     }
 }

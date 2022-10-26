@@ -18,22 +18,22 @@ namespace Aoc.Spaceship.Navigation
 
         public int XMax()
         {
-            return _coordinateToCheck.X;
+            return _map.GetLength(0) - (_coordinateToCheck.X + 1);
         }
 
         public int XMin()
         {
-            return (_coordinateToCheck.X + 1) - _map.GetLength(0);
+            return -1 * (_map.GetLength(0) - (XMax() + 1));
         }
 
         public int YMin()
         {
-            return -1 * _coordinateToCheck.Y;
+            return -1 * (_map.GetLength(1) - (_coordinateToCheck.Y + 1));
         }
 
         public int YMax()
         {
-            return _map.GetLength(1) - (_coordinateToCheck.Y + 1);
+            return (_map.GetLength(1) - 1) + YMin();
         }
 
         public IList<Coordinate> GetVisibleAsteroids()
