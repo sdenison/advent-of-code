@@ -5,6 +5,18 @@ namespace Aoc.Spaceship.Unit.Tests.ImagingTests
     [TestFixture]
     public class ImageTests
     {
+
+        [Test]
+        public void Can_parse_image_data_from_string()
+        {
+            var imageData = "123456789012";
+            var height = 2;
+            var width = 3;
+            var image = new Imaging.Image(imageData, height, width);
+            Assert.AreEqual(new[] { 1, 2, 3 }, image.Layers[0].Rows[0]);
+            Assert.AreEqual(new[] { 0, 1, 2 }, image.Layers[1].Rows[1]);
+        }
+
         [Test]
         public void Can_parse_image_data()
         {
