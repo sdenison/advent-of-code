@@ -63,5 +63,31 @@ namespace Aoc.Spaceship.Unit.Tests.ImagingTests
             var answer = numberOfOneDigits * numberOfTwoDigits;
             Assert.AreEqual(1072, answer);
         }
+
+        [Test]
+        public void Can_determine_pixel_colors_from_example()
+        {
+            var imageData = new[] {0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 0, 0, 0, 0};
+            var height = 2;
+            var width = 2;
+            var image = new Image(imageData, height, width);
+
+            var finalImage = image.GetFinalImage();
+            Assert.AreEqual(" 1", finalImage[0]);
+            Assert.AreEqual("1 ", finalImage[1]);
+            File.WriteAllLines("D:\\temp\\day8_puzzle_example_output.txt", finalImage);
+        }
+
+        [Test]
+        public void Can_get_message_for_day_8_step_2()
+        {
+            var imageData = DataGenerator.GetDay8PuzzleData();
+            var height = 6;
+            var width = 25;
+            var image = new Image(imageData, height, width);
+
+            var finalImage = image.GetFinalImage();
+            File.WriteAllLines("D:\\temp\\day8_puzzle_example_answer.txt", finalImage);
+        }
     }
 }
