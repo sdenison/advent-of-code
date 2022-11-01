@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Aoc.Spaceship.Utilities
 {
@@ -34,6 +35,13 @@ namespace Aoc.Spaceship.Utilities
         private static void Swap(ref int a, ref int b)
         {
             (a, b) = (b, a);
+        }
+
+        public static T[] SubArray<T>(this T[] array, int offset, int length)
+        {
+            T[] result = new T[length];
+            Array.Copy(array, offset, result, 0, length);
+            return result;
         }
     }
 }
