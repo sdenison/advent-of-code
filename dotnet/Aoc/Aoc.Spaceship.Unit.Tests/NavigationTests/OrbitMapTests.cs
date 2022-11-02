@@ -104,7 +104,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             Assert.AreEqual(4, numberOfTransferrs);
         }
 
-        [Test]
+        [Test, Ignore("Takes too long to run")]
         public void Can_get_answer_day_6_part_2()
         {
             var mapInput = GetDay6InputData();

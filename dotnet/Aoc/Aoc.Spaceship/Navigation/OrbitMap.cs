@@ -14,16 +14,10 @@ namespace Aoc.Spaceship.Navigation
             {
                 var processedOrbits = new List<string>();
                 foreach(var orbit in mapInput)
-                {
                     if (CenterOfMass.AddOrbit(orbit))
-                    {
                         processedOrbits.Add(orbit);
-                    }
-                }
                 foreach (var processedOrbit in processedOrbits)
-                {
                     mapInput.Remove(processedOrbit);
-                }
             }
         }
 
@@ -36,12 +30,10 @@ namespace Aoc.Spaceship.Navigation
         {
             Satellite commonAncestor = null;
             for (var i=0; i<path2.Count; i++)
-            {
                 if (path1[i] == path2[i])
                     commonAncestor = path1[i];
                 else
                     return commonAncestor;
-            }
 
             return commonAncestor;
         }

@@ -33,10 +33,8 @@ namespace Aoc.Spaceship.Navigation
                 return true;
             }
             foreach (var orbitingSatellite in Satellites)
-            {
                 if (orbitingSatellite.AddOrbit(orbitString))
                     return true;
-            }
             return false;
         }
 
