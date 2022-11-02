@@ -98,11 +98,25 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests
             Assert.AreEqual(7, youPath.Count);
             var santaPath = map.GetPath("SAN");
             Assert.AreEqual(5, santaPath.Count);
-
             var commonAncestor = map.GetCommonAncestor(youPath, santaPath);
             Assert.AreEqual("D", commonAncestor.Name);
             var numberOfTransferrs = (youPath[^1].OrbitDepth - commonAncestor.OrbitDepth) + (santaPath[^1].OrbitDepth - commonAncestor.OrbitDepth);
             Assert.AreEqual(4, numberOfTransferrs);
+        }
+
+        [Test]
+        public void Can_get_answer_day_6_part_2()
+        {
+            var mapInput = GetDay6InputData();
+            var map = new OrbitMap(mapInput);
+            var youPath = map.GetPath("YOU");
+            Assert.AreEqual(316, youPath.Count);
+            var santaPath = map.GetPath("SAN");
+            Assert.AreEqual(164, santaPath.Count);
+            var commonAncestor = map.GetCommonAncestor(youPath, santaPath);
+            Assert.AreEqual("2V5", commonAncestor.Name);
+            var numberOfTransferrs = (youPath[^1].OrbitDepth - commonAncestor.OrbitDepth) + (santaPath[^1].OrbitDepth - commonAncestor.OrbitDepth);
+            Assert.AreEqual(340, numberOfTransferrs);
         }
 
         private List<string> GetDay6InputData()
