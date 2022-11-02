@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Aoc.Spaceship.Navigation
 {
@@ -24,6 +25,25 @@ namespace Aoc.Spaceship.Navigation
                     mapInput.Remove(processedOrbit);
                 }
             }
+        }
+
+        public IList<Satellite> GetPath(string name)
+        {
+            return CenterOfMass.GetPath(name).ToArray().ToList();
+        }
+
+        public Satellite GetCommonAncestor(IList<Satellite> path1, IList<Satellite> path2)
+        {
+            Satellite commonAncestor = null;
+            for (var i=0; i<path2.Count; i++)
+            {
+                if (path1[i] == path2[i])
+                    commonAncestor = path1[i];
+                else
+                    return commonAncestor;
+            }
+
+            return commonAncestor;
         }
     }
 }

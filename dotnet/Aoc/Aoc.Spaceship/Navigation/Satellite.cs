@@ -4,7 +4,7 @@ namespace Aoc.Spaceship.Navigation
 {
     public class Satellite
     {
-        private int _orbitLevel;
+        public int OrbitDepth { get; }
         public IList<Satellite> Satellites { get; }
         public string Name { get; }
         public int Orbits { get
@@ -12,15 +12,15 @@ namespace Aoc.Spaceship.Navigation
             var orbits = 0;
             foreach (var satellite in Satellites)
                 orbits += satellite.Orbits;
-            orbits += _orbitLevel;
+            orbits += OrbitDepth;
             return orbits;
         }}
 
-        public Satellite(string name, int orbitLevel)
+        public Satellite(string name, int orbitDepth)
         {
             Name = name;
             Satellites = new List<Satellite>();
-            _orbitLevel = orbitLevel;           
+            OrbitDepth = orbitDepth;           
         }
 
         public bool AddOrbit(string orbitString)
@@ -29,7 +29,7 @@ namespace Aoc.Spaceship.Navigation
             var orbitingSatelliteName = orbitString.Split(')')[1];
             if (currentSatelliteName == Name)
             {
-                Satellites.Add(new Satellite(orbitingSatelliteName, _orbitLevel + 1));
+                Satellites.Add(new Satellite(orbitingSatelliteName, OrbitDepth + 1));
                 return true;
             }
             foreach (var orbitingSatellite in Satellites)
@@ -38,6 +38,26 @@ namespace Aoc.Spaceship.Navigation
                     return true;
             }
             return false;
+        }
+
+        public Stack<Satellite> GetPath(string name)
+        {
+            foreach (var satellite in Satellites)
+            {
+                if (satellite.Name == name)
+                {
+                    var path = new Stack<Satellite>();
+                    path.Push(this);
+                    return path;
+                }
+                var proposedPath = satellite.GetPath(name);
+                if (proposedPath != null)
+                {
+                    proposedPath.Push(this);
+                    return proposedPath;
+                }
+            }
+            return null;
         }
     }
 }
