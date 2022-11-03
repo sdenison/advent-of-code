@@ -38,11 +38,16 @@ namespace Aoc.Spaceship.Communication
             return newPattern.ToArray();
         }
 
+        public void ApplyPhases(int numberOfPhases)
+        {
+            for (var phase = 1; phase <= numberOfPhases; phase++)
+                ApplyPhase(phase);
+        }
 
         public void ApplyPhase(int phase)
         {
             var phaseData = new List<int>();
-            for(var i = 1; i <= PhaseData[0].Count; i++)
+            for(var i = 1; i <= PhaseData[phase - 1].Count; i++)
             {
                 if (i == 3)
                 {
@@ -59,7 +64,8 @@ namespace Aoc.Spaceship.Communication
             var phasePattern = GetPattern(phaseStep);
             var output = new List<int>();
             var patternPointer = 0;
-            var offset = phaseStep == 1 ? 0 : 1;
+            //var offset = phaseStep == 1 ? 0 : 1;
+            var offset = 1;
             foreach(var phaseInput in initialPhaseData)
             {
                 output.Add(phaseInput * phasePattern[patternPointer + offset]);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Aoc.Spaceship.Utilities
 {
-    internal static class ArrayFunctions
+    public static class ArrayFunctions
     {
         public static IList<IList<int>> GetPermutations(this int[] nums)
         {
