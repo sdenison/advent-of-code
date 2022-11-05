@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Aoc.Spaceship.Utilities
 {
@@ -42,6 +43,27 @@ namespace Aoc.Spaceship.Utilities
             T[] result = new T[length];
             Array.Copy(array, offset, result, 0, length);
             return result;
+        }
+
+        public static List<string> ToStringList(this IList<IList<int>> intList)
+        {
+            var returnList = new List<string>();
+            foreach (var numbers in intList)
+            {
+                var line = "";
+                foreach (var number in numbers)
+                    line += number.ToString();
+                returnList.Add(line);
+            }
+            return returnList;
+        }
+
+        public static string ToIntString(this IList<int> intList)
+        {
+            var line = "";
+            foreach (var number in intList)
+                line += number.ToString();
+            return line;
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Aoc.Spaceship.Utilities;
 
 namespace Aoc.Spaceship.Communication
 {
@@ -43,67 +46,141 @@ namespace Aoc.Spaceship.Communication
             return newPattern;
         }
 
-        public void ApplyPhases(int numberOfPhases)
+        public void ApplyPhaseMultiplier(int numberOfPhases, int multiplier)
         {
-            for (var phase = 1; phase <= numberOfPhases; phase++)
-                ApplyPhase(phase).Wait();
         }
 
-        public async Task ApplyPhase(int phase)
+        public IEnumerable<string> ApplyPhases(int numberOfPhases)
+        {
+            for (var phase = 1; phase <= numberOfPhases; phase++)
+            {
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+                Console.WriteLine($"Starting phase {phase}");
+                yield return ApplyPhase(phase);
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                Console.WriteLine($"Finished phase {phase} in {stopWatch.ElapsedMilliseconds / 1000} seconds");
+            }
+        }
+
+        public string ApplyPhase(int phase)
         {
             var phaseData = new List<int>();
             var applyPhaseStepTasks = new List<Task<int>>();
 
-            //Task.Run
 
-            //Task.Run
+            //var range = Enumerable.Range(1, PhaseData[phase - 1].Count);
+            //var tasks = range.Select(i => ApplyPhaseStep(i, PhaseData[phase - 1]));
+            //var results = await Task.WhenAll(tasks);
+            //foreach (var result in results)
+            //{
+            //    phaseData.Add(result);
+            //}
 
-            var range = Enumerable.Range(1, PhaseData[phase - 1].Count);
-            var tasks = range.Select(i => ApplyPhaseStep(i, PhaseData[phase - 1]));
-            var results = await Task.WhenAll(tasks);
-            foreach (var result in results)
+            
+
+
+            var range = Enumerable.Range(0, PhaseData[phase - 1].Count - 1);
+
+
+
+
+            var phaseDataArray = new int[PhaseData[phase - 1].Count];
+            //Parallel.For(, range, i =>
+            //{
+            //    if (i == 0)
+            //    {
+            //        var x = i;
+            //    }
+            //    var phaseInt = ApplyPhaseStep(i + 1, PhaseData[phase - 1]);
+            //    phaseDataArray[i] = phaseInt;
+            //});
+
+            Parallel.For(0, PhaseData[phase - 1].Count, (i) =>
             {
-                phaseData.Add(result);
-            }
+                //if (i + 1 % 10000 == 0)
+                //    Console.WriteLine($"Processed phase step {i + 1} out of {PhaseData[phase - 1].Count}");
+                var phaseInt = ApplyPhaseStep(i + 1, PhaseData[phase - 1]);
+                //phaseData.Add(phaseInt);
+                phaseDataArray[i] = phaseInt;
+            });
 
-            //for(var i = 1; i <= PhaseData[phase - 1].Count; i++)
+
+            //for (var i = 1; i <= PhaseData[phase - 1].Count; i++)
+            ////foreach(var i in range)
             //{
-                    
-            //    //var phaseInt = ApplyPhaseStep(i, PhaseData[phase - 1]);
-            //    //applyPhaseStepTasks.Add(Task.Run((int) ApplyPhaseStep(i, PhaseData[phase - 1])));
-            //    applyPhaseStepTasks.Add(ApplyPhaseStep(i, PhaseData[phase - 1]));
-            //    //phaseData.Add(phaseInt);
+            //    if (i % 10000 == 0)
+            //        Console.WriteLine($"Processed phase step {i} out of {PhaseData[phase - 1].Count}");
+            //    var phaseInt = ApplyPhaseStep(i, PhaseData[phase - 1]);
+            //    phaseData.Add(phaseInt);
             //}
 
-            //Task.WaitAll(applyPhaseStepTasks.ToArray());
-            //foreach (var taskInt in applyPhaseStepTasks)
-            //{
-            //    phaseData.Add(taskInt.Result);
-            //}
 
-            PhaseData.Add(phaseData);
+            //PhaseData.Add(phaseData);
+            PhaseData.Add(phaseDataArray.ToList());
+            return phaseDataArray.ToList().ToIntString();
         }
 
-        public async Task<int> ApplyPhaseStep(int phaseStep, IList<int> initialPhaseData)
+        public async Task<int> ApplyPhaseStep2(int phaseStep, IList<int> initialPhaseData)
         {
-            var patternPointer = 0;
             var sum = 0;
-            var phaseDataCount = 0;
 
-            for (var i = 0; i < initialPhaseData.Count; i++)
+            for (var i = phaseStep - 1; i < initialPhaseData.Count; i++)
             {
-                var phaseInput = initialPhaseData[i];
-                sum += phaseInput * GetPatternInt(phaseStep, i);
-                patternPointer++;
+                try
+                {
+                    var phaseInput = initialPhaseData[i];
+                    sum += phaseInput * GetPatternInt(phaseStep, i);
+                }
+                catch (Exception ex)
+                {
+                    var x = ex.Message;
+                }
             }
 
-            //var range = Enumerable.Range(0, initialPhaseData.Count - 1);
+            return Math.Abs(sum % 10);
+        }
+
+
+        public int ApplyPhaseStep(int phaseStep, IList<int> initialPhaseData)
+        {
+            var sum = 0;
+            var patternInt = 0;
+
+            //for (var i = phaseStep - 1; i < initialPhaseData.Count; i++)
+            for (var i = 0; i < initialPhaseData.Count; i++)
+            {
+                if (0 == (i + 1) % (phaseStep))
+                {
+                    patternInt = GetPatternInt(phaseStep, i);
+                    if (patternInt == 0)
+                    {
+                        i += phaseStep - 1;
+                        continue;
+                    }
+                }
+                sum += initialPhaseData[i] * patternInt;
+            }
+
+            //var tasks = range.Select(i => initialPhaseData[i] * GetPatternInt(phaseStep, i));
+            //var results = await Task.WaitAll(tasks);
+
+
+
+            //var range = Enumerable.Range(0, initialPhaseData.Count);
             //await Task.Run(() => Parallel.ForEach(range, i =>
             //{
             //    var phaseInput = initialPhaseData[i];
             //    sum += phaseInput * GetPatternInt(phaseStep, i);
             //    //patternPointer++;
             //}));
+
+            //Parallel.ForEach(range, (i) =>
+            //{
+            //    var phaseInput = initialPhaseData[i];
+            //    sum += phaseInput * GetPatternInt(phaseStep, i);
+            //});
 
 
             //await Task.Run(() => Parallel.ForEach(initialPhaseData, phaseInput =>

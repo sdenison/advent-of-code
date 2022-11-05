@@ -1,6 +1,7 @@
 ﻿using Aoc.Spaceship.Communication;
 using Aoc.Spaceship.Utilities;
 using NUnit.Framework;
+using System.IO;
 
 
 namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
@@ -61,38 +62,49 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             var input = "12345678";
             int[] pattern = { 0, 1, 0, -1 };
             var fft = new Fft(input, pattern);
+            foreach (var VARIABLE in fft.ApplyPhases(1))
+            {
+            }
+
             fft.ApplyPhases(1);
+
             int[] afterOnePhase = {4, 8, 2, 2, 6, 1, 5, 8};
             Assert.AreEqual(afterOnePhase, fft.PhaseData[1]);
         }
 
-        //[Test]
-        //public void Can_apply_phase_4()
-        //{
-        //    var input = "12345678";
-        //    int[] pattern = { 0, 1, 0, -1 };
-        //    var fft = new Fft(input, pattern);
-        //    fft.ApplyPhases(4);
-        //    int[] afterOnePhase = {4, 8, 2, 2, 6, 1, 5, 8};
-        //    Assert.AreEqual(afterOnePhase, fft.PhaseData[1]);
-        //    int[] afterTwoPhases= { 3, 4, 0, 4, 0, 4, 3, 8 };
-        //    Assert.AreEqual(afterTwoPhases, fft.PhaseData[2]);
-        //    int[] afterThreePhases= { 0, 3, 4, 1, 5, 5, 1, 8};
-        //    Assert.AreEqual(afterThreePhases, fft.PhaseData[3]);
-        //    int[] afterFourPhases = {0, 1, 0, 2, 9, 4, 9, 8};
-        //    Assert.AreEqual(afterFourPhases, fft.PhaseData[4]);
-        //}
+        [Test]
+        public void Can_apply_phase_4()
+        {
+            var input = "12345678";
+            int[] pattern = { 0, 1, 0, -1 };
+            var fft = new Fft(input, pattern);
+            foreach (var applyPhase in fft.ApplyPhases(4))
+            {
+                
+            }
+            int[] afterOnePhase = { 4, 8, 2, 2, 6, 1, 5, 8 };
+            Assert.AreEqual(afterOnePhase, fft.PhaseData[1]);
+            int[] afterTwoPhases = { 3, 4, 0, 4, 0, 4, 3, 8 };
+            Assert.AreEqual(afterTwoPhases, fft.PhaseData[2]);
+            int[] afterThreePhases = { 0, 3, 4, 1, 5, 5, 1, 8 };
+            Assert.AreEqual(afterThreePhases, fft.PhaseData[3]);
+            int[] afterFourPhases = { 0, 1, 0, 2, 9, 4, 9, 8 };
+            Assert.AreEqual(afterFourPhases, fft.PhaseData[4]);
+        }
 
-        //[Test]
-        //public void Can_apply_100_phases_from_example()
-        //{
-        //    var input = "80871224585914546619083218645595";
-        //    int[] pattern = { 0, 1, 0, -1 };
-        //    var fft = new Fft(input, pattern);
-        //    fft.ApplyPhases(100);
-        //    int[] expectedOutput = {2, 4, 1, 7, 6, 1, 7, 6};
-        //    Assert.AreEqual(expectedOutput, fft.PhaseData[100].ToArray().SubArray(0, 8));
-        //}
+        [Test]
+        public void Can_apply_100_phases_from_example()
+        {
+            var input = "80871224585914546619083218645595";
+            int[] pattern = { 0, 1, 0, -1 };
+            var fft = new Fft(input, pattern);
+            foreach (var applyPhase in fft.ApplyPhases(100))
+            {
+                
+            }
+            int[] expectedOutput = { 2, 4, 1, 7, 6, 1, 7, 6 };
+            Assert.AreEqual(expectedOutput, fft.PhaseData[100].ToArray().SubArray(0, 8));
+        }
 
         //[Test]
         //public void Can_apply_100_phases_from_example2()
@@ -113,34 +125,55 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             var input = GetDay16PuzzleData();
             int[] pattern = { 0, 1, 0, -1 };
             var fft = new Fft(input, pattern);
-            fft.ApplyPhases(100);
+
+            var path = "D:\\temp\\day16_step_1.txt";
+            if (File.Exists(path))
+                File.Delete(path);
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(input);
+            }
+            foreach (var applyPhase in fft.ApplyPhases(100))
+            {
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(applyPhase);
+                }
+            }
             var puzzleAnswer = fft.PhaseData[100].ToArray().SubArray(0, 8);
             int[] expectedOutput = { 4, 9, 2, 5, 4, 7, 7, 9 };
+            var lines = fft.PhaseData.ToStringList();
+            //File.WriteAllLines("D:\\temp\\day16_step_1.txt", fft.PhaseData.ToStringList());
             Assert.AreEqual(expectedOutput, puzzleAnswer);
         }
 
-        //[Test]
-        //public void Can_get_message_offset()
-        //{
-        //    var input = "03036732577212944063491565474664";
-        //    var finalInput = "";
-        //    for (var i = 0; i < 10000; i++)
-        //        finalInput += input;
-        //    int[] pattern = { 0, 1, 0, -1 };
-        //    var fft = new Fft(finalInput, pattern);
-        //    fft.ApplyPhases(1);
-        //    //int[] expectedOffset = {0, 3, 0, 3, 6, 7, 3};
-        //    int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
+        //[Test, Ignore("too slow")]
 
-        //    var charOffset = 303673;
-        //    var listOffset = 303673 / finalInput.Length;
-        //    var finalOffset = 303673 % finalInput.Length;
-        //    var intList = fft.PhaseData[listOffset];
-        //    var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
-        //    Assert.AreEqual("", message);
-        //}
+        [Test] 
+        public void Can_get_message_offset()
+        {
+            var input = "03036732577212944063491565474664";
+            var finalInput = "";
+            for (var i = 0; i < 10000; i++)
+                finalInput += input;
+            int[] pattern = { 0, 1, 0, -1 };
+            var fft = new Fft(finalInput, pattern);
+            foreach (var applyPhase in fft.ApplyPhases(1))
+            {
+                
+            }
+            //int[] expectedOffset = {0, 3, 0, 3, 6, 7, 3};
+            int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
 
-        private string GetDay16PuzzleData()
+            var charOffset = 303673;
+            var listOffset = 303673 / finalInput.Length;
+            var finalOffset = 303673 % finalInput.Length;
+            var intList = fft.PhaseData[listOffset];
+            //var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
+            //Assert.AreEqual("", message);
+        }
+
+        public static string GetDay16PuzzleData()
         {
             return
                 "59793513516782374825915243993822865203688298721919339628274587775705006728427921751430533510981343323758576985437451867752936052153192753660463974146842169169504066730474876587016668826124639010922391218906707376662919204980583671961374243713362170277231101686574078221791965458164785925384486127508173239563372833776841606271237694768938831709136453354321708319835083666223956618272981294631469954624760620412170069396383335680428214399523030064601263676270903213996956414287336234682903859823675958155009987384202594409175930384736760416642456784909043049471828143167853096088824339425988907292558707480725410676823614387254696304038713756368483311";

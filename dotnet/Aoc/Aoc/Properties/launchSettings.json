@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Aoc": {
+      "commandName": "Project",
+      "commandLineArgs": "communications fft"
+    }
+  }
+}
