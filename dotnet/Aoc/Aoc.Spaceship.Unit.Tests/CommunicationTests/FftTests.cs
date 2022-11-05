@@ -100,7 +100,7 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             var fft = new Fft(input, pattern);
             foreach (var applyPhase in fft.ApplyPhases(100))
             {
-                
+
             }
             int[] expectedOutput = { 2, 4, 1, 7, 6, 1, 7, 6 };
             Assert.AreEqual(expectedOutput, fft.PhaseData[100].ToArray().SubArray(0, 8));
@@ -149,29 +149,29 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
 
         //[Test, Ignore("too slow")]
 
-        [Test] 
-        public void Can_get_message_offset()
-        {
-            var input = "03036732577212944063491565474664";
-            var finalInput = "";
-            for (var i = 0; i < 10000; i++)
-                finalInput += input;
-            int[] pattern = { 0, 1, 0, -1 };
-            var fft = new Fft(finalInput, pattern);
-            foreach (var applyPhase in fft.ApplyPhases(1))
-            {
-                
-            }
-            //int[] expectedOffset = {0, 3, 0, 3, 6, 7, 3};
-            int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
+        //[Test]
+        //public void Can_get_message_offset()
+        //{
+        //    var input = "03036732577212944063491565474664";
+        //    var finalInput = "";
+        //    for (var i = 0; i < 10000; i++)
+        //        finalInput += input;
+        //    int[] pattern = { 0, 1, 0, -1 };
+        //    var fft = new Fft(finalInput, pattern);
+        //    foreach (var applyPhase in fft.ApplyPhases(1))
+        //    {
 
-            var charOffset = 303673;
-            var listOffset = 303673 / finalInput.Length;
-            var finalOffset = 303673 % finalInput.Length;
-            var intList = fft.PhaseData[listOffset];
-            //var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
-            //Assert.AreEqual("", message);
-        }
+        //    }
+        //    //int[] expectedOffset = {0, 3, 0, 3, 6, 7, 3};
+        //    int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
+
+        //    var charOffset = 303673;
+        //    var listOffset = 303673 / finalInput.Length;
+        //    var finalOffset = 303673 % finalInput.Length;
+        //    var intList = fft.PhaseData[listOffset];
+        //    //var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
+        //    //Assert.AreEqual("", message);
+        //}
 
         public static string GetDay16PuzzleData()
         {

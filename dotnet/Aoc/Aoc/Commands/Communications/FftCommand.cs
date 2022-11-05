@@ -49,7 +49,7 @@ namespace Aoc.Commands.Communications
             }
         }
 
-        public void Fft_This_worked()
+        public void Fft()
         {
             var input = "03036732577212944063491565474664";
             var finalInput = "";
@@ -78,6 +78,7 @@ namespace Aoc.Commands.Communications
 
 
 
+
             //int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
             //var charOffset = 303673;
             //var listOffset = 303673 / finalInput.Length;
@@ -87,11 +88,11 @@ namespace Aoc.Commands.Communications
             //Assert.AreEqual("", message);
         }
 
-        public void Fft()
+        public void Fft_big()
         {
             var input = FftTests.GetDay16PuzzleData();
             var finalInput = "";
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 10000; i++)
                 finalInput += input;
             int[] pattern = { 0, 1, 0, -1 };
             var fft = new Fft(finalInput, pattern);
