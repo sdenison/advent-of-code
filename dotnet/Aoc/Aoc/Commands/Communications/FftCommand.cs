@@ -49,7 +49,7 @@ namespace Aoc.Commands.Communications
             }
         }
 
-        public void Fft()
+        public void Fft_fast()
         {
             var input = "03036732577212944063491565474664";
             var finalInput = "";
@@ -75,20 +75,10 @@ namespace Aoc.Commands.Communications
                     sw.WriteLine(applyPhase);
                 }
             }
-
-
-
-
-            //int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
-            //var charOffset = 303673;
-            //var listOffset = 303673 / finalInput.Length;
-            //var finalOffset = 303673 % finalInput.Length;
-            //var intList = fft.PhaseData[listOffset];
-            //var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
             //Assert.AreEqual("", message);
         }
 
-        public void Fft_big()
+        public void Fft()
         {
             var input = FftTests.GetDay16PuzzleData();
             var finalInput = "";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Aoc.Spaceship.Utilities
 {
@@ -60,10 +61,17 @@ namespace Aoc.Spaceship.Utilities
 
         public static string ToIntString(this IList<int> intList)
         {
-            var line = "";
+            //var line = "";
+            var intStringProgress = 0;
+            var line = new StringBuilder();
             foreach (var number in intList)
-                line += number.ToString();
-            return line;
+            {
+                line.Append(number.ToString());
+                //if (intStringProgress % 1000 == 0)
+                //    Console.WriteLine($"ToIntString progress: {intStringProgress}");
+                //intStringProgress++;
+            }
+            return line.ToString();
         }
     }
 }

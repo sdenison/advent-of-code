@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -61,32 +62,78 @@ namespace Aoc.Spaceship.Communication
         public string ApplyPhase(int phase)
         {
             var phaseDataArray = new int[PhaseData[phase - 1].Count];
+            Console.WriteLine($"Copy array start");
+            var initialPhaseDataArray = PhaseData[phase - 1].ToArray();
+            Console.WriteLine($"Copy array end");
+            var dataSize = PhaseData[phase - 1].Count;
+            int phaseStepProgress = 0;
 
             //This is the parallel for that works
-            Parallel.For(0, PhaseData[phase - 1].Count, (phaseStep) =>
+            Parallel.For(0, dataSize / 2, (phaseStep) =>
             {
-                phaseDataArray[phaseStep] = ApplyPhaseStep(phaseStep + 1, PhaseData[phase - 1]);
+                phaseDataArray[phaseStep] = ApplyPhaseStep(phaseStep + 1, initialPhaseDataArray);// PhaseData[phase - 1]);
+                if (phaseStep % 1000 == 0)
+                {
+                    Console.WriteLine($"Phase {phase}. Parallel phase step progress: {phaseStepProgress}. Done with phase step {phaseStep}.");
+                    phaseStepProgress++;
+                }
             });
 
-            //for (var phaseStep = 0; phaseStep < PhaseData[phase - 1].Count; phaseStep++)
+            var total = 0;
+            for (int phaseStep = PhaseData[phase - 1].Count - 1; phaseStep >= dataSize / 2; phaseStep--)
+            {
+                var newInt = ApplyPhaseStepHalf(phaseStep, initialPhaseDataArray);
+                total += newInt;
+                phaseDataArray[phaseStep] = total % 10;
+                if (phaseStep % 1000 == 0)
+                {
+                    Console.WriteLine($"Phase {phase}. Last half phase step progress: {phaseStep}.");
+                }
+            }
+
+            //for (int phaseStep = (dataSize / 2) - 1; phaseStep >= dataSize / 4; phaseStep--)
+            //if (dataSize > 30)
             //{
-            //    phaseDataArray[phaseStep] = ApplyPhaseStep(phaseStep + 1, PhaseData[phase - 1]);
-            //}
 
+        //    for (int phaseStep = (dataSize / 2) - 1; phaseStep * 3 > dataSize; phaseStep--)
+        //    {
+        //        var newInt = ApplyPhaseQuarter(phaseStep, initialPhaseDataArray, dataSize);
+        //        total += newInt;
+        //        phaseDataArray[phaseStep] = total % 10;
+        //    }
+        //}
 
-            PhaseData.Add(phaseDataArray.ToList());
+        PhaseData.Add(phaseDataArray.ToList());
+            
             return phaseDataArray.ToList().ToIntString();
         }
 
-        public int ApplyPhaseStep(int phaseStep, IList<int> initialPhaseData)
+        public int ApplyPhaseQuarter(int phaseStep, int[] phaseData, int dataSize)
+        {
+            var backStep = dataSize - (dataSize / 2 - phaseStep);
+            var amountToadd = phaseData[phaseStep];
+            var amountToRemove = phaseData[backStep] + phaseData[backStep - 1];
+            var amountToAdd = amountToadd - amountToRemove;
+            return amountToAdd;
+        }
+
+        public int ApplyPhaseStepHalf(int phaseStep, int[] phaseData)
+        {
+            return phaseData[phaseStep];// * GetPatternInt(phaseStep, phaseStep);
+        }
+
+
+        public int ApplyPhaseStep(int phaseStep, int[] initialPhaseData) //IList<int> initialPhaseData)
         {
             var sum = 0;
-            
+
             var phaseDataPointer = 0;
             int patternCounter = 0;
             if (phaseStep == 1)
+            {
                 patternCounter = 1;
-            var phaseDataSize = initialPhaseData.Count;
+            }
+            var phaseDataSize = initialPhaseData.Length;
             while (phaseDataPointer < phaseDataSize)
             {
                 int nextPhaseDataPointer;
@@ -106,12 +153,12 @@ namespace Aoc.Spaceship.Communication
                 {
                     if (patternCounter == 1)
                     {
-                        while(phaseDataPointer < nextPhaseDataPointer)
+                        while (phaseDataPointer < nextPhaseDataPointer)
                         {
                             sum += initialPhaseData[phaseDataPointer];
                             phaseDataPointer++;
                         }
-                        patternCounter = 3;
+                        patternCounter++;
                     }
                     else
                     {
@@ -124,9 +171,9 @@ namespace Aoc.Spaceship.Communication
                     }
                 }
             }
+
             return Math.Abs(sum % 10);
         }
-
         public int ApplyPhaseStepOld(int phaseStep, IList<int> initialPhaseData)
         {
             var sum = 0;
@@ -149,6 +196,8 @@ namespace Aoc.Spaceship.Communication
 
         public int GetPatternInt(int phaseStep, int index)
         {
+            if (phaseStep == 0)
+                return 1;
             var rIndex = ((index + 1) % (phaseStep * Pattern.Length)) / phaseStep;
             return Pattern[rIndex];
         }
