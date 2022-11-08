@@ -1,7 +1,6 @@
 ﻿using Aoc.Spaceship.Communication;
 using Aoc.Spaceship.Utilities;
 using NUnit.Framework;
-using System.IO;
 
 
 namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
@@ -37,12 +36,6 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             var input = "15243";
             int[] pattern = { 1, 2, 3 };
             var fft = new Fft(input, pattern);
-            //Assert.AreEqual(2, fft.GetPatternInt(1, 0));
-            //Assert.AreEqual(3, fft.GetPatternInt(1, 1));
-            //Assert.AreEqual(1, fft.GetPatternInt(1, 2));
-            //Assert.AreEqual(2, fft.GetPatternInt(1, 3));
-            //Assert.AreEqual(3, fft.GetPatternInt(1, 4));
-            //Assert.AreEqual(1, fft.GetPatternInt(1, 5));
 
             var expectedTwoPattern = new[] { 1, 1, 2, 2, 3, 3 };
             Assert.AreEqual(1, fft.GetPatternInt(2, 0)); //0
@@ -106,19 +99,6 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             Assert.AreEqual(expectedOutput, fft.PhaseData[100].ToArray().SubArray(0, 8));
         }
 
-        //[Test]
-        //public void Can_apply_100_phases_from_example2()
-        //{
-        //    var input = "19617804207202209144916044189917";
-        //    int[] pattern = { 0, 1, 0, -1 };
-        //    var fft = new Fft(input, pattern);
-        //    fft.ApplyPhases(100);
-        //    int[] expectedOutput = {7, 3, 7, 4, 5, 4, 1, 8};
-        //    var subArray = fft.PhaseData[2].ToArray<int>();
-        //    Assert.AreEqual(expectedOutput, fft.PhaseData[100].ToArray().SubArray(0, 8));
-        //}
-
-        ////[Test, Ignore("too long")]
         [Test] //Takes 15 seconds
         public void Can_get_day_16_step_1_answer()
         {
@@ -143,35 +123,23 @@ namespace Aoc.Spaceship.Unit.Tests.CommunicationTests
             var puzzleAnswer = fft.PhaseData[100].ToArray().SubArray(0, 8);
             int[] expectedOutput = { 4, 9, 2, 5, 4, 7, 7, 9 };
             var lines = fft.PhaseData.ToStringList();
-            //File.WriteAllLines("D:\\temp\\day16_step_1.txt", fft.PhaseData.ToStringList());
             Assert.AreEqual(expectedOutput, puzzleAnswer);
         }
 
-        //[Test, Ignore("too slow")]
-
+        [Test, Ignore("too slow")]
         //[Test]
-        //public void Can_get_message_offset()
-        //{
-        //    var input = "03036732577212944063491565474664";
-        //    var finalInput = "";
-        //    for (var i = 0; i < 10000; i++)
-        //        finalInput += input;
-        //    int[] pattern = { 0, 1, 0, -1 };
-        //    var fft = new Fft(finalInput, pattern);
-        //    foreach (var applyPhase in fft.ApplyPhases(1))
-        //    {
-
-        //    }
-        //    //int[] expectedOffset = {0, 3, 0, 3, 6, 7, 3};
-        //    int[] expectedOffset = { 0, 3, 0, 3, 6, 7, 3 };
-
-        //    var charOffset = 303673;
-        //    var listOffset = 303673 / finalInput.Length;
-        //    var finalOffset = 303673 % finalInput.Length;
-        //    var intList = fft.PhaseData[listOffset];
-        //    //var message = intList.ToArray().SubArray(finalOffset, 8).ToString();
-        //    //Assert.AreEqual("", message);
-        //}
+        public void Can_get_message_offset() 
+        {
+            var input = "03036732577212944063491565474664";
+            var finalInput = "";
+            for (var i = 0; i < 10000; i++)
+                finalInput += input;
+            int[] pattern = { 0, 1, 0, -1 };
+            var fft = new Fft(finalInput, pattern);
+            foreach (var applyPhase in fft.ApplyPhases(1))
+            {
+            }
+        }
 
         public static string GetDay16PuzzleData()
         {

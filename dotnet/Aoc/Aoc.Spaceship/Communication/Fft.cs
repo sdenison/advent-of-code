@@ -68,10 +68,10 @@ namespace Aoc.Spaceship.Communication
             var dataSize = PhaseData[phase - 1].Count;
             int phaseStepProgress = 0;
 
-            //This is the parallel for that works
-            Parallel.For(0, dataSize / 2, (phaseStep) =>
+            //Brute force the first third of the phase steps in parallel
+            Parallel.For(0, dataSize / 3, (phaseStep) =>
             {
-                phaseDataArray[phaseStep] = ApplyPhaseStep(phaseStep + 1, initialPhaseDataArray);// PhaseData[phase - 1]);
+                phaseDataArray[phaseStep] = ApplyPhaseStep(phaseStep + 1, initialPhaseDataArray);
                 if (phaseStep % 1000 == 0)
                 {
                     Console.WriteLine($"Phase {phase}. Parallel phase step progress: {phaseStepProgress}. Done with phase step {phaseStep}.");
@@ -80,9 +80,10 @@ namespace Aoc.Spaceship.Communication
             });
 
             var total = 0;
+            //Last half of the phase steps
             for (int phaseStep = PhaseData[phase - 1].Count - 1; phaseStep >= dataSize / 2; phaseStep--)
             {
-                var newInt = ApplyPhaseStepHalf(phaseStep, initialPhaseDataArray);
+                var newInt = initialPhaseDataArray[phaseStep];
                 total += newInt;
                 phaseDataArray[phaseStep] = total % 10;
                 if (phaseStep % 1000 == 0)
@@ -91,48 +92,37 @@ namespace Aoc.Spaceship.Communication
                 }
             }
 
-            //for (int phaseStep = (dataSize / 2) - 1; phaseStep >= dataSize / 4; phaseStep--)
-            //if (dataSize > 30)
-            //{
+            //One third to ohe half of the phase steps
+            var backSideIndex = 0;
+            for (int phaseStep = dataSize / 2 - 1; phaseStep >= dataSize / 3; phaseStep--)
+            {
+                total += initialPhaseDataArray[phaseStep];
+                total -= initialPhaseDataArray[dataSize - 1 - backSideIndex];
+                backSideIndex++;
+                if (backSideIndex != 1)
+                {
+                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex];
+                    backSideIndex++;
+                }
+                phaseDataArray[phaseStep] = total % 10;
+                if (phaseStep % 1000 == 0)
+                {
+                    Console.WriteLine($"Phase {phase}. Last half phase step progress: {phaseStep}.");
+                }
+            }
 
-        //    for (int phaseStep = (dataSize / 2) - 1; phaseStep * 3 > dataSize; phaseStep--)
-        //    {
-        //        var newInt = ApplyPhaseQuarter(phaseStep, initialPhaseDataArray, dataSize);
-        //        total += newInt;
-        //        phaseDataArray[phaseStep] = total % 10;
-        //    }
-        //}
-
-        PhaseData.Add(phaseDataArray.ToList());
-            
+            PhaseData.Add(phaseDataArray.ToList());
             return phaseDataArray.ToList().ToIntString();
         }
 
-        public int ApplyPhaseQuarter(int phaseStep, int[] phaseData, int dataSize)
-        {
-            var backStep = dataSize - (dataSize / 2 - phaseStep);
-            var amountToadd = phaseData[phaseStep];
-            var amountToRemove = phaseData[backStep] + phaseData[backStep - 1];
-            var amountToAdd = amountToadd - amountToRemove;
-            return amountToAdd;
-        }
-
-        public int ApplyPhaseStepHalf(int phaseStep, int[] phaseData)
-        {
-            return phaseData[phaseStep];// * GetPatternInt(phaseStep, phaseStep);
-        }
-
-
-        public int ApplyPhaseStep(int phaseStep, int[] initialPhaseData) //IList<int> initialPhaseData)
+        //This is pretty ugly, but its faster
+        public int ApplyPhaseStep(int phaseStep, int[] initialPhaseData)
         {
             var sum = 0;
-
             var phaseDataPointer = 0;
             int patternCounter = 0;
             if (phaseStep == 1)
-            {
                 patternCounter = 1;
-            }
             var phaseDataSize = initialPhaseData.Length;
             while (phaseDataPointer < phaseDataSize)
             {
