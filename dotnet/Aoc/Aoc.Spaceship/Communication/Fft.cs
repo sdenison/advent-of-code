@@ -92,24 +92,71 @@ namespace Aoc.Spaceship.Communication
                 }
             }
 
+            var lastPhaseStep = 0;
             //One third to ohe half of the phase steps
-            var backSideIndex = 0;
+            var backSideIndex1 = 0;
             for (int phaseStep = dataSize / 2 - 1; phaseStep >= dataSize / 3; phaseStep--)
             {
                 total += initialPhaseDataArray[phaseStep];
-                total -= initialPhaseDataArray[dataSize - 1 - backSideIndex];
-                backSideIndex++;
-                if (backSideIndex != 1)
+                total -= initialPhaseDataArray[dataSize - 1 - backSideIndex1];
+                backSideIndex1++;
+                if (backSideIndex1 != 1)
                 {
-                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex];
-                    backSideIndex++;
+                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex1];
+                    backSideIndex1++;
                 }
+
                 phaseDataArray[phaseStep] = total % 10;
                 if (phaseStep % 1000 == 0)
                 {
                     Console.WriteLine($"Phase {phase}. Last half phase step progress: {phaseStep}.");
                 }
+
+                lastPhaseStep = phaseStep;
             }
+
+            var firstTime = true;
+            var backSideIndex2 = 0;
+            //One third to ohe half of the phase steps
+            for (int phaseStep = dataSize / 3 - 1; phaseStep >= dataSize / 4; phaseStep--)
+            {
+                total += initialPhaseDataArray[phaseStep];
+                total -= initialPhaseDataArray[dataSize - 1 - backSideIndex1];
+                backSideIndex1++;
+                total -= initialPhaseDataArray[dataSize - 1 - backSideIndex1];
+                backSideIndex1++;
+
+                if (firstTime)
+                {
+                    var x = dataSize - (phaseStep + 1) * 3;
+                    for (var i = 0; i < x; i++ )
+                    {
+                        total -= initialPhaseDataArray[dataSize - 1 - backSideIndex2];
+                        backSideIndex2++;
+                    }
+                    firstTime = false;
+                    if (phaseDataArray[phaseStep] != total %10)
+                    {
+                        var y = "oof";
+                    }
+                    phaseDataArray[phaseStep] = total % 10;
+                }
+                else 
+                {
+                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex2];
+                    backSideIndex2++;
+                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex2];
+                    backSideIndex2++;
+                    total -= initialPhaseDataArray[dataSize - 1 - backSideIndex2];
+                    backSideIndex2++;
+                }
+                if (phaseStep % 1000 == 0)
+                {
+                    Console.WriteLine($"Phase {phase}. Last half phase step progress: {phaseStep}.");
+                }
+            }
+
+
 
             PhaseData.Add(phaseDataArray.ToList());
             return phaseDataArray.ToList().ToIntString();
