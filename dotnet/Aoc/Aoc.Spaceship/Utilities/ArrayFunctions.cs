@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Aoc.Spaceship.Utilities
 {
-    internal static class ArrayFunctions
+    public static class ArrayFunctions
     {
         public static IList<IList<int>> GetPermutations(this int[] nums)
         {
@@ -42,6 +44,34 @@ namespace Aoc.Spaceship.Utilities
             T[] result = new T[length];
             Array.Copy(array, offset, result, 0, length);
             return result;
+        }
+
+        public static List<string> ToStringList(this IList<IList<int>> intList)
+        {
+            var returnList = new List<string>();
+            foreach (var numbers in intList)
+            {
+                var line = "";
+                foreach (var number in numbers)
+                    line += number.ToString();
+                returnList.Add(line);
+            }
+            return returnList;
+        }
+
+        public static string ToIntString(this IList<int> intList)
+        {
+            //var line = "";
+            var intStringProgress = 0;
+            var line = new StringBuilder();
+            foreach (var number in intList)
+            {
+                line.Append(number.ToString());
+                //if (intStringProgress % 1000 == 0)
+                //    Console.WriteLine($"ToIntString progress: {intStringProgress}");
+                //intStringProgress++;
+            }
+            return line.ToString();
         }
     }
 }

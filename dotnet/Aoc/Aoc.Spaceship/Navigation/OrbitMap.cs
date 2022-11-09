@@ -10,6 +10,7 @@ namespace Aoc.Spaceship.Navigation
         public OrbitMap(IList<string> mapInput)
         {
             CenterOfMass = new Satellite("COM", 0);
+            //Orbits can come in any order so keep looping through to add orbits
             while (mapInput.Count > 0)
             {
                 var processedOrbits = new List<string>();
