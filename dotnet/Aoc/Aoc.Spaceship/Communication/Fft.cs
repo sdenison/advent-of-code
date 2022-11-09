@@ -139,7 +139,7 @@ namespace Aoc.Spaceship.Communication
                     {
                         var y = "oof";
                     }
-                    phaseDataArray[phaseStep] = total % 10;
+                    //phaseDataArray[phaseStep] = total % 10;
                 }
                 else 
                 {
