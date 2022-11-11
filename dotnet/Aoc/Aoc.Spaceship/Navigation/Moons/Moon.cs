@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices.ComTypes;
+using System;
 
 namespace Aoc.Spaceship.Navigation.Moons
 {
@@ -22,19 +23,19 @@ namespace Aoc.Spaceship.Navigation.Moons
             Velocity = new Coordinate(0, 0, 0);
         }
 
-        public bool Equals(Moon obj)
-        {
-            return Position.Equals(obj.Position) && Velocity.Equals(obj.Velocity);
-        }
+        //public bool Equals(object obj)
+        //{
+        //    return Position.Equals(obj.Position) && Velocity.Equals(obj.Velocity);
+        //}
 
         public long GetHash()
         {
-            return Position.X * 10000 + Position.Y * 100 * Position.Z + Velocity.Z * 1000000 * Velocity.Y * 100000000 + Velocity.X * 10000000000;
+            return Math.Abs(Position.X) * 10000000000 + Math.Abs(Position.Y) * 100000000 + Math.Abs(Position.Z) * 1000000 + Math.Abs(Velocity.X) * 10000 + Math.Abs(Velocity.Y) * 100 + Math.Abs(Velocity.Z);
         }
 
         public string ToString()
         {
-            return Position.ToString() + Velocity.ToString();
+            return GetHash().ToString();
         }
     }
 }

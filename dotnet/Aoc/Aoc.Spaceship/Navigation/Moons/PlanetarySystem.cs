@@ -11,7 +11,13 @@ namespace Aoc.Spaceship.Navigation.Moons
     {
         public IList<Moon> Moons { get; set; }
         public IList<Moon> InitialMoonConfiguration { get; set; }
-        public SortedDictionary<string, int> EnergyList { get; set; }
+        //public SortedDictionary<string, int> EnergyList { get; set; }
+        public History History { get; set; }
+        public SortedDictionary<Vector, SortedDictionary<Vector, SortedDictionary<Vector, List<Vector>>>> VectorHistory
+        {
+            get;
+            set;
+        }
 
 
         public int TotalEnergy
@@ -21,7 +27,9 @@ namespace Aoc.Spaceship.Navigation.Moons
 
         public PlanetarySystem(IList<string> moonCoordinates)
         {
-            EnergyList = new SortedDictionary<string, int>();
+            VectorHistory = new SortedDictionary<Vector, SortedDictionary<Vector, SortedDictionary<Vector, List<Vector>>>>();
+            //History = new SortedSet<Snapshot>();
+            History = new History();
             Moons = new List<Moon>();
             InitialMoonConfiguration = new List<Moon>();
             foreach(var moon in moonCoordinates)
@@ -29,7 +37,20 @@ namespace Aoc.Spaceship.Navigation.Moons
                 Moons.Add(new Moon(moon));
                 InitialMoonConfiguration.Add(new Moon(moon));
             }
-            EnergyList.Add(ToString(), 0);
+
+            AddToVectorHistory();
+        }
+
+        public bool AddToVectorHistory()
+        {
+            var vector0 = new Vector(Moons[0].Position.X, Moons[0].Position.Y, Moons[0].Position.Z, Moons[0].Velocity.X, Moons[0].Velocity.Y, Moons[0].Velocity.Z);
+            var vector1 = new Vector(Moons[1].Position.X, Moons[1].Position.Y, Moons[1].Position.Z, Moons[1].Velocity.X, Moons[1].Velocity.Y, Moons[1].Velocity.Z);
+            var vector2 = new Vector(Moons[2].Position.X, Moons[2].Position.Y, Moons[2].Position.Z, Moons[2].Velocity.X, Moons[2].Velocity.Y, Moons[2].Velocity.Z);
+            var vector3 = new Vector(Moons[3].Position.X, Moons[3].Position.Y, Moons[3].Position.Z, Moons[3].Velocity.X, Moons[3].Velocity.Y, Moons[3].Velocity.Z);
+            var snapshot = new Snapshot(vector0, vector1, vector2, vector3);
+            if (History.AddSnapshot(snapshot))
+                return false;
+            return true;
         }
 
         public void TakeTimeSteps(int stepsToTake)
@@ -41,6 +62,15 @@ namespace Aoc.Spaceship.Navigation.Moons
         public string ToString()
         {
             return Moons[0].ToString() + Moons[1].ToString() + Moons[2].ToString() + Moons[3].ToString();
+        }
+
+        public long ToInt()
+        {
+            var _1hash = Moons[0].GetHashCode();
+            var _2hash = Moons[2].GetHashCode();
+            
+            var x = Tuple.Create(Moons[0].GetHash(), Moons[1].GetHash(), Moons[2].GetHash(), Moons[3].GetHash());
+            return x.GetHashCode();
         }
 
         public long FindRepeatingPattern()
@@ -55,9 +85,8 @@ namespace Aoc.Spaceship.Navigation.Moons
                 stepsTaken++;
                 //var moonsMatch = true;
 
-                if (EnergyList.ContainsKey(ToString()))
+                if (!AddToVectorHistory())
                     return stepsTaken;
-                EnergyList.Add(ToString(), 0);
 
                 //for (var i = 0; i < Moons.Count; i++)
                 //{
@@ -68,7 +97,7 @@ namespace Aoc.Spaceship.Navigation.Moons
                 //if (moonsMatch)
                 //    return stepsTaken;
 
-                if (stepsTaken % 10000000 == 0)
+                if (stepsTaken % 1000000 == 0)
                 {
                     stopWatch.Stop();
                     Console.WriteLine($"Planetary system has run {stepsTaken} steps in {stopWatch.ElapsedMilliseconds / 1000} seconds");
