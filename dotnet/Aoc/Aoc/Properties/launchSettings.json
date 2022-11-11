@@ -2,7 +2,7 @@
   "profiles": {
     "Aoc": {
       "commandName": "Project",
-      "commandLineArgs": "communications fft"
+      "commandLineArgs": "navigation calculatemoons"
     }
   }
 }

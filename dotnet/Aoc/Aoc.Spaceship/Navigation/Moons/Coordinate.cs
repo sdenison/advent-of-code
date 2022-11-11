@@ -24,5 +24,15 @@ namespace Aoc.Spaceship.Navigation.Moons
             Y = y;
             Z = z;
         }
+
+        public bool Equals(Coordinate obj)
+        {
+            return X == obj.X && Y == obj.Y && Z == obj.Z;
+        }
+
+        public string ToString()
+        {
+            return Math.Abs(X).ToString("D2") + Math.Abs(Y).ToString("D2") + Math.Abs(Z).ToString("D2");
+        }
     }
 }
