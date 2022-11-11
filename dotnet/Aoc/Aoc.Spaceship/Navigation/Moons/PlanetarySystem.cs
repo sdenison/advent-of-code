@@ -13,6 +13,10 @@ namespace Aoc.Spaceship.Navigation.Moons
         public IList<Moon> InitialMoonConfiguration { get; set; }
         //public SortedDictionary<string, int> EnergyList { get; set; }
         public History History { get; set; }
+        public int _xsum = 0;
+        public int _ysum = 0;
+        public int _zsum = 0;
+
         public SortedDictionary<Vector, SortedDictionary<Vector, SortedDictionary<Vector, List<Vector>>>> VectorHistory
         {
             get;
@@ -38,6 +42,10 @@ namespace Aoc.Spaceship.Navigation.Moons
                 InitialMoonConfiguration.Add(new Moon(moon));
             }
 
+            _xsum = Moons[0].Position.X + Moons[1].Position.X + Moons[2].Position.X + Moons[3].Position.X;
+            _ysum = Moons[0].Position.Y + Moons[1].Position.Y + Moons[2].Position.Y + Moons[3].Position.Y;
+            _zsum = Moons[0].Position.Z + Moons[1].Position.Z + Moons[2].Position.Z + Moons[3].Position.Z;
+
             AddToVectorHistory();
         }
 
@@ -46,8 +54,9 @@ namespace Aoc.Spaceship.Navigation.Moons
             var vector0 = new Vector(Moons[0].Position.X, Moons[0].Position.Y, Moons[0].Position.Z, Moons[0].Velocity.X, Moons[0].Velocity.Y, Moons[0].Velocity.Z);
             var vector1 = new Vector(Moons[1].Position.X, Moons[1].Position.Y, Moons[1].Position.Z, Moons[1].Velocity.X, Moons[1].Velocity.Y, Moons[1].Velocity.Z);
             var vector2 = new Vector(Moons[2].Position.X, Moons[2].Position.Y, Moons[2].Position.Z, Moons[2].Velocity.X, Moons[2].Velocity.Y, Moons[2].Velocity.Z);
-            var vector3 = new Vector(Moons[3].Position.X, Moons[3].Position.Y, Moons[3].Position.Z, Moons[3].Velocity.X, Moons[3].Velocity.Y, Moons[3].Velocity.Z);
-            var snapshot = new Snapshot(vector0, vector1, vector2, vector3);
+            //var vector3 = new Vector(Moons[3].Position.X, Moons[3].Position.Y, Moons[3].Position.Z, Moons[3].Velocity.X, Moons[3].Velocity.Y, Moons[3].Velocity.Z);
+            //var snapshot = new Snapshot(vector0, vector1, vector2, vector3);
+            var snapshot = new Snapshot(vector0, vector1, vector2);
             if (History.AddSnapshot(snapshot))
                 return false;
             return true;
@@ -182,33 +191,32 @@ namespace Aoc.Spaceship.Navigation.Moons
                     {
                         var moonToCompare = Moons[moonToCompareId];
                         if (moon.Position.X < moonToCompare.Position.X)
-                            moonDelta.X++;
+                            moon.Velocity.X++;
                         if (moon.Position.X > moonToCompare.Position.X)
-                            moonDelta.X--;
+                            moon.Velocity.X--;
                         if (moon.Position.Y < moonToCompare.Position.Y)
-                            moonDelta.Y++;
+                            moon.Velocity.Y++;
                         if (moon.Position.Y > moonToCompare.Position.Y)
-                            moonDelta.Y--;
+                            moon.Velocity.Y--;
                         if (moon.Position.Z < moonToCompare.Position.Z)
-                            moonDelta.Z++;
+                            moon.Velocity.Z++;
                         if (moon.Position.Z > moonToCompare.Position.Z)
-                            moonDelta.Z--;
+                            moon.Velocity.Z--;
                     }
                 }
-
-                moon.StepDelta = moonDelta;
-                moon.Velocity.X += moon.StepDelta.X;
-                moon.Velocity.Y += moon.StepDelta.Y;
-                moon.Velocity.Z += moon.StepDelta.Z;
             }
 
-            foreach (var moon in Moons)
+            for (var moonId = 0; moonId < 3; moonId++)
             {
+                var moon = Moons[moonId];
                 moon.Position.X += moon.Velocity.X;
                 moon.Position.Y += moon.Velocity.Y;
                 moon.Position.Z += moon.Velocity.Z;
             }
 
+            Moons[3].Position.X = _xsum - (Moons[0].Position.X + Moons[1].Position.X + Moons[2].Position.X);
+            Moons[3].Position.Y = _ysum - (Moons[0].Position.Y + Moons[1].Position.Y + Moons[2].Position.Y);
+            Moons[3].Position.Z = _zsum - (Moons[0].Position.Z + Moons[1].Position.Z + Moons[2].Position.Z);
         }
     }
 }

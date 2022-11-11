@@ -10,12 +10,12 @@ namespace Aoc.Spaceship.Navigation.Moons
         public Vector Vector2 { get; set; }
         public Vector Vector3 { get; set; }
 
-        public Snapshot(Vector vector0, Vector vector1, Vector vector2, Vector vector3)
+        public Snapshot(Vector vector0, Vector vector1, Vector vector2)
         {
             Vector0 = vector0;
             Vector1 = vector1;
             Vector2 = vector2;
-            Vector3 = vector3;
+            //Vector3 = vector3;
         }
 
         public int Compare(Snapshot x, Snapshot y)
@@ -26,8 +26,8 @@ namespace Aoc.Spaceship.Navigation.Moons
                 return x.Vector1.Compare(x.Vector1, y.Vector1);
             if (x.Vector2.Compare(x.Vector2, y.Vector2) != 0)
                 return x.Vector2.Compare(x.Vector2, y.Vector2);
-            if (x.Vector3.Compare(x.Vector3, y.Vector3) != 0)
-                return x.Vector3.Compare(x.Vector3, y.Vector3);
+            //if (x.Vector3.Compare(x.Vector3, y.Vector3) != 0)
+            //    return x.Vector3.Compare(x.Vector3, y.Vector3);
             return 0;
         }
 

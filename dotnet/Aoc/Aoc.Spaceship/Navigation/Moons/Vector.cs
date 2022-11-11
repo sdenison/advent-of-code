@@ -62,6 +62,12 @@ namespace Aoc.Spaceship.Navigation.Moons
                           Math.Abs(Xvelocity) * 10000 + Math.Abs(Yvelocity) * 100 + Math.Abs(Zvelocity));
         }
 
+        public long GetLong()
+        {
+            return Math.Abs(Xposition) * 10000000000 + Math.Abs(Yposition) * 100000000 + Math.Abs(Zposition) * 1000000 +
+                          Math.Abs(Xvelocity) * 10000 + Math.Abs(Yvelocity) * 100 + Math.Abs(Zvelocity);
+        }
+
         public int CompareTo(Vector other)
         {
             return Compare(this, other);

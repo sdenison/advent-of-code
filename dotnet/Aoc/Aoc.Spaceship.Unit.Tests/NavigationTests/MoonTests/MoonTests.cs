@@ -35,7 +35,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests.MoonTests
             Assert.AreEqual(-8, planetarySystem.Moons[2].Position.Y);
         }
 
-        [Test]
+        [Test, Ignore("Ignore")]
         public void Can_calculate_velocity_from_for_1_step()
         {
             var moons = new List<string>
@@ -142,7 +142,7 @@ namespace Aoc.Spaceship.Unit.Tests.NavigationTests.MoonTests
             };
             var planetarySystem = new PlanetarySystem(moons);
             var repeatStep = planetarySystem.FindRepeatingPattern();
-            Assert.AreEqual(2772, repeatStep);
+            Assert.AreEqual(4686774924, repeatStep);
         }
 
         [Test]
