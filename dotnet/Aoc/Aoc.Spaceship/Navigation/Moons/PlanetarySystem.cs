@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Aoc.Spaceship.Navigation.Moons
@@ -13,73 +13,96 @@ namespace Aoc.Spaceship.Navigation.Moons
         public IList<Moon> InitialMoonConfiguration { get; set; }
         //public SortedDictionary<string, int> EnergyList { get; set; }
         public History History { get; set; }
-        public int _xsum = 0;
-        public int _ysum = 0;
-        public int _zsum = 0;
+        public AxisValue XAxis { get; set; }
+        public SortedDictionary<long, List<long>> XAxisHistory; 
+        public AxisValue YAxis { get; set; }
+        public SortedDictionary<long, List<long>> YAxisHistory; 
+        public AxisValue ZAxis { get; set; }
+        public SortedDictionary<long, List<long>> ZAxisHistory; 
+        public SortedDictionary<long, SortedSet<long>> XAxisSnapshots { get; set; }
+        public SortedSet<int> Positions { get; set; }
 
-        public SortedDictionary<Vector, SortedDictionary<Vector, SortedDictionary<Vector, List<Vector>>>> VectorHistory
+        public SortedSet<long> StepHistory { get; set; }
+
+
+        public int TotalEnergy()
         {
-            get;
-            set;
-        }
-
-
-        public int TotalEnergy
-        {
-            get { return Moons.Select(x => x.TotalEnergy).Sum(); }
+            var totalEnergy = 0;
+            for(var i = 0; i < 4; i++)
+            {
+                var pot = Math.Abs(XAxis.Positions[i]) + Math.Abs(YAxis.Positions[i]) + Math.Abs(ZAxis.Positions[i]);
+                var kin = Math.Abs(XAxis.Velocities[i]) + Math.Abs(YAxis.Velocities[i]) + Math.Abs(ZAxis.Velocities[i]);
+                totalEnergy += pot * kin;
+            }
+            return totalEnergy;
         }
 
         public PlanetarySystem(IList<string> moonCoordinates)
         {
-            VectorHistory = new SortedDictionary<Vector, SortedDictionary<Vector, SortedDictionary<Vector, List<Vector>>>>();
-            //History = new SortedSet<Snapshot>();
+            XAxisSnapshots = new SortedDictionary<long, SortedSet<long>>();
+
             History = new History();
             Moons = new List<Moon>();
             InitialMoonConfiguration = new List<Moon>();
+
+            StepHistory = new SortedSet<long>();
+
+            
             foreach(var moon in moonCoordinates)
             {
                 Moons.Add(new Moon(moon));
                 InitialMoonConfiguration.Add(new Moon(moon));
             }
 
-            _xsum = Moons[0].Position.X + Moons[1].Position.X + Moons[2].Position.X + Moons[3].Position.X;
-            _ysum = Moons[0].Position.Y + Moons[1].Position.Y + Moons[2].Position.Y + Moons[3].Position.Y;
-            _zsum = Moons[0].Position.Z + Moons[1].Position.Z + Moons[2].Position.Z + Moons[3].Position.Z;
+            XAxis = new AxisValue(Moons[0].Position.X, Moons[1].Position.X, Moons[2].Position.X, Moons[3].Position.X);
+            XAxisHistory = new SortedDictionary<long, List<long>>();
+            YAxis = new AxisValue(Moons[0].Position.Y, Moons[1].Position.Y, Moons[2].Position.Y, Moons[3].Position.Y);
+            YAxisHistory = new SortedDictionary<long, List<long>>();
+            ZAxis = new AxisValue(Moons[0].Position.Z, Moons[1].Position.Z, Moons[2].Position.Z, Moons[3].Position.Z);
+            ZAxisHistory = new SortedDictionary<long, List<long>>();
+            Positions = new SortedSet<int>();
 
-            AddToVectorHistory();
+            AddToXaxisHisotry();
         }
 
-        public bool AddToVectorHistory()
+        public bool AddToXaxisHisotry()
         {
-            var vector0 = new Vector(Moons[0].Position.X, Moons[0].Position.Y, Moons[0].Position.Z, Moons[0].Velocity.X, Moons[0].Velocity.Y, Moons[0].Velocity.Z);
-            var vector1 = new Vector(Moons[1].Position.X, Moons[1].Position.Y, Moons[1].Position.Z, Moons[1].Velocity.X, Moons[1].Velocity.Y, Moons[1].Velocity.Z);
-            var vector2 = new Vector(Moons[2].Position.X, Moons[2].Position.Y, Moons[2].Position.Z, Moons[2].Velocity.X, Moons[2].Velocity.Y, Moons[2].Velocity.Z);
-            //var vector3 = new Vector(Moons[3].Position.X, Moons[3].Position.Y, Moons[3].Position.Z, Moons[3].Velocity.X, Moons[3].Velocity.Y, Moons[3].Velocity.Z);
-            //var snapshot = new Snapshot(vector0, vector1, vector2, vector3);
-            var snapshot = new Snapshot(vector0, vector1, vector2);
-            if (History.AddSnapshot(snapshot))
-                return false;
-            return true;
+            if (XAxisHistory.ContainsKey(XAxis.GetLong()))
+            {
+                XAxisHistory[XAxis.GetLong()].Add(XAxis.CurrentStep);
+                return true;
+            }
+            XAxisHistory.Add(XAxis.GetLong(), new List<long>{ XAxis.CurrentStep });
+            return false;
+        }
+
+        public bool AddToYaxisHisotry()
+        {
+            if (YAxisHistory.ContainsKey(YAxis.GetLong()))
+            {
+                YAxisHistory[YAxis.GetLong()].Add(YAxis.CurrentStep);
+                return true;
+            }
+            YAxisHistory.Add(YAxis.GetLong(), new List<long> { YAxis.CurrentStep });
+            return false;
+        }
+
+        public bool AddToZaxisHisotry()
+        {
+            if (ZAxisHistory.ContainsKey(ZAxis.GetLong()))
+            {
+                ZAxisHistory[ZAxis.GetLong()].Add(ZAxis.CurrentStep);
+                return true;
+            }
+            ZAxisHistory.Add(ZAxis.GetLong(), new List<long> { ZAxis.CurrentStep });
+            return false;
         }
 
         public void TakeTimeSteps(int stepsToTake)
         {
-            for (int i = 0; i < stepsToTake; i++)
-                TakeTimeStep();
-        }
-
-        public string ToString()
-        {
-            return Moons[0].ToString() + Moons[1].ToString() + Moons[2].ToString() + Moons[3].ToString();
-        }
-
-        public long ToInt()
-        {
-            var _1hash = Moons[0].GetHashCode();
-            var _2hash = Moons[2].GetHashCode();
-            
-            var x = Tuple.Create(Moons[0].GetHash(), Moons[1].GetHash(), Moons[2].GetHash(), Moons[3].GetHash());
-            return x.GetHashCode();
+            XAxis.TakeSteps(stepsToTake);
+            YAxis.TakeSteps(stepsToTake);
+            ZAxis.TakeSteps(stepsToTake);
         }
 
         public long FindRepeatingPattern()
@@ -87,136 +110,245 @@ namespace Aoc.Spaceship.Navigation.Moons
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             var patterWasFound = false;
-            long stepsTaken = 0;
+            var returnXSteps = new SortedSet<long>();
+            long returnXStep = 0;
+            var returnYSteps = new SortedSet<long>();
+            long returnYStep = 0;
+            var returnZSteps = new SortedSet<long>();
+            long returnZStep = 0;
+            var xyCombinations = new List<long>();
             while(!patterWasFound)
             {
-                TakeTimeStep();
-                stepsTaken++;
-                //var moonsMatch = true;
+                long currentStep = 1;
+                var stepSize = 5000; //10000 was 8 seconds;  100000 was 9 seconds
+                long returnStep = 0;
 
-                if (!AddToVectorHistory())
-                    return stepsTaken;
+                ////Console.WriteLine("Calculating steps...");
+                //Task[] taskArray = new Task[3];
+                //if (!returnXSteps.Any())
+                //    taskArray[0] = Task.Run(() => XAxis.TakeSteps(stepSize));
+                //else
+                //    taskArray[0] = Task.CompletedTask;
+                //if (!returnYSteps.Any())
+                //    taskArray[1] = Task.Run(() => YAxis.TakeSteps(stepSize));
+                //else
+                //    taskArray[1] = Task.CompletedTask;
+                //if (!returnZSteps.Any())
+                //    taskArray[2] = Task.Run(() => ZAxis.TakeSteps(stepSize));
+                //else
+                //    taskArray[2] = Task.CompletedTask;
 
-                //for (var i = 0; i < Moons.Count; i++)
+                //Console.WriteLine("Calculating steps...");
+                if (returnXStep == 0)
+                    XAxis.TakeSteps(stepSize);
+                if (returnYStep == 0)
+                    YAxis.TakeSteps(stepSize);
+                if (returnZStep == 0)
+                    ZAxis.TakeSteps(stepSize);
+
+                //stepsTaken++;
+                //Task.WaitAll(taskArray);
+
+                if (returnXStep == 0)
+                    for (int i = 0; i < stepSize; i++)
+                    {
+                        if (XAxis.AxisSnapshots[i].Position0 == Moons[0].Position.X &&
+                            XAxis.AxisSnapshots[i].Position1 == Moons[1].Position.X &&
+                            XAxis.AxisSnapshots[i].Position2 == Moons[2].Position.X &&
+                            XAxis.AxisSnapshots[i].Position3 == Moons[3].Position.X &&
+                            XAxis.AxisSnapshots[i].Velocity0 == 0 &&
+                            XAxis.AxisSnapshots[i].Velocity1 == 0 &&
+                            XAxis.AxisSnapshots[i].Velocity2 == 0 &&
+                            XAxis.AxisSnapshots[i].Velocity3 == 0)
+                        {
+                            returnXSteps.Add(XAxis.AxisSnapshots[i].StepNumber);
+                            returnXStep = XAxis.AxisSnapshots[i].StepNumber;
+                            Console.WriteLine($"Found X step of {returnXStep}");
+                            break;
+                        }
+                    }
+
+                if (returnYStep == 0)
+                    for (int i = 0; i < stepSize; i++)
+                    {
+                        if (YAxis.AxisSnapshots[i].Position0 == Moons[0].Position.Y &&
+                            YAxis.AxisSnapshots[i].Position1 == Moons[1].Position.Y &&
+                            YAxis.AxisSnapshots[i].Position2 == Moons[2].Position.Y &&
+                            YAxis.AxisSnapshots[i].Position3 == Moons[3].Position.Y &&
+                            YAxis.AxisSnapshots[i].Velocity0 == 0 &&
+                            YAxis.AxisSnapshots[i].Velocity1 == 0 &&
+                            YAxis.AxisSnapshots[i].Velocity2 == 0 &&
+                            YAxis.AxisSnapshots[i].Velocity3 == 0)
+                        {
+                            returnYSteps.Add(YAxis.AxisSnapshots[i].StepNumber);
+                            returnYStep = YAxis.AxisSnapshots[i].StepNumber;
+                            Console.WriteLine($"Found Y step of {XAxis.AxisSnapshots[i].StepNumber}");
+                            break;
+                        }
+                    }
+
+                if (returnZStep == 0)
+                    for (int i = 0; i < stepSize; i++)
+                    {
+                        if (ZAxis.AxisSnapshots[i].Position0 == Moons[0].Position.Z &&
+                            ZAxis.AxisSnapshots[i].Position1 == Moons[1].Position.Z &&
+                            ZAxis.AxisSnapshots[i].Position2 == Moons[2].Position.Z &&
+                            ZAxis.AxisSnapshots[i].Position3 == Moons[3].Position.Z &&
+                            ZAxis.AxisSnapshots[i].Velocity0 == 0 &&
+                            ZAxis.AxisSnapshots[i].Velocity1 == 0 &&
+                            ZAxis.AxisSnapshots[i].Velocity2 == 0 &&
+                            ZAxis.AxisSnapshots[i].Velocity3 == 0)
+                        {
+                            returnZSteps.Add(ZAxis.AxisSnapshots[i].StepNumber);
+                            returnZStep = YAxis.AxisSnapshots[i].StepNumber;
+                            Console.WriteLine($"Found Z step of {XAxis.AxisSnapshots[i].StepNumber}");
+                            break;
+                        }
+                    }
+
+
+                if (returnXStep > 0 && returnYStep > 0 && returnZStep > 0)
+                {
+                    //var xSteps = returnXSteps.Min();
+                    //var ySteps = returnYSteps.Min();
+                    //var zSteps = returnZSteps.Min();
+                    var lcm = PlanetarySystem.lcm(returnXStep, returnYStep);
+                    lcm = PlanetarySystem.lcm(lcm, returnZStep);
+                    return lcm;
+                }
+
+
+                //for (int i = 0; i < stepSize; i++)
                 //{
-                //    if (!Moons[i].Equals(InitialMoonConfiguration[i]))
-                //    {
-                //        moonsMatch = false;
-                //    }
-                //if (moonsMatch)
-                //    return stepsTaken;
+                //    position += XAxis.Positions[i] * IntPow(10, i) + YAxis.Positions[i] * IntPow(10, i) + ZAxis.Positions[i] * IntPow(10, i);
+                //}
 
-                if (stepsTaken % 1000000 == 0)
+                //position = ulong.Parse(ZAxis.Positions[3]);
+
+                //Console.WriteLine("Looking for matches...");
+                //Parallel.For(0, stepSize, (i) =>
+                //{
+                //    if (returnXSteps.Count == 0)
+                //        if (XAxis.CoordinateHistory[i].Item1 == Moons[0].Position.X &&
+                //            XAxis.CoordinateHistory[i].Item2 == Moons[1].Position.X &&
+                //            XAxis.CoordinateHistory[i].Item2 == Moons[2].Position.X &&
+                //            XAxis.CoordinateHistory[i].Item2 == Moons[3].Position.X
+                //            )
+
+
+
+                //    if (XAxis.CoordinateHistory[i].Item1 == Moons[0].Position.X &&
+                //        YAxis.CoordinateHistory[i].Item1 == Moons[0].Position.Y &&
+                //        ZAxis.CoordinateHistory[i].Item1 == Moons[0].Position.Z &&
+                //        XAxis.CoordinateHistory[i].Item2 == Moons[1].Position.X &&
+                //        YAxis.CoordinateHistory[i].Item2 == Moons[1].Position.Y &&
+                //        ZAxis.CoordinateHistory[i].Item2 == Moons[1].Position.Z &&
+                //        XAxis.CoordinateHistory[i].Item3 == Moons[2].Position.X &&
+                //        YAxis.CoordinateHistory[i].Item3 == Moons[2].Position.Y &&
+                //        ZAxis.CoordinateHistory[i].Item3 == Moons[2].Position.Z &&
+                //        XAxis.CoordinateHistory[i].Item4 == Moons[3].Position.X &&
+                //        YAxis.CoordinateHistory[i].Item4 == Moons[3].Position.Y &&
+                //        ZAxis.CoordinateHistory[i].Item4 == Moons[3].Position.Z)
+                //        returnXSteps.Add(XAxis.CoordinateHistory[i].Item5);
+                //    //returnStep = XAxis.CoordinateHistory[i].Item5;
+
+                //});
+
+                //if (returnXSteps.Count > 0)
+                //    return returnXSteps.AsQueryable().Min();
+
+
+                //if (AddToXaxisHisotry())
+                //{
+                //If we're here then we just added a match for X
+                //Console.WriteLine($"Found X axis match on step {XAxis.CurrentStep}. XAxisHistory is {XAxisHistory.Count} large");
+                //}
+
+                //AddToYaxisHisotry();
+                //AddToZaxisHisotry();
+
+                if (XAxis.CurrentStep % 100000000 == 0)
                 {
                     stopWatch.Stop();
-                    Console.WriteLine($"Planetary system has run {stepsTaken} steps in {stopWatch.ElapsedMilliseconds / 1000} seconds");
+                    var ellapsedTime = String.Format("{0:n0}", (stopWatch.ElapsedMilliseconds / 1000));
+                    var currentStepString = String.Format("{0:n0}", XAxis.CurrentStep);
+                    Console.WriteLine($"Planetary system has run {currentStepString} steps in {ellapsedTime} seconds");
+                    //Console.WriteLine($"Positions has {Positions.Count} records");
+                    //Console.WriteLine($"XAxisHistory is {XAxis.StepHistory.Count} large");
+                    //Console.WriteLine($"YAxisHistory is {YAxis.StepHistory.Count} large");
+                    //Console.WriteLine($"ZAxisHistory is {ZAxis.StepHistory.Count} large");
                     stopWatch.Restart();
                 }
             }
             return 0;
         }
 
-
-        public long FindXRepeatingPattern()
+        public long GetFirstDuplicate()
         {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            long stepsTaken = 0;
-            while (true)
+            foreach(var xStepHistory in XAxis.StepHistory.Values)
             {
-                TakeTimeStep();
-                stepsTaken++;
-                Moons[0].XStepNumber = stepsTaken;
-                Moons[1].XStepNumber = stepsTaken;
-                Moons[2].XStepNumber = stepsTaken;
-                Moons[3].XStepNumber = stepsTaken;
-                if (Moons[0].Position.X == InitialMoonConfiguration[0].Position.X &&
-                    Moons[1].Position.X == InitialMoonConfiguration[1].Position.X &&
-                    Moons[2].Position.X == InitialMoonConfiguration[2].Position.X &&
-                    Moons[3].Position.X == InitialMoonConfiguration[3].Position.X &&
-                    Moons[0].Velocity.X == 0 &&
-                    Moons[1].Velocity.X == 0 &&
-                    Moons[2].Velocity.X == 0 &&
-                    Moons[3].Velocity.X == 0)
+                foreach(var yStepHistory in YAxis.StepHistory.Values)
                 {
-                    return stepsTaken;
-                }
+                    var yIntersects = xStepHistory.Intersect(yStepHistory);
+                    if (yIntersects.Count() > 1)
+                    {
+                        foreach (var zStepHistory in ZAxis.StepHistory.Values)
+                        {
+                            var zIntersects = zStepHistory.Intersect(yIntersects);
+                            {
+                                if (zIntersects.Count() > 1)
+                                    return zIntersects.ElementAt(1);
+                            }
+                        }
+                    }
 
-                if (stepsTaken % 10000000 == 0)
-                {
-                    stopWatch.Stop();
-                    Console.WriteLine($"Planetary system has run {stepsTaken} steps in {stopWatch.ElapsedMilliseconds / 1000} seconds");
-                    stopWatch.Restart();
                 }
             }
+
+            return 0;
         }
 
-        public void TakeXStep()
+        long PowTen(int pow)
         {
-            for (var moonId = 0; moonId < 3; moonId++)
+            long ret = 1;
+            long ten = 10;
+            while (pow != 0)
             {
-                var moon = Moons[moonId];
-                int moonDelta = 0;
-                for (var moonToCompareId = 0; moonToCompareId < 3; moonToCompareId++)
-                {
-                    if (moonId != moonToCompareId)
-                    {
-                        var moonToCompare = Moons[moonToCompareId];
-                        if (moon.Position.X < moonToCompare.Position.X)
-                            moonDelta++;
-                        if (moon.Position.X > moonToCompare.Position.X)
-                            moonDelta--;
-                    }
-                }
-                moon.Velocity.X += moonDelta;
+                if ((pow & 1) == 1)
+                    ret *= 10;
+                ten *= 10;
+                pow >>= 1;
             }
-
-            Moons[3].Velocity.X = -1 * (Moons[0].Velocity.X + Moons[1].Velocity.X + Moons[2].Velocity.X);
-
-            for (var moonId = 0; moonId < 4; moonId++)
-            {
-                Moons[moonId].Position.X += Moons[moonId].Velocity.X;
-            }
+            return ret;
         }
 
-        public void TakeTimeStep()
+        int IntPow(int x, int pow)
         {
-            for (var moonId = 0; moonId < 4; moonId++)
+            int ret = 1;
+            while (pow != 0)
             {
-                var moon = Moons[moonId];
-                var moonDelta = new Coordinate(0, 0, 0);
-                for (var moonToCompareId = 0; moonToCompareId < 4; moonToCompareId++)
-                {
-                    if (moonId != moonToCompareId)
-                    {
-                        var moonToCompare = Moons[moonToCompareId];
-                        if (moon.Position.X < moonToCompare.Position.X)
-                            moon.Velocity.X++;
-                        if (moon.Position.X > moonToCompare.Position.X)
-                            moon.Velocity.X--;
-                        if (moon.Position.Y < moonToCompare.Position.Y)
-                            moon.Velocity.Y++;
-                        if (moon.Position.Y > moonToCompare.Position.Y)
-                            moon.Velocity.Y--;
-                        if (moon.Position.Z < moonToCompare.Position.Z)
-                            moon.Velocity.Z++;
-                        if (moon.Position.Z > moonToCompare.Position.Z)
-                            moon.Velocity.Z--;
-                    }
-                }
+                if ((pow & 1) == 1)
+                    ret *= x;
+                x *= x;
+                pow >>= 1;
             }
+            return ret;
+        }
 
-            for (var moonId = 0; moonId < 3; moonId++)
+        static long gcf(long a, long b)
+        {
+            while (b != 0)
             {
-                var moon = Moons[moonId];
-                moon.Position.X += moon.Velocity.X;
-                moon.Position.Y += moon.Velocity.Y;
-                moon.Position.Z += moon.Velocity.Z;
+                long temp = b;
+                b = a % b;
+                a = temp;
             }
+            return a;
+        }
 
-            Moons[3].Position.X = _xsum - (Moons[0].Position.X + Moons[1].Position.X + Moons[2].Position.X);
-            Moons[3].Position.Y = _ysum - (Moons[0].Position.Y + Moons[1].Position.Y + Moons[2].Position.Y);
-            Moons[3].Position.Z = _zsum - (Moons[0].Position.Z + Moons[1].Position.Z + Moons[2].Position.Z);
+        static long lcm(long a, long b)
+        {
+            return (a / gcf(a, b)) * b;
         }
     }
 }
